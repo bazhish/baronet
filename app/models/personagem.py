@@ -1,7 +1,7 @@
-# app/models/personagem.py
+from typing import Any
 
 class Personagem:
-    def __init__(self, nome: str, classe: str, nivel: int = 1, vida: int = 100, stamina: int = 100):
+    def __init__(self, nome: str, classe: Any, nivel: int, vida: int, stamina: int = 100):
         self.nome = nome
         self.classe = classe
         self.nivel = nivel

@@ -13,9 +13,9 @@ class Usuario:
 
         self.nível_atual = 1
         self.nível_máximo = 100
-        self.dano = 10
-        self.velocidade = 7
-        self.defesa = 8
+        self.dano = 2
+        self.velocidade = 4
+        self.defesa = 5
         self.vida_atual = 100
         self.vida_máxima = 100
 
@@ -42,7 +42,6 @@ class Usuario:
         self.limite_de_peso()
 
         self.descrição = ()
-        self.atualizar_descrição()
         
     def limite_de_peso(self) -> None:
         if not (70 <= self.peso <= 110):
@@ -58,7 +57,7 @@ class Usuario:
 
     def subir_de_nível(self) -> None:
 
-        multiplicador = float(1.0)
+        multiplicador = 1
         if 0 < self.nível_atual <= 25:
             multiplicador = 1.25
         if 25 < self.nível_atual <= 50:
@@ -70,30 +69,28 @@ class Usuario:
 
         self.experiência_máxima = int(self.experiência_máxima * multiplicador)
         self.nível_atual = int(self.nível_atual + 1)
-        self.dano = int(self.dano * 1.35)
+        self.dano = int(self.dano * 1.5)
         self.velocidade = int(self.velocidade * 1.25)
         self.defesa = int(self.defesa * 1.25)
         self.vida_máxima = int(self.vida_máxima * 1.75)
         self.vida_atual = int(self.vida_máxima)
         self.estamina_máxima = int(self.estamina_máxima * 1.35)
         self.estamina_atual = int(self.estamina_máxima)
+        self.atualizar_descrição()
 
     def receber_experiência(self, experiência: int) -> None:
         self.experiência_atual += experiência
 
-        while self.nível_atual < self.nível_máximo:
-            if self.experiência_atual >= self.experiência_máxima:
-                if self.experiência_atual == self.experiência_máxima:
-                    self.experiência_atual = 0
-                else:
-                    self.experiência_atual -= self.experiência_máxima
-                
-                self.subir_de_nível()
-        
-        self.atualizar_descrição()
+        while self.experiência_atual >= self.experiência_máxima and self.nível_atual < self.nível_máximo:  
+            if self.experiência_atual > self.estamina_máxima: 
+                self.experiência_atual -= self.experiência_máxima
+            else:
+                self.experiência_atual = 0
+            self.subir_de_nível()
     
     def diminuir_tentativas(self) -> None:
         self.tentativas_restantes -= 1
+        self.vida_atual = self.vida_máxima
 
         if self.tentativas_restantes == 0:
             raise SystemExit("suas tentativas acabaram, você perdeu o jogo")
@@ -104,20 +101,20 @@ class Usuario:
         if self.vida_atual <= 0:
             self.diminuir_tentativas()
     
-    def equipar_arma(self, arma):
+    def equipar_arma(self, arma) -> None:
         self.arma = arma
 
-    def equipar_escudo(self, escudo):
-    
+    def equipar_escudo(self, escudo) -> None:
         self.escudo = escudo
 
-    def atualizar_descrição(self):
+    def atualizar_descrição(self) -> None:
         self.descrição = (f"nome: {self.nome}\n"
                           f"idade: {self.idade}\n"
                           f"peso: {self.peso}Kg\n"
                           f"genero: {self.genero}\n"
                           f"altura: {self.altura}m\n"
-                          f"nivel: {self.nível_atual}/{self.nível_máximo}\n"
+                          f"experiência: {self.experiência_atual}/{self.experiência_máxima}\n"
+                          f"nível: {self.nível_atual}/{self.nível_máximo}\n"
                           f"dano: {self.dano}\n"
                           f"velocidade: {self.velocidade}\n"
                           f"defesa: {self.defesa}\n"
@@ -125,11 +122,5 @@ class Usuario:
                           f"estamina: {self.estamina_atual}/{self.estamina_máxima}\n"
                           f"arma: {self.arma}\n"
                           f"escudo: {self.escudo}\n"
+                          f"tentativas: {self.tentativas_restantes}\n"
                           f"classe: {self.classe_do_usuário}\n")
-
-    def usar_habilidade_ativa(self):
-        pass
-
-jogador = Usuario("max", 21, 97, "homem", 2.1)
-jogador.receber_experiência(700)
-print(jogador.descrição)

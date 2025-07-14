@@ -1,3 +1,4 @@
+# app/models/personagens/jogador_ficticio.py
 jogador = {
     "none": "jahseh",
     "idade": 21,

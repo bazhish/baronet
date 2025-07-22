@@ -12,11 +12,11 @@
 - **O jogo "Baronet" é um RPG com temática medieval que combina perspectivas TopDown e plataforma 2D com foco em combate estratégico e sinergia de combos, combinados com história e exploração.**
 ## REPOSITORY - REPOSITÓRIO
 *ENG*
-- **This repository is an area for all project members to have access to the backend coding.**
+- **This repository is an area for all project members to have access all parts of to the project.**
 - **If it does not violate the license you can use the code for studies or tests.**
-- **I appreciate if you can share ideas on how I can improve :)**
+- **I appreciate if you can share ideas on how We can improve :)**
 
 *PORT*
-- **Este repositório é uma área para todos os integrantes projeto terem acesso à codificação do backend.**
+- **Este repositório é uma área para todos os integrantes projeto terem acesso à todas as partes do projeto.**
 - **Se não violar a licença, você pode usar o código para estudos ou testes.**
-- **Agradeceria se você pudesse compartilhar ideias sobre como posso melhorar :)**
+- **Agradeceria se você pudesse compartilhar ideias sobre como podemos melhorar :)**

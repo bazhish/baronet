@@ -1,5 +1,5 @@
 # app/models/inimigo.py
-from dataclasses import dataclass, field
+from dataclasses import field, dataclass
 from typing import Any
 
 @dataclass
@@ -78,6 +78,3 @@ class AdversarioDemiHumano:
 class AdversarioMontro:
     pass
 
-kanji = AdversarioHumano("kanji", 17, 76, "homem", 1.65, 30, 5, 5, 5, 100, 400, "arco", "", "arqueiro")
-kanji.atualizar_descrição()
-print(kanji.descrição)

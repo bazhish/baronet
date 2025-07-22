@@ -1,47 +1,53 @@
+# app/models/personagens/personagem_principal.py
+from dataclasses import field, dataclass
+from typing import Any
 
+@dataclass
 class Usuario:
-    def __init__(self, nome: str, idade: int, peso: float, gênero: str, altura: float) -> None:
+    
      
-        self.nome = nome
-        self.idade = idade
-        self.peso = peso
-        self.genero = gênero
-        self.altura = altura
+    idade: int
+    peso: float
+    nome: str
+    genero: str
+    altura: float
 
-        self.tentativas_restantes = 3
-        self.tentativas = 3
+    tentativas_restantes = 3
+    tentativas = 3
 
-        self.nível_atual = 1
-        self.nível_máximo = 100
-        self.dano = 2
-        self.velocidade = 4
-        self.defesa = 5
-        self.vida_atual = 100
-        self.vida_máxima = 100
+    nível_atual = 1
+    nível_máximo = 100
+    dano = 2
+    velocidade = 4
+    defesa = 5
+    vida_atual = 100
+    vida_máxima = 100
 
-        self.arma = None
-        self.escudo = None
+    experiência_atual = 0
+    experiência_máxima = 100
 
-        self.classe_do_usuário = None
+    estamina_atual = 100
+    estamina_máxima = 100
 
-        self.experiência_atual = 0
-        self.experiência_máxima = 100
+    arma: Any = None
+    escudo: Any = None
 
-        self.estamina_atual = 100
-        self.estamina_máxima = 100
+    classe_do_usuário: Any = None
 
-        self.primeira_habilidade_passiva = None
-        self.segunda_habilidade_passiva = None
-        self.terceira_habilidade_passiva = None
+    primeira_habilidade_passiva: Any = None
+    segunda_habilidade_passiva: Any = None
+    terceira_habilidade_passiva: Any = None
 
-        self.primeira_habilidade_ativa = None
-        self.segunda_habilidade_ativa = None
+    primeira_habilidade_ativa: Any = None
+    segunda_habilidade_ativa: Any = None
 
+    descrição: str = field(default = "", init = False)
+
+    def __post_init__(self):
         self.limite_de_altura()
         self.limite_de_idade()
         self.limite_de_peso()
 
-        self.descrição = ()
         
     def limite_de_peso(self) -> None:
         if not (70 <= self.peso <= 110):
@@ -100,7 +106,10 @@ class Usuario:
 
         if self.vida_atual <= 0:
             self.diminuir_tentativas()
-    
+
+    def atacar(self, alvo):
+        alvo["vida"] -= self.dano
+ 
     def equipar_arma(self, arma) -> None:
         self.arma = arma
 

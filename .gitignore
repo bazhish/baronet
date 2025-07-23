@@ -1,5 +1,3 @@
-.venv/
-__pycache__/
-*.pyc
-.env
-anotacoes.md
+tests/
+backend/tests
+__pycache__

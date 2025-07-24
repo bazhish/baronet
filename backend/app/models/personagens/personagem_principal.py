@@ -1,4 +1,4 @@
-# app/models/personagens/personagem_principal.py
+# backend/app/models/personagens/personagem_principal.py
 from dataclasses import field, dataclass
 from typing import Any
 
@@ -17,17 +17,26 @@ class Usuario:
 
     nível_atual = 1
     nível_máximo = 100
+    
     experiência_atual = 0
     experiência_máxima = 100
 
-    dano = 2
-    velocidade = 4
-    defesa = 5
-    vida_atual = 100
+    dano_base = 2
+    dano_final: int = dano_base
+
+    velocidade_base = 4
+    velocidade_final: int = velocidade_base
+
+    defesa_base = 5
+    defesa_final: int = velocidade_base
+
+    vida_base = 100
+    vida_atual: int = vida_base
     vida_máxima = 100
 
-    estamina_atual = 100
-    estamina_máxima = 100
+    estamina_base = 150
+    estamina_atual: int = estamina_base
+    estamina_máxima = 150
 
     arma: Any = None
     escudo: Any = None
@@ -38,17 +47,17 @@ class Usuario:
     segunda_habilidade_passiva: Any = None
     terceira_habilidade_passiva: Any = None
 
-    primeira_habilidade_ativa: Any = None
-    segunda_habilidade_ativa: Any = None
+    habilidade_ativa: Any = None
+    habilidade_especial: Any = None
 
     descrição: str = field(default = "", init = False)
 
     def __post_init__(self):
-        self.atualizar_descrição()
         self.limite_de_altura()
         self.limite_de_idade()
         self.limite_de_peso()
-
+        self.atributos()
+        self.atualizar_descrição()
         
     def limite_de_peso(self) -> None:
         if not (70 <= self.peso <= 110):
@@ -62,7 +71,7 @@ class Usuario:
         if not (16 <= self.idade <= 25):
             raise ValueError("a idade do seu personagem deve estar entre 16 anos - 25 anos")
 
-    def subir_de_nível(self) -> None:
+    def multiplicador_de_experiência(self) -> None:
 
         multiplicador = 1
         if 0 < self.nível_atual <= 25:
@@ -75,14 +84,16 @@ class Usuario:
             multiplicador = 2.0
 
         self.experiência_máxima = int(self.experiência_máxima * multiplicador)
-        self.nível_atual = int(self.nível_atual + 1)
-        self.dano = int(self.dano * 1.5)
-        self.velocidade = int(self.velocidade * 1.25)
-        self.defesa = int(self.defesa * 1.25)
-        self.vida_máxima = int(self.vida_máxima * 1.75)
-        self.vida_atual = int(self.vida_máxima)
-        self.estamina_máxima = int(self.estamina_máxima * 1.35)
-        self.estamina_atual = int(self.estamina_máxima)
+
+    def atributos(self) -> None:
+        self.nível_atual += 1
+        self.dano_base *= self.nível_atual
+        self.velocidade_base *= self.nível_atual
+        self.defesa_base *= self.nível_atual
+        self.vida_máxima *= self.nível_atual
+        self.vida_atual = self.vida_máxima
+        self.estamina_máxima *= self.nível_atual
+        self.estamina_atual = self.estamina_máxima
         self.atualizar_descrição()
 
     def receber_experiência(self, experiência: int) -> None:
@@ -93,7 +104,8 @@ class Usuario:
                 self.experiência_atual -= self.experiência_máxima
             else:
                 self.experiência_atual = 0
-            self.subir_de_nível()
+            self.atributos()
+            self.multiplicador_de_experiência()
     
     def diminuir_tentativas(self) -> None:
         if self.vida_atual <= 0:
@@ -105,7 +117,7 @@ class Usuario:
             raise SystemExit("suas tentativas acabaram, você perdeu o jogo")
 
     def atacar(self, alvo):
-        alvo.vida_atual -= self.dano
+        alvo.vida -= self.dano_final
  
     def equipar_arma(self, arma) -> None:
         self.arma = arma
@@ -121,7 +133,7 @@ class Usuario:
                           f"altura: {self.altura}m\n"
                           f"experiência: {self.experiência_atual}/{self.experiência_máxima}\n"
                           f"nível: {self.nível_atual}/{self.nível_máximo}\n"
-                          f"dano: {self.dano}\n"
+                          f"dano: {self.dano_final}\n"
                           f"velocidade: {self.velocidade}\n"
                           f"defesa: {self.defesa}\n"
                           f"vida: {self.vida_atual}/{self.vida_máxima}\n"

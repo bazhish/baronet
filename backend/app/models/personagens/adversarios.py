@@ -1,4 +1,4 @@
-# app/models/inimigo.py
+# app/models/adversarios.py
 from dataclasses import field, dataclass
 from typing import Any
 
@@ -16,7 +16,8 @@ class AdversarioDemiHumano:
     dano: int
     velocidade: int
     defesa: int
-    vida: int
+    vida_atual: int
+    vida_máxima: int
 
     arma: Any
     escudo: Any
@@ -47,7 +48,7 @@ class AdversarioDemiHumano:
                           f"dano: {self.dano}\n"
                           f"velocidade: {self.velocidade}\n"
                           f"defesa: {self.defesa}\n"
-                          f"vida: {self.vida}\n"
+                          f"vida: {self.vida_atual}/{self.vida_máxima}\n"
                           f"arma: {self.arma}\n"
                           f"escudo: {self.escudo}\n"
                           f"classe: {self.classe}\n")
@@ -57,15 +58,10 @@ class AdversarioDemiHumano:
         self.dano *= self.nível
         self.velocidade *= self.nível
         self.defesa *= self.nível
-        self.vida *= self.nível
+        self.vida_atual *= self.nível
 
-    def receber_dano(self, quantidade) -> None:
-        self.vida -= quantidade
-        if self.vida < 0:
-            self.vida = 0
-
-    def atacar(self, alvo: dict) -> None:
-        alvo["vida"] -= self.dano
+    def atacar(self, alvo) -> None:
+        alvo.vida_atual -= self.dano
 
     def estar_vivo(self):
         while self.vida > 0:
@@ -114,13 +110,8 @@ class AdversarioMontro:
         self.defesa *= self.nível
         self.vida *= self.nível
 
-    def receber_dano(self, quantidade) -> None:
-        self.vida -= quantidade
-        if self.vida < 0:
-            self.vida = 0
-
-    def atacar(self, alvo: dict) -> None:
-        alvo["vida"] -= self.dano
+    def atacar(self, alvo) -> None:
+        alvo.vida_atual -= self.dano
 
     def estar_vivo(self):
         return self.vida > 0

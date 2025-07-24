@@ -17,14 +17,14 @@ class Usuario:
 
     nível_atual = 1
     nível_máximo = 100
+    experiência_atual = 0
+    experiência_máxima = 100
+
     dano = 2
     velocidade = 4
     defesa = 5
     vida_atual = 100
     vida_máxima = 100
-
-    experiência_atual = 0
-    experiência_máxima = 100
 
     estamina_atual = 100
     estamina_máxima = 100
@@ -44,6 +44,7 @@ class Usuario:
     descrição: str = field(default = "", init = False)
 
     def __post_init__(self):
+        self.atualizar_descrição()
         self.limite_de_altura()
         self.limite_de_idade()
         self.limite_de_peso()
@@ -95,20 +96,16 @@ class Usuario:
             self.subir_de_nível()
     
     def diminuir_tentativas(self) -> None:
-        self.tentativas_restantes -= 1
-        self.vida_atual = self.vida_máxima
+        if self.vida_atual <= 0:
+            self.tentativas_restantes -= 1
+            self.vida_atual = self.vida_máxima
+            print("você perdeu uma tentativa!")
 
         if self.tentativas_restantes == 0:
             raise SystemExit("suas tentativas acabaram, você perdeu o jogo")
 
-    def receber_dano(self, quantidade) -> None:
-        self.vida_atual -= quantidade
-
-        if self.vida_atual <= 0:
-            self.diminuir_tentativas()
-
     def atacar(self, alvo):
-        alvo["vida"] -= self.dano
+        alvo.vida_atual -= self.dano
  
     def equipar_arma(self, arma) -> None:
         self.arma = arma

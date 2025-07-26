@@ -5,29 +5,34 @@ from typing import Any
 @dataclass
 class Usuario:
     
+    nome: str
     idade: int
     peso: float
-    nome: str
     genero: str
     altura: float
 
-    tentativas_restantes: int = 3
-    tentativas: int = 3
+    tentativas_restantes = 3
+    tentativas = 3
 
-    nível_atual: int = 1
-    nível_máximo: int = 100
+    nível_atual = 1
+    nível_máximo = 100
     
-    experiência_atual: int = 0
-    experiência_máxima: int = 100
+    experiência_atual = 0
+    experiência_máxima = 100
 
-    dano_base: int = 2
-    velocidade_base: int = 4
-    defesa_base: int = 5
-    vida_base: int = 100
-    estamina_base: int = 150
+    dano_base = 2
+    velocidade_base = 4
+    defesa_base = 5
+    vida_base = 100
+    estamina_base = 150
 
     arma: Any = None
     escudo: Any = None
+
+    elmo: Any = None
+    peitoral: Any = None
+    calça: Any = None
+    botas: Any = None
 
     vida_atual: int = field(init=False)
     vida_máxima: int = field(init=False)
@@ -46,19 +51,18 @@ class Usuario:
     descrição: str = field(default = "", init = False)
 
     def __post_init__(self):
+        self.dano_bonus = 0
+        self.velocidade_bonus = 0
+        self.defesa_bonus = 0
+        self.vida_bonus = 0
+        self.estamina_bonus = 0
+        self.bonus_de_experiencia = 0
         self.vida_máxima = self.vida_base
         self.vida_atual = self.vida_máxima
         self.estamina_máxima = self.estamina_base
         self.estamina_atual = self.estamina_máxima
-        self.limites()
-
-    def limites(self):
-        if not (70 <= self.peso <= 110):
-            raise ValueError("peso deve estar entre 70kg e 110kg")
-        if not (1.5 <= self.altura <= 2.5):
-            raise ValueError("altura deve estar entre 1.5m e 2.5m")
-        if not (16 <= self.idade <= 25):
-            raise ValueError("idade deve estar entre 16 e 25 anos")
+        self.atualizar_atributos()
+        self.atualizar_descrição()
 
     @property
     def dano_final(self):
@@ -71,7 +75,15 @@ class Usuario:
     @property
     def defesa_final(self):
         return self.defesa_base + self.defesa_bonus
+    
+    @property
+    def vida_final(self):
+        return self.vida_base + self.vida_bonus
 
+    @property
+    def estamina_final(self):
+        return self.estamina_base + self.estamina_bonus
+    
     def equipar_arma(self, arma):
         self.arma = arma
         self.dano_bonus = arma.dano if arma else 0
@@ -90,6 +102,28 @@ class Usuario:
         self.escudo = None
         self.defesa_bonus = 0
 
+    def receber_experiencia(self, xp: int):
+        self.bonus_de_experiencia = 0
+        if self.bonus_de_experiencia > 0:
+            xp *= self.bonus_de_experiencia
+
+        self.experiência_atual += xp
+        while self.experiência_atual >= self.experiência_máxima and self.nível_atual < self.nível_máximo:
+            self.experiência_atual -= self.experiência_máxima
+            self.subir_nivel()
+    
+    def atualizar_experiencia_maxima(self):
+        multiplicador = 1.0
+        if self.nível_atual <= 25:
+            multiplicador = 1.25
+        elif self.nível_atual <= 50:
+            multiplicador = 1.5
+        elif self.nível_atual <= 75:
+            multiplicador = 1.75
+        else:
+            multiplicador = 2.0
+        self.experiência_máxima = int(self.experiência_máxima * multiplicador)
+
     def subir_nivel(self):
         if self.nível_atual < self.nível_máximo:
             self.nível_atual += 1
@@ -103,18 +137,7 @@ class Usuario:
             self.estamina_máxima = self.estamina_base
             self.estamina_atual = self.estamina_máxima
             self.atualizar_experiencia_maxima()
-
-    def atualizar_experiencia_maxima(self):
-        multiplicador = 1.0
-        if self.nível_atual <= 25:
-            multiplicador = 1.25
-        elif self.nível_atual <= 50:
-            multiplicador = 1.5
-        elif self.nível_atual <= 75:
-            multiplicador = 1.75
-        else:
-            multiplicador = 2.0
-        self.experiência_máxima = int(self.experiência_máxima * multiplicador)
+            self.atualizar_atributos()
 
     def atualizar_atributos(self) -> None:
         self.dano_base *= self.nível_atual
@@ -124,14 +147,7 @@ class Usuario:
         self.vida_atual = self.vida_máxima
         self.estamina_máxima *= self.nível_atual
         self.estamina_atual = self.estamina_máxima
-        self.atualizar_descrição()
 
-    def receber_experiencia(self, xp: int):
-        self.experiência_atual += xp
-        while self.experiência_atual >= self.experiência_máxima and self.nível_atual < self.nível_máximo:
-            self.experiência_atual -= self.experiência_máxima
-            self.subir_nivel()
-    
     def diminuir_tentativas(self) -> None:
         if self.vida_atual <= 0:
             self.tentativas_restantes -= 1

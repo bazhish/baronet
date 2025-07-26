@@ -34,11 +34,10 @@ class AdversarioDemiHumano:
     descrição: str = field(default = "", init = False)
 
     def __post_init__(self):
-        self.atualizar_descrição()
         self.atributos()
+        self.atualizar_descrição()
 
     def atualizar_descrição(self) -> None:
-        self.atributos()
         self.descrição = (f"nome: {self.nome}\n"
                           f"idade: {self.idade}\n"
                           f"peso: {self.peso}Kg\n"

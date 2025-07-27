@@ -19,10 +19,10 @@ class AdversarioDemiHumano:
     vida_atual: int
     vida_máxima: int
 
-    arma: Any
-    escudo: Any
+    arma: Any = None
+    escudo: Any = None
 
-    classe: Any
+    classe: Any = None
 
     primeira_habilidade_passiva: Any = None
     segunda_habilidade_passiva: Any = None
@@ -63,7 +63,7 @@ class AdversarioDemiHumano:
         alvo.vida_atual -= self.dano
 
     def estar_vivo(self):
-        while self.vida > 0:
+        while self.vida_atual > 0:
             return True
 
 @dataclass

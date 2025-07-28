@@ -1,0 +1,37 @@
+{
+    "usuario": "ggg",
+    "dados_pessoais": {
+        "Nome": "ggg",
+        "Idade": 44,
+        "Altura": 3,
+        "Genero": "Masculino",
+        "Peso": 66,
+        "Classe": "espadachin"
+    },
+    "inventario": [
+        [
+            "Espada Cega",
+            1
+        ]
+    ],
+    "status": {
+        "nivel": 1,
+        "dano": 12,
+        "velocidade": 4,
+        "defesa": 3,
+        "vida": 12,
+        "experiencia": 0
+    },
+    "progresso": {
+        "capitulo": 1,
+        "missao": 0
+    },
+    "keys": {
+        "inventario": "E",
+        "correr": "Ctrl",
+        "habilidade": "R",
+        "habilidade_1": "Z",
+        "habilidade_2": "X",
+        "habilidade_3": "C"
+    }
+}

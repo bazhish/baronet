@@ -1,0 +1,9 @@
+Estetica de: stardew valley
+Estilo: 2D
+FPS:16
+resolução em jobilidade livre: 32x32
+resolução em dialogos: 48x48
+software usado: pixilart
+tematica: medieval
+sistema de combate: por turnos (exemplo final fantasy)
+gênero: 2D, Aventura, RPG, Esrtategia

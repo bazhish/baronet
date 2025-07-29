@@ -13,11 +13,10 @@ class AdversarioDemiHumano:
     nível: int
     experiência: int
 
-    dano: int
-    velocidade: int
-    defesa: int
-    vida_atual: int
-    vida_máxima: int
+    dano_base: int
+    velocidade_base: int
+    defesa_base: int
+    vida_base: int
 
     arma: Any = None
     escudo: Any = None
@@ -33,8 +32,12 @@ class AdversarioDemiHumano:
 
     descrição: str = field(default = "", init = False)
 
+    vida_atual: int = field(init = False)
+    vida_máxima: int = field(init = False)
+
     def __post_init__(self):
         self.atributos()
+        self.vida_atual = self.vida_máxima
         self.atualizar_descrição()
 
     def atualizar_descrição(self) -> None:
@@ -44,20 +47,29 @@ class AdversarioDemiHumano:
                           f"genero: {self.gênero}\n"
                           f"altura: {self.altura}m\n"
                           f"nível: {self.nível}\n"
-                          f"dano: {self.dano}\n"
-                          f"velocidade: {self.velocidade}\n"
-                          f"defesa: {self.defesa}\n"
+                          f"dano: {self.dano_final}\n"
+                          f"velocidade: {self.velocidade_final}\n"
+                          f"defesa: {self.defesa_final}\n"
                           f"vida: {self.vida_atual}/{self.vida_máxima}\n"
                           f"arma: {self.arma}\n"
                           f"escudo: {self.escudo}\n"
                           f"classe: {self.classe}\n")
         
+    @property
+    def dano_final(self):
+        self.dano_base *= self.nível
 
-    def atributos(self) -> None:
-        self.dano *= self.nível
-        self.velocidade *= self.nível
+    @property
+    def velocidade_final(self):
+        self.velocidade_base *= self.nível
+
+    @property
+    def defesa_final(self):
         self.defesa *= self.nível
-        self.vida_atual *= self.nível
+
+    @property
+    def vida_máxima(self):
+        self.vida_base * self.nível 
 
     def atacar(self, alvo) -> None:
         alvo.vida_atual -= self.dano

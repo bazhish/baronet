@@ -1,19 +1,21 @@
 #backend/app/models/sistema/efeitos_de_combates.py
 import sys, os
 from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
 from ..personagens.adversarios import AdversarioDemiHumano
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..')))
 
-
+@dataclass
 class Base(ABC):
-    def __init__(self, nome, alcance = 0, duração = 0, dano = 0, velocidade = 0, defesa = 0):
-        self.nome = nome
-        self.alcance = alcance
-        self.duração = duração
-        self.dano = dano
-        self.velocidade = velocidade
-        self.defesa = defesa
-        self.descrição = ""
+    nome: str
+    alcance: int = 0
+    duração: int = 0
+    dano: int = 0
+    velocidade: int = 0
+    defesa: int = 0
+    descrição: str = field(default = "", init = False)
+
+    def __post_init__(self):
         self.atualizar_descrição()
 
     @abstractmethod
@@ -29,6 +31,8 @@ class Base(ABC):
             f"velocidade: {self.velocidade} "
             f"defesa: {self.defesa}"
         )
+
+# debuff
 
 class Queimadura(Base):
     def __init__(self):
@@ -110,3 +114,12 @@ class Lentidao(Base):
 
     def atualizar_descrição(self):
         return super().atualizar_descrição()
+    
+# buff
+@dataclass
+class Defesa(ABC):
+    porcentagem: float
+
+    def vantagem(self, usuario):
+        usuario.defesa
+

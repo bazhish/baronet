@@ -122,6 +122,7 @@ class Usuario:
             multiplicador = 1.75
         else:
             multiplicador = 2.0
+        
         self.experiência_máxima = int(self.experiência_máxima * multiplicador)
 
     def subir_nivel(self):

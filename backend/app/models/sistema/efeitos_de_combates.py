@@ -32,7 +32,7 @@ class Base(ABC):
             f"defesa: {self.defesa}"
         )
 
-# debuff
+# desvantagens
 
 class Queimadura(Base):
     def __init__(self):
@@ -115,11 +115,56 @@ class Lentidao(Base):
     def atualizar_descrição(self):
         return super().atualizar_descrição()
     
-# buff
+class Explosivo(Base):
+    def __init__(self):
+        super().__init__("Explosivo",1,1,1,1,1)
+
+    def aplicar_efeito(self, alvo):
+        for segundos in range(self.duração)
+
+# vantagens
+
 @dataclass
-class Defesa(ABC):
+class Defesa():
     porcentagem: float
 
     def vantagem(self, usuario):
-        usuario.defesa
+        self.valor = usuario.defesa * self.porcentagem
+        usuario.defesa_bonus = self.valor
+@dataclass
+class Velocidade():
+    porcentagem: float
+
+    def vantagem(self, usuario):
+        self.valor = usuario.velocidade * self.porcentagem
+        usuario.velocidade_bonus = self.valor
+@dataclass
+class Vida():
+    porcentagem: float
+
+    def vantagem(self, usuario):
+        self.valor = usuario.vida * self.porcentagem
+        usuario.vida_bonus = self.valor
+@dataclass
+class Estamina():
+    porcentagem: float
+
+    def vantagem(self, usuario):
+        self.valor = usuario.estamina * self.porcentagem
+        usuario.estamina_bonus = self.valor
+@dataclass
+class Dano():
+    porcentagem: float
+
+    def vantagem(self, usuario):
+        self.valor = usuario.dano * self.porcentagem
+        usuario.dano_bonus = self.valor
+@dataclass
+class BonusDeExperiencia():
+    porcentagem: float
+
+    def vantagem(self, usuario):
+        usuario.bonus_de_experiência = self.porcentagem
+
+
 

@@ -1,4 +1,4 @@
-# app/models/adversarios.py
+# backend/app/models/personagens/adversarios.py
 from dataclasses import field, dataclass
 from typing import Any
 

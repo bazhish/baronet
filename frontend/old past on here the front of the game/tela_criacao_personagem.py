@@ -86,6 +86,7 @@ estado = MENU
 clicou = False
 
 # Dados que podem ser digitado
+TEXTO_S = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
 TEXTO = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "ç", "á", "é", "ó", "í", "ú", "ã", "õ", "â", "ê", "ô", "û", "î", " "]
 INTEIRO = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 DECIMAIS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ","]
@@ -130,6 +131,7 @@ def desenhar_botao(texto, posicao_x, posicao_y, largura, altura, posicao_da_letr
         posicao_x -= 5
         altura += 10
         posicao_y -= 5
+        arredondamento_da_borda += 2
         font_button = pygame.font.Font(rf"{endereço}\fonte\Minha fonte.ttf", fonte + 2)
         pygame.time.delay(10)
         pygame.draw.rect(screen, cor_ativado, (posicao_x, posicao_y, largura, altura), border_radius=arredondamento_da_borda)
@@ -332,6 +334,7 @@ questao_18 = None
 questao_19 = None
 genero = None
 
+
 # Conexão inicial e criação das tabelas
 def inicializar_banco():
     conexao = sqlite3.connect(endereco_banco_de_dados)
@@ -358,7 +361,6 @@ def inicializar_banco():
         velocidade INTEGER,
         defesa INTEGER,
         vida integer,
-        arma INTEGER,
         experiencia INTEGER,
         FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
     )""")
@@ -391,6 +393,7 @@ def inicializar_banco():
         habilidade_1 TEXT,
         habilidade_2 TEXT,
         habilidade_3 TEXT,
+        mapa TEXT,
         FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
     )""")
 
@@ -435,9 +438,9 @@ def criar_personagem(nome, idade, altura, peso, genero, classe, dano, velocidade
 """, (usuario_id, arma, 1))
 
     cursor.execute("""
-        INSERT INTO keys (usuario_id, inventario, correr, habilidades, habilidade_1, habilidade_2, habilidade_3)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    """, (usuario_id, "E", "Ctrl", "R", "Z", "X", "C"))
+        INSERT INTO keys (usuario_id, inventario, correr, habilidades, habilidade_1, habilidade_2, habilidade_3, mapa)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    """, (usuario_id, "E", "Ctrl", "R", "Z", "X", "C", "M"))
 
     conexao.commit()
     conexao.close()
@@ -507,7 +510,7 @@ def obter_keys_do_usuario(usuario_id):
     cursor = conexao.cursor()
 
     cursor.execute("""
-        SELECT inventario, correr, habilidades, habilidade_1, habilidade_2, habilidade_3
+        SELECT inventario, correr, habilidades, habilidade_1, habilidade_2, habilidade_3, mapa
         FROM keys
         WHERE usuario_id = ?
     """, (usuario_id,))
@@ -733,7 +736,8 @@ if __name__ == "__main__":
                                                  "habilidade": dados["keys"][0][2],
                                                  "habilidade_1": dados["keys"][0][3],
                                                  "habilidade_2": dados["keys"][0][4],
-                                                 "habilidade_3": dados["keys"][0][5]
+                                                 "habilidade_3": dados["keys"][0][5],
+                                                 "mapa": dados["keys"][0][6]
                                                  }}, arquivo, indent=4)
                         if os.path.exists(rf"{endereço}\usuario2.json"):
                             os.remove(rf"{endereço}\usuario2.json")
@@ -1555,7 +1559,8 @@ if __name__ == "__main__":
                                          "habilidade": "R",
                                          "habilidade_1": "Z",
                                          "habilidade_2": "X",
-                                         "habilidade_3": "C"
+                                         "habilidade_3": "C",
+                                         "mapa": "M"
                                          }}, arquivo, indent=4)
                     
 

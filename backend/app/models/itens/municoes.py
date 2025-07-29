@@ -1,6 +1,6 @@
 from random import choice, randint
 from typing import Any, Dict, Optional
-from _efeito_munições import (
+from backend.app.models.sistema.efeito_municoes import (
     efeito_assoviante, efeito_congelante, efeito_desintegrador,
     efeito_eletrocutante, efeito_explosivo, efeito_flamengante,
     efeito_paralisante, efeito_tranquilizante, efeito_venenoso

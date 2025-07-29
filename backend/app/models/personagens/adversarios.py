@@ -28,8 +28,8 @@ class AdversarioDemiHumano:
     segunda_habilidade_passiva: Any = None
     terceira_habilidade_passiva: Any = None
 
-    primeira_habilidade_ativa: Any = None
-    segunda_habilidade_ativa: Any = None
+    habilidade_ativa: Any = None
+    habilidade_especial: Any = None
 
     descrição: str = field(default = "", init = False)
 
@@ -63,8 +63,7 @@ class AdversarioDemiHumano:
         alvo.vida_atual -= self.dano
 
     def estar_vivo(self):
-        while self.vida_atual > 0:
-            return True
+        return self.vida_atual > 0
 
 @dataclass
 class AdversarioMontro:
@@ -78,7 +77,8 @@ class AdversarioMontro:
     dano: int
     velocidade: int
     defesa: int
-    vida: int
+    vida_maxima: int
+    vida_atual: int = field(default = 1)
 
     arma: Any = None
     escudo: Any = None
@@ -90,7 +90,6 @@ class AdversarioMontro:
         self.atributos()
 
     def atualizar_descrição(self) -> None:
-        self.atributos()
         self.descrição = (f"nome: {self.nome}\n"
                           f"peso: {self.peso}Kg\n"
                           f"altura: {self.altura}m\n"
@@ -98,7 +97,7 @@ class AdversarioMontro:
                           f"dano: {self.dano}\n"
                           f"velocidade: {self.velocidade}\n"
                           f"defesa: {self.defesa}\n"
-                          f"vida: {self.vida}\n"
+                          f"vida: {self.vida_atual}/{self.vida_maxima}\n"
                           f"arma: {self.arma}\n"
                           f"escudo: {self.escudo}\n")
         
@@ -107,7 +106,8 @@ class AdversarioMontro:
         self.dano *= self.nível
         self.velocidade *= self.nível
         self.defesa *= self.nível
-        self.vida *= self.nível
+        self.vida_maxima *= self.nível
+        self.vida_atual = self.vida_maxima
 
     def atacar(self, alvo) -> None:
         alvo.vida_atual -= self.dano

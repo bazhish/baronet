@@ -130,9 +130,8 @@ if __name__ == "__main__":
             pygame.draw.rect(screen, (210, 210, 210), rect_box, border_radius=15)
 
             if input_boxes[0]["text"] != teclas["inventario"] or input_boxes[1]["text"] != teclas["correr"] or input_boxes[2]["text"] != teclas["habilidade"] or input_boxes[3]["text"] != teclas["habilidade_1"] or input_boxes[4]["text"] != teclas["habilidade_2"] or input_boxes[5]["text"] != teclas["habilidade_3"] or input_boxes[6]["text"] != teclas["mapa"] and input_boxes[6]["text"] != "" and input_boxes[5]["text"] != "" and input_boxes[4]["text"] != "" and input_boxes[3]["text"] != "" and input_boxes[2]["text"] != "" and input_boxes[1]["text"] != "" and input_boxes[0]["text"] != "":
-                if input_boxes[6]["text"] != " " and input_boxes[5]["text"] != " " and input_boxes[4]["text"] != " " and input_boxes[3]["text"] != " " and input_boxes[2]["text"] != " " and input_boxes[1]["text"] != " " and input_boxes[0]["text"] != " ":
-                    cor_atualizar = (200, 200, 220)
-                    cor_atualizar_ativo = (180, 180, 200)
+                cor_atualizar = (200, 200, 220)
+                cor_atualizar_ativo = (180, 180, 200)
             else:
                 cor_atualizar = (100, 100, 120)
                 cor_atualizar_ativo = (80, 80, 100)

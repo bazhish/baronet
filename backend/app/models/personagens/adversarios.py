@@ -113,4 +113,4 @@ class AdversarioMontro:
         alvo.vida_atual -= self.dano
 
     def estar_vivo(self):
-        return self.vida > 0
+        return self.vida_atual > 0

@@ -51,6 +51,8 @@ fonte = pygame.font.Font(rf"{endereço}\fonte\Minha fonte.ttf", 9)
 
 fonte_alternativa = pygame.font.Font(rf"{endereço}\fonte\Minha fonte.ttf", 12)
 
+fonte_box = pygame.font.Font(rf"{endereço}\fonte\Minha fonte.ttf", 25)
+
 
 # Telas do jogo
 MENU = "menu"
@@ -87,7 +89,8 @@ clicou = False
 
 # Dados que podem ser digitado
 TEXTO_S = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
-TEXTO = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "ç", "á", "é", "ó", "í", "ú", "ã", "õ", "â", "ê", "ô", "û", "î", " "]
+TEXTO = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "ç", "á", "é", "ó", "í", "ú", "ã", "õ", "â", "ê", "ô", "û", "î", " ",
+         "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "I", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Ç", "Á", "É", "Ó", "Í", "Ú", "Â", "Ô", "Â", "Ê", "Ô", "Û", "Î"]
 INTEIRO = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 DECIMAIS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ","]
 
@@ -188,12 +191,9 @@ inicio_texto = pygame.time.get_ticks()
 quantidade_letras = 0
 
 # Caixas de texto para colocar os dados do seu usuario
-input_boxes = [
-    {"label": "Nome", "rect": pygame.Rect(450, 150, 400, 50), "text": "", "active": False, "peritido": TEXTO},
-    {"label": "Idade", "rect": pygame.Rect(450, 220, 400, 50), "text": "", "active": False, "peritido": INTEIRO},
-    {"label": "Altura", "rect": pygame.Rect(450, 290, 400, 50), "text": "", "active": False, "peritido": DECIMAIS},
-    {"label": "Peso", "rect": pygame.Rect(450, 360, 400, 50), "text": "", "active": False, "peritido": DECIMAIS}
-]
+input_boxes = {"label": "Nome", "rect": pygame.Rect(420, 150, 500, 80), "text": "", "active": False, "peritido": TEXTO}
+    
+
 
 # Caixas de texto para logar em sua conta ja criada
 input_usuario = {"label": "Usuario", "rect": pygame.Rect(450, 150, 400, 50), "text": "", "active": False, "peritido": TEXTO}
@@ -345,10 +345,6 @@ def inicializar_banco():
     CREATE TABLE IF NOT EXISTS usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT,
-        idade INTEGER,         
-        altura INTEGER,
-        peso INTEGER,
-        genero TEXT,
         classe TEXT
         
     )""")
@@ -404,7 +400,7 @@ nivel = 1
 experiencia = 0
 
 # Função para criar personagem completo
-def criar_personagem(nome, idade, altura, peso, genero, classe, dano, velocidade, defesa, vida, arma):
+def criar_personagem(nome, classe, dano, velocidade, defesa, vida, arma):
     global nivel, experiencia
     conexao = sqlite3.connect(endereco_banco_de_dados)
     cursor = conexao.cursor()
@@ -413,8 +409,8 @@ def criar_personagem(nome, idade, altura, peso, genero, classe, dano, velocidade
 
     # Inserir usuário
     cursor.execute("""
-        INSERT INTO usuarios (nome, idade, altura, peso, genero, classe) VALUES (?, ?, ?, ?, ?, ?)
-    """, (nome, idade, altura, peso, genero, classe))
+        INSERT INTO usuarios (nome, classe) VALUES (?, ?)
+    """, (nome, classe))
     usuario_id = cursor.lastrowid
 
     # Inserir status
@@ -543,7 +539,7 @@ def ver_se_o_usuario_nao_existe(nome):
 
     cursor.execute("PRAGMA foreign_keys = ON")
 
-    cursor.execute("SELECT id, idade, altura, peso, classe FROM usuarios WHERE nome = ?", (nome,))
+    cursor.execute("SELECT id, classe FROM usuarios WHERE nome = ?", (nome,))
     usuario = cursor.fetchone()
 
     if not usuario:
@@ -558,7 +554,7 @@ def obter_dados_usuario_por_nome(nome):
     cursor = conexao.cursor()
 
     cursor.execute("""
-        SELECT nome, idade, altura, genero, peso, classe
+        SELECT nome, classe
         FROM usuarios
         WHERE nome = ?
     """, (nome,))
@@ -586,20 +582,18 @@ if __name__ == "__main__":
 
                 # Caixas de texto
                 elif evento.type == pygame.MOUSEBUTTONDOWN:
-                    for box in input_boxes:
-                        box["active"] = box["rect"].collidepoint(evento.pos)
+                    input_boxes["active"] = input_boxes["rect"].collidepoint(evento.pos)
                     input_usuario["active"] = input_usuario["rect"].collidepoint(evento.pos)
 
                 elif evento.type == pygame.KEYDOWN:
-                    for box in input_boxes:
-                        if box["active"]:
-                            if evento.key == pygame.K_BACKSPACE:
-                                box["text"] = box["text"][:-1]
-                            elif evento.key == pygame.K_RETURN:
-                                box["active"] = False
-                            else:
-                                if evento.unicode in box["peritido"]:
-                                    box["text"] += evento.unicode
+                    if input_boxes["active"]:
+                        if evento.key == pygame.K_BACKSPACE:
+                            input_boxes["text"] = input_boxes["text"][:-1]
+                        elif evento.key == pygame.K_RETURN:
+                            input_boxes["active"] = False
+                        else:
+                            if evento.unicode in input_boxes["peritido"]:
+                                input_boxes["text"] += evento.unicode
                     if input_usuario["active"]:
                         if evento.key == pygame.K_BACKSPACE:
                             input_usuario["text"] = input_usuario["text"][:-1]
@@ -713,11 +707,7 @@ if __name__ == "__main__":
                             json.dump({"usuario": usuario,
                                        
                                        "dados_pessoais": {"Nome": dados["dados_pessoais"][0],
-                                                          "Idade": dados["dados_pessoais"][1],
-                                                          "Altura": dados["dados_pessoais"][2],
-                                                          "Genero": dados["dados_pessoais"][3],
-                                                          "Peso": dados["dados_pessoais"][4],
-                                                          "Classe": dados["dados_pessoais"][5]},
+                                                          "Classe": dados["dados_pessoais"][1]},
 
                                        "inventario": obter_inventario_do_usuario(obter_id_usuario_por_nome(usuario)),
 
@@ -861,13 +851,13 @@ if __name__ == "__main__":
                     estado = COMO_SERA_ESCOLHIDO_A_CLASSE
                 
                 # Questões
-                questao_1 = alternativas(300, 35, "Você prefere planejar tudo antes de agir ou agi no momento:", "Planejar", "Agir No Momento", questao_1)
+                questao_1 = alternativas(300, 35, "Você prefere planejar tudo antes de agir ou agir no momento:", "Planejar", "Agir no momento", questao_1)
 
-                questao_2 = alternativas(300, 155, "Quando está sob pressão, você mantém a calma ou se estressa facilmente:", "Calma", "Estressado", questao_2)
+                questao_2 = alternativas(300, 155, "Quando está sob pressão, você mantém a calma ou se estressa facilmente:", "Calmo", "Estressado", questao_2)
 
-                questao_3 = alternativas(300, 275, "Você prefere resolver problemas sozinho ou pedir ajuda:", "Sozinho", "Pedir Ajuda", questao_3)
+                questao_3 = alternativas(300, 275, "Você prefere resolver problemas sozinho ou pedir ajuda:", "Sozinho", "Pedir ajuda", questao_3)
 
-                questao_4 = alternativas(300, 395, "Você tem facilidade para se concentrar por longos períodos:", "Sim", "Não", questao_4)
+                questao_4 = alternativas(300, 395, "Você tem facilidade para se concentrar por longos períodos?", "Sim", "Não", questao_4)
 
                 questao_5 = alternativas(300, 515, "Você costuma ser mais lógico ou mais criativo:", "Lógico", "Criativo", questao_5)
 
@@ -886,13 +876,13 @@ if __name__ == "__main__":
                 
                 questao_6 = alternativas(300, 35, "Você prefere força bruta ou agilidade para lutar:", "Força", "Agilidade", questao_6)
 
-                questao_7 = alternativas(300, 155, "Você aguenta mais tempo lutando ou tem explosões curtas de energia:", "Resistente", "Explosoes", questao_7)
+                questao_7 = alternativas(300, 155, "Você aguenta mais tempo lutando ou tem explosões curtas de energia:", "Resistência", "Explosões", questao_7)
 
                 questao_8 = alternativas(300, 275, "Você prefere ataques rápidos ou golpes poderosos:", "Rápido", "Poderoso", questao_8)
 
-                questao_9 = alternativas(300, 395, "Você é bom em esquivar ou em bloquear ataques:", "Esquiva", "Bloquear", questao_9)
+                questao_9 = alternativas(300, 395, "Você é melhor em esquivar ou em bloquear ataques:", "Esquivar", "Bloquear", questao_9)
 
-                questao_10 = alternativas(300, 515, "Você se considera mais resistente a dores ou mais resistente ao cansaço:", "Dor", "Cansaço", questao_10)
+                questao_10 = alternativas(300, 515, "Você se considera mais resistente à dor ou ao cansaço:", "Dor", "Cansaço", questao_10)
 
                 # Ir para a próxima tela
                 if desenhar_botao("Avançar ->", 1070, 580, 200, 40, 15, (160, 160, 160), (100, 100, 100), 25):
@@ -911,9 +901,9 @@ if __name__ == "__main__":
 
                 questao_12 = alternativas(300, 155, "Você costuma ser mais amigável ou reservado com os outros:", "Amigável", "Reservado", questao_12)
 
-                questao_13 = alternativas(300, 275, "Você confia facilmente nas pessoas:", "Sim", "Não", questao_13)
+                questao_13 = alternativas(300, 275, "Você confia facilmente nas pessoas?", "Sim", "Não", questao_13)
 
-                questao_14 = alternativas(300, 395, "Você é bom em convencer e influenciar os outros:", "Sim", "Não", questao_14)
+                questao_14 = alternativas(300, 395, "Você é bom em convencer e influenciar os outros?", "Sim", "Não", questao_14)
 
                 questao_15 = alternativas(300, 515, "Você prefere resolver conflitos com conversa ou com ação:", "Conversa", "Ação", questao_15)
 
@@ -930,13 +920,13 @@ if __name__ == "__main__":
                 if desenhar_botao("<- Voltar", 30, 580, 185, 40, 13, (160, 160, 160), (100, 100, 100), 25):
                     estado = PERSONALIDADE_tela_3
                 
-                questao_16 = alternativas(300, 35, "Você prefere ataques rápidos e furtivos ou ataques lentos e fortes:", "Furtivo", "Forte", questao_16)
+                questao_16 = alternativas(300, 35, "Você prefere ataques rápidos e furtivos ou ataques lentos e fortes:", "Furtivos", "Fortes", questao_16)
 
                 questao_17 = alternativas(300, 155, "Você é melhor em defesa ou em ataque:", "Defesa", "Ataque", questao_17)
 
-                questao_18 = alternativas(300, 275, "Você prefere lutar sozinho ou com um parceiro:", "Individual", "Em Time", questao_18)
+                questao_18 = alternativas(300, 275, "Você prefere lutar sozinho ou com um parceiro:", "Sozinho", "Em time", questao_18)
 
-                questao_19 = alternativas(300, 395, "Você tem mais experiência em combate corpo a corpo ou à distância:", "Corpo A Corpo", "Distânte", questao_19)
+                questao_19 = alternativas(300, 395, "Você tem mais experiência em combate corpo a corpo ou à distância:", "Corpo a corpo", "À distância", questao_19)
 
                 # Ir para a próxima tela
                 if desenhar_botao("Avançar ->", 1070, 580, 200, 40, 15, (160, 160, 160), (100, 100, 100), 25):
@@ -1126,83 +1116,52 @@ if __name__ == "__main__":
             # Area para setar os dados do usuario
             elif estado == DADOS_PESSOAIS:
                 # Fonte dos inputs
-                fonte_input = pygame.font.SysFont("arial", 28)
+                fonte_input = pygame.font.SysFont("arial", 48)
                 screen.blit(imagem_fundo_secundario, (0, 0))
                 # Retangulo para escrever
                 pygame.draw.rect(screen, (175, 175, 175), (200, 100, 900, 400), border_radius=20)
 
-                # Alternativa para escolher o genero
-                genero = alternativas(875, 200, "Qual sera seu genero", "Masculino", "Feminino", genero, 200)
-
                 # Para escrever os dados
-                for box in input_boxes:
-                    cor_borda = COR_ATIVA if box["active"] else COR_INATIVA
-                    pygame.draw.rect(screen, cor_borda, box["rect"], 2, border_radius=15)
+                
+                cor_borda = COR_ATIVA if input_boxes["active"] else COR_INATIVA
+                pygame.draw.rect(screen, cor_borda, input_boxes["rect"], 2, border_radius=15)
+                
+                # Label
+                label_surface = fonte_input.render(input_boxes["label"] + ":", True, COR_TEXTO)
+                screen.blit(label_surface, (input_boxes["rect"].x - 120, input_boxes["rect"].y + 10))
+
+                # Texto
+                texto_surface = fonte_input.render(input_boxes["text"], True, COR_TEXTO)
+                screen.blit(texto_surface, (input_boxes["rect"].x + 10, input_boxes["rect"].y + 10))
+
+                if "," in input_boxes["text"]:
+                    input_boxes["text"] = input_boxes["text"].replace(",", ".")
+
+                if desenhar_botao("Próximo ->", 870, 410, 200, 40, 13, (160, 160, 160), (100, 100, 100), 25):  
+                    erros = []
+
+                
+                    label = input_boxes["label"]
+                    texto = input_boxes["text"]
                     
-                    # Label
-                    label_surface = fonte_input.render(box["label"] + ":", True, COR_TEXTO)
-                    screen.blit(label_surface, (box["rect"].x - 120, box["rect"].y + 10))
 
-                    # Texto
-                    texto_surface = fonte_input.render(box["text"], True, COR_TEXTO)
-                    screen.blit(texto_surface, (box["rect"].x + 10, box["rect"].y + 10))
-
-                    if "," in box["text"]:
-                        box["text"] = box["text"].replace(",", ".")
-
-                    if desenhar_botao("Próximo ->", 870, 410, 200, 40, 13, (160, 160, 160), (100, 100, 100), 25):  
-                        erros = []
-
-                        for box in input_boxes:
-                            label = box["label"]
-                            texto = box["text"]
-
-                            # Validação para idade (inteiro)
-                            if label == "Idade":
-                                if not texto.isdigit():
-                                    erros.append("Idade deve conter apenas números.")
-
-                            # Validação para altura e peso (números decimais ou inteiros)
-                            elif label in ["Altura", "Peso"]:
-                                try:
-                                    float(texto.replace(",", "."))  # Aceita ponto ou vírgula
-                                except ValueError:
-                                    erros.append(f"{label} deve conter um número válido.")
-                        
-                        
-
-                        dados_pessoais = {}
+                    dados_pessoais = {}
 
 
 
-                        for box in input_boxes:
-                            dados_pessoais[box["label"]] = box["text"]
+                    dados_pessoais[input_boxes["label"]] = input_boxes["text"]
+                    
+                                        
+                    if len(erros) != 0:
+                        estado = DADOS_PESSOAIS
+                        Mensagem_de_aviso(erros[0])
 
-                        dados_pessoais["Genero"] = genero
-                        
-                        # Ver se os dados são validos
-                        if dados_pessoais["Genero"] == None:
-                            Mensagem_de_aviso("Genero Invalido: Selecione um genero")
-                                            
-                        elif len(erros) != 0:
-                            estado = DADOS_PESSOAIS
-                            Mensagem_de_aviso(erros[0])
+                    elif ver_se_o_usuario_ja_existe(dados_pessoais["Nome"]):
+                        estado = DADOS_PESSOAIS
+                        Mensagem_de_aviso("Nome já existente")
 
-                        elif not (16 <= int(dados_pessoais["Idade"]) <= 100):
-                            Mensagem_de_aviso("Idade Invalida: Tente de 16 a 100")
-                        
-                        elif not (1.0 <= float(dados_pessoais["Altura"]) <= 3.0):
-                            Mensagem_de_aviso("Altura Invalida: Tente entre 1.0 a 3.0")
-
-                        elif not (40.0 <= float(dados_pessoais["Peso"]) <= 130.0):
-                            Mensagem_de_aviso("Peso Invalido: Tente de 40.0 a 130")
-
-                        elif ver_se_o_usuario_ja_existe(dados_pessoais["Nome"]):
-                            estado = DADOS_PESSOAIS
-                            Mensagem_de_aviso("Nome já existente")
-
-                        else:
-                            estado = CRIAR_E_IR
+                    else:
+                        estado = CRIAR_E_IR
 
 
 
@@ -1469,10 +1428,6 @@ if __name__ == "__main__":
 
                 if dados_pessoais["Classe"] == ASSASSINO:
                     criar_personagem(dados_pessoais["Nome"],
-                                    dados_pessoais["Idade"],
-                                    dados_pessoais["Altura"],
-                                    dados_pessoais["Peso"],
-                                    dados_pessoais["Genero"],
                                     ASSASSINO,
                                     10, 5, 2, 10, "Adaga Sem Ponta")
                     
@@ -1480,10 +1435,6 @@ if __name__ == "__main__":
                     
                 elif dados_pessoais["Classe"] == ESPADACHIN:
                     criar_personagem(dados_pessoais["Nome"],
-                                    dados_pessoais["Idade"],
-                                    dados_pessoais["Altura"],
-                                    dados_pessoais["Peso"],
-                                    dados_pessoais["Genero"],
                                     ESPADACHIN,
                                     12, 4, 3, 12, "Espada Cega")
                     
@@ -1491,10 +1442,6 @@ if __name__ == "__main__":
                     
                 elif dados_pessoais["Classe"] == LANCEIRO:
                     criar_personagem(dados_pessoais["Nome"],
-                                    dados_pessoais["Idade"],
-                                    dados_pessoais["Altura"],
-                                    dados_pessoais["Peso"],
-                                    dados_pessoais["Genero"],
                                     LANCEIRO,
                                     11, 4, 4, 13, "Lança Com Cabo Quebrado")
                     
@@ -1502,10 +1449,6 @@ if __name__ == "__main__":
                 
                 elif dados_pessoais["Classe"] == ARQUEIRO:
                     criar_personagem(dados_pessoais["Nome"],
-                                    dados_pessoais["Idade"],
-                                    dados_pessoais["Altura"],
-                                    dados_pessoais["Peso"],
-                                    dados_pessoais["Genero"],
                                     ARQUEIRO,
                                     9, 6, 2, 11, "Arco E Flexa Velho")
                     
@@ -1513,10 +1456,6 @@ if __name__ == "__main__":
                     
                 elif dados_pessoais["Classe"] == BATEDOR:
                     criar_personagem(dados_pessoais["Nome"],
-                                    dados_pessoais["Idade"],
-                                    dados_pessoais["Altura"],
-                                    dados_pessoais["Peso"],
-                                    dados_pessoais["Genero"],
                                     BATEDOR,
                                     7, 5, 3, 14, "Soco Espinhado")
                     
@@ -1524,10 +1463,6 @@ if __name__ == "__main__":
                     
                 else:
                     criar_personagem(dados_pessoais["Nome"],
-                                    dados_pessoais["Idade"],
-                                    dados_pessoais["Altura"],
-                                    dados_pessoais["Peso"],
-                                    dados_pessoais["Genero"],
                                     ESCUDEIRO,
                                     8, 3, 5, 15, "Escudo De Mão")
                     

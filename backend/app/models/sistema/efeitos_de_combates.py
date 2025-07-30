@@ -36,16 +36,13 @@ class Base(ABC):
 
 class Queimadura(Base):
     def __init__(self):
-        super().__init__("uueimadura", 1,1,1,1,1)
+        super().__init__("queimadura", 1,1,1,1,1)
 
     def aplicar_efeito(self, alvo):
         for segundos in range(self.duração):
             alvo.vida_atual -= self.dano
             alvo.velocidade = max(0, alvo.velocidade - self.velocidade)
             alvo.defesa = max(0, alvo.defesa - self.defesa)
-
-    def atualizar_descrição(self):
-        super().atualizar_descrição()
 
 class Veneno(Base):
     def __init__(self):
@@ -57,9 +54,6 @@ class Veneno(Base):
             alvo.velocidade = max(0, alvo.velocidade - self.velocidade)
             alvo.defesa = max(0, alvo.defesa - self.defesa)
 
-    def atualizar_descrição(self):
-        super().atualizar_descrição()
-
 class Sangramento(Base):
     def __init__(self):
         super().__init__("sangramento", 1,1,1,1,1)
@@ -70,9 +64,6 @@ class Sangramento(Base):
             alvo.velocidade = max(0, alvo.velocidade - self.velocidade)
             alvo.defesa = max(0, alvo.defesa - self.defesa)
 
-    def atualizar_descrição(self):
-        super().atualizar_descrição()
-
 class Atordoamento(Base):
     def __init__(self):
         super().__init__("atordoamento", 1,1,1,1,1)
@@ -82,9 +73,6 @@ class Atordoamento(Base):
             alvo.velocidade = max(0, alvo.velocidade - self.velocidade)
             alvo.defesa = max(0, alvo.defesa - self.defesa)
 
-    def atualizar_descrição(self):
-        return super().atualizar_descrição()
-    
 class Silencio(Base):
     def __init__(self):
         super().__init__("silêncio")
@@ -97,12 +85,7 @@ class Silencio(Base):
                 alvo.terceira_habilidade_passiva = None
                 alvo.habilidade_ativa = None
                 alvo.habilidade_especial = None
-        else:
-            pass
 
-    def atualizar_descrição(self):
-        return super().atualizar_descrição()
-    
 class Lentidao(Base):
     def __init__(self):
         super().__init__("Lentidão",1,1,1,1,1)
@@ -112,59 +95,63 @@ class Lentidao(Base):
             alvo.velocidade = max(0, alvo.velocidade - self.velocidade)
             alvo.defesa = max(0, alvo.defesa - self.defesa)
 
-    def atualizar_descrição(self):
-        return super().atualizar_descrição()
-    
 class Explosivo(Base):
     def __init__(self):
         super().__init__("Explosivo",1,1,1,1,1)
 
     def aplicar_efeito(self, alvo):
-        for segundos in range(self.duração)
+        alvo.vida_atual -= self.dano
 
 # vantagens
 
 @dataclass
-class Defesa():
+class VantagemBase:
     porcentagem: float
+    atributo: str
+    descricao: str = ""
 
     def vantagem(self, usuario):
-        self.valor = usuario.defesa * self.porcentagem
-        usuario.defesa_bonus = self.valor
-@dataclass
-class Velocidade():
-    porcentagem: float
+        valor_base = getattr(usuario, self.atributo)
+        valor_bonus = valor_base * self.porcentagem
+        setattr(usuario, f"{self.atributo}_bonus", valor_bonus)
 
-    def vantagem(self, usuario):
-        self.valor = usuario.velocidade * self.porcentagem
-        usuario.velocidade_bonus = self.valor
 @dataclass
-class Vida():
-    porcentagem: float
+class Defesa(VantagemBase):
+    def __init__(self, porcentagem: float):
+        descricao = f"Aumenta a defesa em {porcentagem*100:.0f}%."
+        super().__init__(porcentagem, "defesa", descricao)
 
-    def vantagem(self, usuario):
-        self.valor = usuario.vida * self.porcentagem
-        usuario.vida_bonus = self.valor
 @dataclass
-class Estamina():
-    porcentagem: float
+class Velocidade(VantagemBase):
+    def __init__(self, porcentagem: float):
+        descricao = f"Aumenta a velocidade em {porcentagem*100:.0f}%."
+        super().__init__(porcentagem, "velocidade", descricao)
 
-    def vantagem(self, usuario):
-        self.valor = usuario.estamina * self.porcentagem
-        usuario.estamina_bonus = self.valor
 @dataclass
-class Dano():
-    porcentagem: float
+class Vida(VantagemBase):
+    def __init__(self, porcentagem: float):
+        descricao = f"Aumenta a vida máxima em {porcentagem*100:.0f}%."
+        super().__init__(porcentagem, "vida", descricao)
 
-    def vantagem(self, usuario):
-        self.valor = usuario.dano * self.porcentagem
-        usuario.dano_bonus = self.valor
 @dataclass
-class BonusDeExperiencia():
+class Estamina(VantagemBase):
+    def __init__(self, porcentagem: float):
+        descricao = f"Aumenta a estamina em {porcentagem*100:.0f}%."
+        super().__init__(porcentagem, "estamina", descricao)
+
+@dataclass
+class Dano(VantagemBase):
+    def __init__(self, porcentagem: float):
+        descricao = f"Aumenta o dano em {porcentagem*100:.0f}%."
+        super().__init__(porcentagem, "dano", descricao)
+
+@dataclass
+class BonusDeExperiencia:
     porcentagem: float
+    descricao: str = ""
+
+    def __post_init__(self):
+        self.descricao = f"Aumenta o ganho de experiência em {self.porcentagem*100:.0f}%."
 
     def vantagem(self, usuario):
         usuario.bonus_de_experiência = self.porcentagem
-
-
-

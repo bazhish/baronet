@@ -521,7 +521,7 @@ def ver_se_o_usuario_ja_existe(nome):
 
     cursor.execute("PRAGMA foreign_keys = ON")
 
-    cursor.execute("SELECT id, idade, altura, peso, classe FROM usuarios WHERE nome = ?", (nome,))
+    cursor.execute("SELECT id, classe FROM usuarios WHERE nome = ?", (nome,))
     usuario = cursor.fetchone()
 
     if usuario:

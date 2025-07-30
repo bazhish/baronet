@@ -2,8 +2,8 @@
 import sys, os
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from ..personagens.adversarios import AdversarioDemiHumano
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..')))
+from backend.app.models.personagens.adversarios import AdversarioDemiHumano
 
 @dataclass
 class Base(ABC):
@@ -108,7 +108,7 @@ class Explosivo(Base):
 class VantagemBase:
     porcentagem: float
     atributo: str
-    descricao: str = ""
+    descricao: str = field(default = "",init = False)
 
     def vantagem(self, usuario):
         valor_base = getattr(usuario, self.atributo)
@@ -148,7 +148,7 @@ class Dano(VantagemBase):
 @dataclass
 class BonusDeExperiencia:
     porcentagem: float
-    descricao: str = ""
+    descricao: str = field(default = "",init = False)
 
     def __post_init__(self):
         self.descricao = f"Aumenta o ganho de experiência em {self.porcentagem*100:.0f}%."

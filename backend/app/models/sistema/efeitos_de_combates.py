@@ -3,7 +3,6 @@ import sys, os
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..')))
-from backend.app.models.personagens.adversarios import AdversarioDemiHumano
 
 @dataclass
 class Base(ABC):

@@ -31,11 +31,16 @@ clock = pygame.time.Clock()
 JOGO = "jogo"
 OPCOES = "opcoes"
 MENU = "menu"
+INVENTARIO = "inventario"
 estado = JOGO
 
 quadrado = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
+quadrado_2 = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
+quadrado_3 = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
+contador = 0
 rect_opcoes = pygame.Rect(LARGURA // 2.5, LARGURA // 1.5, ALTURA // 1.6, ALTURA // 2)
 click = False
+click_e = False
 
 if __name__ == "__main__":
     screen = pygame.display.set_mode((LARGURA, ALTURA), pygame.FULLSCREEN)
@@ -77,12 +82,19 @@ if __name__ == "__main__":
         key = pygame.key.get_pressed()
 
         if estado == JOGO:
-            screen.fill((0, 0, 0))
+            screen.fill((210, 210, 210))
             if key[pygame.K_ESCAPE] and not click:
                 click = True
+                contador = 0
                 estado = OPCOES
             if not key[pygame.K_ESCAPE]:
                 click = False
+            if key[pygame.K_e] and not click_e:
+                click_e = True
+                contador = 0
+                estado = INVENTARIO
+            if not key[pygame.K_e]:
+                click_e = False
 
         if estado == OPCOES:
             if key[pygame.K_ESCAPE] and not click:
@@ -90,9 +102,10 @@ if __name__ == "__main__":
                 estado = JOGO
             if not key[pygame.K_ESCAPE]:
                 click = False
-
-            quadrado.fill((*(0, 0, 0), 180))
-            screen.blit(quadrado, (0, 0))
+            if contador == 0:
+                quadrado.fill((*(0, 0, 0), 150))
+                screen.blit(quadrado, (0, 0))
+            contador += 1
             rect_box = pygame.Rect(LARGURA // 3, ALTURA // 6, LARGURA // 3, ALTURA // 1.4)
             pygame.draw.rect(screen, (180, 180, 180), rect_box, border_radius=15)
 
@@ -100,6 +113,7 @@ if __name__ == "__main__":
                 estado = JOGO
 
             if desenhar_botao("Opçoes", LARGURA // 2.86, ALTURA // 2.2, LARGURA // 3.3, ALTURA // 8, ALTURA // 18, (150, 150, 150), (120, 120, 120), ALTURA // 30, fonte= ALTURA // 18):
+                contador = 0
                 estado = MENU
 
             if desenhar_botao("Sair", LARGURA // 2.86, ALTURA // 1.4, LARGURA // 3.3, ALTURA // 8, ALTURA // 18, (150, 150, 150), (120, 120, 120), ALTURA // 30, fonte= ALTURA // 18):
@@ -107,9 +121,10 @@ if __name__ == "__main__":
                 sys.exit()
 
         if estado == MENU:
-            quadrado.fill((*(0, 0, 0), 180))
-            screen.blit(quadrado, (0, 0))
-
+            if contador == 0:
+                quadrado_2.fill((*(0, 0, 0), 150))
+                screen.blit(quadrado_2, (0, 0))
+            contador += 1
             texto_surface = font_title.render("RPG", True, (190, 190, 230))
             texto_rect = texto_surface.get_rect(center=(LARGURA // 2, ALTURA // 7))
             screen.blit(texto_surface, texto_rect)
@@ -179,7 +194,25 @@ if __name__ == "__main__":
                 texto_surface = fonte_input.render(box["text"], True, COR_TEXTO)
                 screen.blit(texto_surface, (box["rect"].x + 5, box["rect"].y + 5))
 
+        if estado == INVENTARIO:
+            if contador == 0:
+                quadrado_3.fill((*(0, 0, 0), 150))
+                screen.blit(quadrado_3, (0, 0))
+            contador += 1
             
+            if key[pygame.K_e] and not click_e:
+                click_e = True
+                estado = JOGO
+            if not key[pygame.K_e]:
+                click_e = False
+
+            if key[pygame.K_ESCAPE] and not click:
+                click = True
+                contador = 0
+                estado = JOGO
+            if not key[pygame.K_ESCAPE]:
+                click = False
+
             
         pygame.display.flip()
         clock.tick(16)

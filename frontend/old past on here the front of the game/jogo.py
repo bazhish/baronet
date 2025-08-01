@@ -22,7 +22,7 @@ endereco_banco_de_dados = rf"{endereço}\banco_de_dados.db"
 with open(rf"{endereço}\usuario.json", "r") as arquivo:
     dados = json.load(arquivo)
 
-teclas = dados["keys"]
+
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -41,6 +41,8 @@ contador = 0
 rect_opcoes = pygame.Rect(LARGURA // 2.5, LARGURA // 1.5, ALTURA // 1.6, ALTURA // 2)
 click = False
 click_e = False
+
+
 
 if __name__ == "__main__":
     screen = pygame.display.set_mode((LARGURA, ALTURA), pygame.FULLSCREEN)
@@ -80,6 +82,26 @@ if __name__ == "__main__":
                                 box["text"] = "Tab"
 
         key = pygame.key.get_pressed()
+
+        teclas = dados["keys"]
+        tecla = [teclas["inventario"].lower(), teclas["correr"].lower(), teclas["habilidade"].lower(), teclas["habilidade_1"].lower(), teclas["habilidade_2"].lower(), teclas["habilidade_3"].lower(), teclas["mapa"].lower()]
+        for nome_tecla in tecla:
+            if nome_tecla == "ctrl" or nome_tecla == "alt" or nome_tecla == "caps" or nome_tecla == "shift" or nome_tecla == "tab":
+                tecla[tecla.index(nome_tecla)] = nome_tecla.upper()
+
+        print(tecla)
+        inventario = tecla[0]
+        correr = tecla[1]
+        habilidade = tecla[2]
+        habilidade_1 = tecla[3]
+        habilidade_2 = tecla[4]
+        habilidade_3 = tecla[5]
+        mapa = tecla[6]
+
+
+
+
+
 
         if estado == JOGO:
             screen.fill((210, 210, 210))

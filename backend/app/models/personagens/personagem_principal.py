@@ -1,4 +1,4 @@
-# backend/app/models/personagens/personagem_principal.py
+# backend\app\models\personagens\personagem_principal.py
 from dataclasses import field, dataclass
 from typing import Any
 

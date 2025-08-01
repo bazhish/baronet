@@ -34,8 +34,3 @@ class Inventario:
         if hasattr(item, "usar"):
             item.usar()
             self.remover_item(item)
-
-inventario = Inventario()
-inventario.adicionar_item("Espada")
-inventario.listar_itens()
-

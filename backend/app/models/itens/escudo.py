@@ -40,14 +40,14 @@ class Escudo:
 
     def atualizar_descrição(self):
         self.descrição = (
-            f"Nome: {self.nome}, "
-            f"Nível: {self.nivel}, "
-            f"Raridade: {self.raridade}, "
-            f"Defesa: {self.defesa_final}, "
-            f"Peso: {self.peso}, "
-            f"Atributo adicional: {self.atributo_adicional}, "
+            f"Nome: {self.nome}\n"
+            f"Nível: {self.nivel:.0f}\n"
+            f"Raridade: {self.raridade}\n"
+            f"Defesa: {self.defesa_final:.0f}\n"
+            f"Peso: {self.peso:.0f}\n"
+            f"Atributo adicional: {self.atributo_adicional}\n"
             f"Cooldown ativo: {self.em_cooldown}, "
-            f"Tempo restante cooldown: {max(0, int(self.cooldown_fim - time.time())) if self.em_cooldown else 0}"
+            f"Tempo restante cooldown: {max(0, int(self.cooldown_fim - time.time())) if self.em_cooldown else 0:.0f}"
         )
 
     def definir_nivel_com_base_no_usuario(self, usuario):
@@ -105,20 +105,6 @@ class Escudo:
         if self.em_cooldown and time.time() >= self.cooldown_fim:
             self.em_cooldown = False
 
-    def gerar_escudo(self):
-        self.atualizar_cooldown()
-        self.calcular_defesa()
-        return {
-            "Nome": self.nome,
-            "Nível": self.nivel,
-            "Raridade": self.raridade,
-            "Defesa": self.defesa_final,
-            "Peso": self.peso,
-            "Atributo adicional": self.atributo_adicional,
-            "Cooldown ativo": self.em_cooldown,
-            "Tempo restante cooldown": max(0, int(self.cooldown_fim - time.time())) if self.em_cooldown else 0,
-        }
-
 def criar_escudo(nome: str, raridade, usuario):
     raridades = {
         "comum": (5,3),
@@ -134,8 +120,12 @@ def criar_escudo(nome: str, raridade, usuario):
     escudo.calcular_defesa()
     escudo.escolher_atributo_adicional_aleatorio()
     escudo.aplicar_bonus_no_usuario(usuario)
-    return escudo.gerar_escudo()
+    escudo.atualizar_descrição() 
+    return escudo  
 
 escudo_titanico = criar_escudo("Escudo Titânico", "lendario", jogador)
-
-print(escudo_titanico.descrição)
+print(f"antes:\n{jogador.descrição}\n")
+print(f"escudo:\n{escudo_titanico.descrição}\n")
+jogador.escudo = escudo_titanico
+jogador.atualizar_descrição()
+print(f"depois:\n{jogador.descrição}\n")

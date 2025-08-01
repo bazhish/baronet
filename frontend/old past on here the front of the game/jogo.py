@@ -12,6 +12,12 @@ import json
 LARGURA, ALTURA = pyautogui.size()
 endereço = os.path.dirname(os.path.abspath(__file__))
 
+with open(rf"{endereço}\usuario.json", "r") as arquivo:
+    dados = json.load(arquivo)
+
+teclas = dados["keys"]
+
+
 if __name__ == "__main__":
     if not os.path.exists(rf"{endereço}\usuario.json"):
         Popen([sys.executable, rf'{endereço}\tela_criacao_personagem.py'])
@@ -19,10 +25,10 @@ if __name__ == "__main__":
 
 endereco_banco_de_dados = rf"{endereço}\banco_de_dados.db"
 
-with open(rf"{endereço}\usuario.json", "r") as arquivo:
-    dados = json.load(arquivo)
+cenario_combate = pygame.image.load(rf"{endereço}\imagens\cenario_combate.png")
+cenario_combate = pygame.transform.scale(cenario_combate, (LARGURA, ALTURA))
 
-teclas = dados["keys"]
+
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -32,6 +38,7 @@ JOGO = "jogo"
 OPCOES = "opcoes"
 MENU = "menu"
 INVENTARIO = "inventario"
+COMBATE = "combate"
 estado = JOGO
 
 quadrado = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
@@ -41,6 +48,8 @@ contador = 0
 rect_opcoes = pygame.Rect(LARGURA // 2.5, LARGURA // 1.5, ALTURA // 1.6, ALTURA // 2)
 click = False
 click_e = False
+
+
 
 if __name__ == "__main__":
     screen = pygame.display.set_mode((LARGURA, ALTURA), pygame.FULLSCREEN)
@@ -69,17 +78,42 @@ if __name__ == "__main__":
                             if evento.unicode in box["peritido"]:
                                 box["text"] += evento.unicode
                             if mods & pygame.KMOD_ALT:
-                                box["text"] = "Alt"
+                                box["text"] = "Lalt"
                             if mods & pygame.KMOD_CAPS:
                                 box["text"] = "Caps"
                             if mods & pygame.KMOD_CTRL:
-                                box["text"] = "Ctrl"
+                                box["text"] = "Lctrl"
                             if mods & pygame.KMOD_SHIFT:
-                                box["text"] = "Shift"
+                                box["text"] = "Lshift"
                             if evento.key == pygame.K_TAB:
                                 box["text"] = "Tab"
 
         key = pygame.key.get_pressed()
+
+        
+
+        
+        tecla = [teclas["inventario"].lower(), teclas["correr"].lower(), teclas["habilidade"].lower(), teclas["habilidade_1"].lower(), teclas["habilidade_2"].lower(), teclas["habilidade_3"].lower(), teclas["mapa"].lower()]
+        for nome_tecla in tecla:
+            if nome_tecla == "caps":
+                tecla[tecla.index(nome_tecla)] = "CAPSLOCK"
+            if nome_tecla == "lctrl" or nome_tecla == "lalt" or nome_tecla == "lshift" or nome_tecla == "tab":
+                tecla[tecla.index(nome_tecla)] = nome_tecla.upper()
+                
+                    
+
+        inventario = getattr(pygame, f"K_{tecla[0]}")
+        correr = getattr(pygame, f"K_{tecla[1]}")
+        habilidade = getattr(pygame, f"K_{tecla[2]}")
+        habilidade_1 = getattr(pygame, f"K_{tecla[3]}")
+        habilidade_2 = getattr(pygame, f"K_{tecla[4]}")
+        habilidade_3 = getattr(pygame, f"K_{tecla[5]}")
+        mapa = getattr(pygame, f"K_{tecla[6]}")
+
+
+
+
+
 
         if estado == JOGO:
             screen.fill((210, 210, 210))
@@ -89,12 +123,15 @@ if __name__ == "__main__":
                 estado = OPCOES
             if not key[pygame.K_ESCAPE]:
                 click = False
-            if key[pygame.K_e] and not click_e:
+            if key[inventario] and not click_e:
                 click_e = True
                 contador = 0
                 estado = INVENTARIO
-            if not key[pygame.K_e]:
+            if not key[inventario]:
                 click_e = False
+
+        if estado == COMBATE:
+
 
         if estado == OPCOES:
             if key[pygame.K_ESCAPE] and not click:
@@ -177,7 +214,7 @@ if __name__ == "__main__":
                     teclas["habilidade_2"] = input_boxes[4]["text"]
                     teclas["habilidade_3"] = input_boxes[5]["text"]
                     teclas["mapa"] = input_boxes[6]["text"]
-                    salvar()
+                    salvar(teclas)
                     estado = MENU
 
             
@@ -200,10 +237,10 @@ if __name__ == "__main__":
                 screen.blit(quadrado_3, (0, 0))
             contador += 1
             
-            if key[pygame.K_e] and not click_e:
+            if key[inventario] and not click_e:
                 click_e = True
                 estado = JOGO
-            if not key[pygame.K_e]:
+            if not key[inventario]:
                 click_e = False
 
             if key[pygame.K_ESCAPE] and not click:

@@ -86,7 +86,7 @@ input_boxes = [
 
 id_usuario = obter_id_usuario_por_nome(dados["usuario"])
 
-def salvar():
+def salvar(teclas):
     global id_usuario
     dados["keys"] = teclas
     with open(rf"{endereço}\usuario.json", "w") as arquivo:
@@ -96,9 +96,9 @@ def salvar():
 
     cursor.execute("""
         UPDATE usuarios
-        SET nome = ?, idade = ?, altura = ?, peso = ?, genero = ?, classe = ?
+        SET nome = ?, classe = ?
         WHERE id = ?
-    """, (dados["usuario"], dados["dados_pessoais"]["Idade"], dados["dados_pessoais"]["Altura"], dados["dados_pessoais"]["Peso"], dados["dados_pessoais"]["Genero"], dados["dados_pessoais"]["Classe"], id_usuario))
+    """, (dados["usuario"], dados["dados_pessoais"]["Classe"], id_usuario))
 
     cursor.execute("""
         UPDATE status
@@ -162,13 +162,13 @@ if __name__ == "__main__":
                             if evento.unicode in box["peritido"]:
                                 box["text"] += evento.unicode
                             if mods & pygame.KMOD_ALT:
-                                box["text"] = "Alt"
+                                box["text"] = "Lalt"
                             if mods & pygame.KMOD_CAPS:
                                 box["text"] = "Caps"
                             if mods & pygame.KMOD_CTRL:
-                                box["text"] = "Ctrl"
+                                box["text"] = "Lctrl"
                             if mods & pygame.KMOD_SHIFT:
-                                box["text"] = "Shift"
+                                box["text"] = "Lshift"
                             if evento.key == pygame.K_TAB:
                                 box["text"] = "Tab"
                             
@@ -299,7 +299,8 @@ if __name__ == "__main__":
                     teclas["habilidade_2"] = input_boxes[4]["text"]
                     teclas["habilidade_3"] = input_boxes[5]["text"]
                     teclas["mapa"] = input_boxes[6]["text"]
-                    salvar()
+                    print(input_boxes[0]["text"])
+                    salvar(teclas)
                     estado = MENU
 
             

@@ -19,7 +19,7 @@ pygame.mixer.init()
 
 # Efeito sonoro de fundo
 pygame.mixer.music.load(rf"{endereço}\efeito_sonoro\Menu.mp3")
-pygame.mixer.music.set_volume(0.15)
+pygame.mixer.music.set_volume(0.05)
 pygame.mixer.music.play(-1)
 
 # Som do botão e se caso ocorra algum erro
@@ -436,7 +436,7 @@ def criar_personagem(nome, classe, dano, velocidade, defesa, vida, arma):
     cursor.execute("""
         INSERT INTO keys (usuario_id, inventario, correr, habilidades, habilidade_1, habilidade_2, habilidade_3, mapa)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    """, (usuario_id, "E", "Ctrl", "R", "Z", "X", "C", "M"))
+    """, (usuario_id, "E", "Lctrl", "R", "Z", "X", "C", "M"))
 
     conexao.commit()
     conexao.close()

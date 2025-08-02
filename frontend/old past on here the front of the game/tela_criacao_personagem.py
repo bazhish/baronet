@@ -19,7 +19,7 @@ pygame.mixer.init()
 
 # Efeito sonoro de fundo
 pygame.mixer.music.load(rf"{endereço}\efeito_sonoro\Menu.mp3")
-pygame.mixer.music.set_volume(0.15)
+pygame.mixer.music.set_volume(0.05)
 pygame.mixer.music.play(-1)
 
 # Som do botão e se caso ocorra algum erro

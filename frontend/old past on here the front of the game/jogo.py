@@ -8,6 +8,8 @@ import sqlite3
 import pyautogui
 from subprocess import Popen
 import json
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'backend', 'app', 'models', 'sistema')))
+from backend.app.models.sistema.habilidade_ativa import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
 
 LARGURA, ALTURA = pyautogui.size()
 endereço = os.path.dirname(os.path.abspath(__file__))
@@ -25,8 +27,10 @@ if __name__ == "__main__":
 
 endereco_banco_de_dados = rf"{endereço}\banco_de_dados.db"
 
-cenario_combate = pygame.image.load(rf"{endereço}\imagens\cenario_combate.png")
-cenario_combate = pygame.transform.scale(cenario_combate, (LARGURA, ALTURA))
+# cenario_combate = pygame.image.load(rf"{endereço}\imagens\cenario_combate.png")
+# cenario_combate = pygame.transform.scale(cenario_combate, (LARGURA, ALTURA))
+
+habilidade_1_usavel = 
 
 
 
@@ -131,6 +135,30 @@ if __name__ == "__main__":
                 click_e = False
 
         if estado == COMBATE:
+            screen.blit(cenario_combate, (0, 0))
+            if key[pygame.K_ESCAPE] and not click:
+                click = True
+                contador = 0
+                estado = OPCOES
+            if not key[pygame.K_ESCAPE]:
+                click = False
+            if key[habilidade_1] and not click:
+                click = True
+            if not key[habilidade_1]:
+                click = False
+            if key[habilidade_2] and not click:
+                click = True
+            if not key[habilidade_2]:
+                click = False
+            if key[habilidade_3] and not click:
+                click = True
+            if not key[habilidade_3]:
+                click = False
+            
+
+
+            
+
 
 
         if estado == OPCOES:

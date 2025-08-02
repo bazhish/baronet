@@ -1,4 +1,4 @@
-# backend/app/models/personagens/personagem_principal.py
+# backend\app\models\personagens\personagem_principal.py
 from dataclasses import field, dataclass
 from typing import Any
 
@@ -26,27 +26,27 @@ class Usuario:
     vida_base = 100
     estamina_base = 150
 
-    arma: Any = None
-    escudo: Any = None
+    arma: None  = field(default = "",init=False)
+    escudo: None  = field(default = "",init=False)
 
-    elmo: Any = None
-    peitoral: Any = None
-    calça: Any = None
-    botas: Any = None
+    elmo: None  = field(default = "",init=False)
+    peitoral: None  = field(default = "",init=False)
+    calça: None  = field(default = "",init=False)
+    botas: None  = field(default = "",init=False)
 
-    vida_atual: int = field(init=False)
-    vida_máxima: int = field(init=False)
-    estamina_atual: int = field(init=False)
-    estamina_máxima: int = field(init=False)
+    vida_atual: int = field(default = "",init=False)
+    vida_máxima: int = field(default = "",init=False)
+    estamina_atual: int = field(default = "",init=False)
+    estamina_máxima: int = field(default = "",init=False)
 
-    classe_do_usuário: Any = None
+    classe_do_usuário: None = field(default = "",init=False)
 
-    primeira_habilidade_passiva: Any = None
-    segunda_habilidade_passiva: Any = None
-    terceira_habilidade_passiva: Any = None
+    primeira_habilidade_passiva: None = field(default = "",init=False)
+    segunda_habilidade_passiva: None = field(default = "",init=False)
+    terceira_habilidade_passiva: None = field(init=False)
 
-    habilidade_ativa: Any = None
-    habilidade_especial: Any = None
+    habilidade_ativa: None = field(default = "",init=False)
+    habilidade_especial: None = field(default = "",init=False)
 
     descrição: str = field(default = "", init = False)
 
@@ -96,7 +96,7 @@ class Usuario:
 
     def equipar_escudo(self, escudo):
         self.escudo = escudo
-        self.defesa_bonus = escudo.defesa if escudo else 0
+        self.defesa_bonus = escudo.defesa_final if escudo else 0
 
     def remover_escudo(self):
         self.escudo = None

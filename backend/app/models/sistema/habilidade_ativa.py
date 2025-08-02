@@ -102,7 +102,7 @@ def efeito_fuga_rapida(usuario, alvo):
 golpe_mortal = HabilidadeAtiva("Golpe mortal", efeito_golpe_mortal, 100, 2, 50, 1)
 intangibilidade = HabilidadeAtiva("Intangibilidade", efeito_intangibilidade, 70, 1, 80, 1)
 impacto_cruzado = HabilidadeAtiva("Impacto cruzado", efeito_impacto_cruzado, 90, 2, 50, 1)
-bloqueio_de_espada = HabilidadeAtiva("Bloqueio de espada", efeito_bloqueio_de_espada, 85, 1, 80, 1j)
+bloqueio_de_espada = HabilidadeAtiva("Bloqueio de espada", efeito_bloqueio_de_espada, 85, 1, 80, 1)
 ataque_com_escudo = HabilidadeAtiva("Ataque com escudo", efeito_ataque_com_escudo, 100, 1, 50, 1)
 defesa_reforcada = HabilidadeAtiva("Defesa reforçada", efeito_defesa_reforcada, 75, 2, 80, 1)
 giro_de_lanca = HabilidadeAtiva("Giro de lança", efeito_giro_de_lanca, 250, 2, 50, 1)

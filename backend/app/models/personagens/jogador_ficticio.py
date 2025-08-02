@@ -1,19 +1,8 @@
 # app/models/personagens/jogador_ficticio.py
-jogador = {
-    "none": "jahseh",
-    "idade": 21,
-    "peso": 97,
-    "genero": "homem",
-    "altura": 2.1,
-    "experiência": "0/100",
-    "nível": 1,
-    "dano": 2,
-    "velociade": 4,
-    "defesa": 5,
-    "vida": 100,
-    "estamina": 100,
-    "arma": None,
-    "escudo": None,
-    "tentativas": 3,
-    "classe": None
-}
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..')))
+from backend.app.models.personagens.personagem_principal import Usuario
+
+jogador = Usuario("jaseh", 21, 98.7, "masculino", 2.1)
+jogador.receber_experiencia(400)
+jogador.atualizar_descrição()

@@ -39,10 +39,10 @@ class Arma:
         nível_minimo, nível_máximo = self.níveis_raridade.get(self.raridade, (0, 100))
         classe = usuario.get("classe", None)
         classe = classe is not None and self.classes_permitidas is not None and classe in self.classes_permitidas
-        return nível_minimo <= usuario["nível"] < nível_máximo and classe
+        return nível_minimo <= usuario.nível_atual < nível_máximo and classe
 
     def nivel_da_arma_com_parametro_do_usuario(self, usuario: Dict[str, Any]):
-        self.nível = randint(max(1, usuario["nível"] - 3), min(usuario["nível"] + 3, 100))
+        self.nível = randint(max(1, usuario.nível_atual - 3), min(usuario.nível_atual + 3, 100))
 
     def nivel_com_parametro_manual(self, nível: int):
         self.nível = nível
@@ -51,7 +51,7 @@ class Arma:
         self.dano = self.dano_base * self.nível
 
     def velocidade_que_o_usuario_ira_perder(self, usuario: Dict[str, Any]):
-        usuario["velocidade"] -= self.peso
+        usuario.velocidade_final -= self.peso
 
     def escolha_de_raridade(self, raridade_escolhida: str):
         self.raridade = raridade_escolhida
@@ -73,11 +73,11 @@ class Arma:
 
     def checar_e_remover_se_quebrada(self, usuario: Dict[str, Any]):
          if self.durabilidade <= 0:
-            usuario["arma"] = "nenhuma"
+            usuario.arma = None
 
     def usar(self, usuario: Dict[str, Any], alvo: Dict[str, Any]):
         dano_final = self.dano * {"comum": 1, "rara": 1.5, "épica": 2.3, "lendaria": 2.8}.get(self.raridade, 1)
-        alvo["vida"] -= dano_final
+        alvo.vida_atual -= dano_final
         self.aplicar_bonus_atributo(usuario, self.atributo)
         self.durabilidade -= 1
         self.checar_e_remover_se_quebrada(usuario)

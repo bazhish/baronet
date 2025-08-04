@@ -10,7 +10,7 @@ from subprocess import Popen
 import json
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'backend', 'app', 'models', 'sistema')))
 from backend.app.models.sistema.habilidade_ativa import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
-
+from backend.app.models.sistema.habilidade_passiva import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
 LARGURA, ALTURA = pyautogui.size()
 endereço = os.path.dirname(os.path.abspath(__file__))
 
@@ -30,12 +30,61 @@ endereco_banco_de_dados = rf"{endereço}\banco_de_dados.db"
 # cenario_combate = pygame.image.load(rf"{endereço}\imagens\cenario_combate.png")
 # cenario_combate = pygame.transform.scale(cenario_combate, (LARGURA, ALTURA))
 
-habilidade_1_usavel = 
+if dados["dados_pessoais"]["Classe"] == "arqueiro":
+    habilidade_1_usavel = 
+    habilidade_2_usavel = 
+    habilidade_3_usavel = 
+    habilidade_passiva_1 = disparo_preciso
+    habilidade_passiva_2 = passos_silenciosos
+    habilidade_passiva_3 = flecha_dupla
+elif dados["dados_pessoais"]["Classe"] == "espadachin":
+    habilidade_1_usavel = 
+    habilidade_2_usavel = 
+    habilidade_3_usavel = 
+    habilidade_passiva_1 = vontade_da_espada
+    habilidade_passiva_2 = heranca_da_espada
+    habilidade_passiva_3 = ataque_rapido
+elif dados["dados_pessoais"]["Classe"] == "assassino":
+    habilidade_1_usavel = 
+    habilidade_2_usavel = 
+    habilidade_3_usavel = 
+    habilidade_passiva_1 = furtividade
+    habilidade_passiva_2 = evasao
+    habilidade_passiva_3 = sangramento
+elif dados["dados_pessoais"]["Classe"] == "escudeiro":
+    habilidade_1_usavel = 
+    habilidade_2_usavel = 
+    habilidade_3_usavel = 
+    habilidade_passiva_1 = bloqueio_de_ataque
+    habilidade_passiva_2 = repelir
+    habilidade_passiva_3 = peso_pena
+elif dados["dados_pessoais"]["Classe"] == "lanceiro":
+    habilidade_1_usavel = 
+    habilidade_2_usavel = 
+    habilidade_3_usavel = 
+    habilidade_passiva_1 = danca_da_lanca
+    habilidade_passiva_2 = controle_passivo
+    habilidade_passiva_3 = controle_total
+elif dados["dados_pessoais"]["Classe"] == "batedor":
+    habilidade_1_usavel = 
+    habilidade_2_usavel = 
+    habilidade_3_usavel = 
+    habilidade_passiva_1 = ataque_silencioso
+    habilidade_passiva_2 = evasao_rapida
+    habilidade_passiva_3 = exploracao_furtiva
 
 
 
 pygame.init()
 clock = pygame.time.Clock()
+
+usuario = {"nivel": dados["status"]["nivel"],
+           "estamina": dados["status"]["dano"] * 10,
+           "defesa": dados["status"]["defesa"],
+           "vida": dados["status"]["vida"] * 10,
+           "velocidade": dados["status"]["velocidade"],
+           "dano": dados["status"]["dano"],
+           "experiencia": dados["status"]["experiencia"]}
 
 # Estados
 JOGO = "jogo"
@@ -53,7 +102,7 @@ rect_opcoes = pygame.Rect(LARGURA // 2.5, LARGURA // 1.5, ALTURA // 1.6, ALTURA 
 click = False
 click_e = False
 
-
+print(furtividade.efeito)
 
 if __name__ == "__main__":
     screen = pygame.display.set_mode((LARGURA, ALTURA), pygame.FULLSCREEN)
@@ -120,6 +169,7 @@ if __name__ == "__main__":
 
 
         if estado == JOGO:
+            dados_do_alvo_recebidos = False
             screen.fill((210, 210, 210))
             if key[pygame.K_ESCAPE] and not click:
                 click = True
@@ -136,6 +186,142 @@ if __name__ == "__main__":
 
         if estado == COMBATE:
             screen.blit(cenario_combate, (0, 0))
+            if dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 1 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 2 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 3 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 4 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 5 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 6 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 7 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 8 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
+                alvo = {"dano": 0,
+                        "nome": 0,
+                        "vida": 0,
+                        "defesa": 0,
+                        "velocidade": 0}
+                dados_do_alvo_recebidos = True
+            
+
+            
             if key[pygame.K_ESCAPE] and not click:
                 click = True
                 contador = 0

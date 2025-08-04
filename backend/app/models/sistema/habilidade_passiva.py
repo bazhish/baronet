@@ -140,3 +140,5 @@ flecha_dupla = HabilidadePassiva("flecha dupla", efeito_flecha_dupla, 70)
 ataque_silencioso = HabilidadePassiva("ataque silencioso", efeito_ataque_silencioso, 12)
 evasao_rapida = HabilidadePassiva("evasão rápida", efeito_evasao_rapida, 45)
 exploracao_furtiva = HabilidadePassiva("exploração furtiva", efeito_exploracao_furtiva, 70)
+
+print(furtividade.efeito)

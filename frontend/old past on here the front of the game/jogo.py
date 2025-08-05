@@ -19,6 +19,7 @@ with open(rf"{endereço}\usuario.json", "r") as arquivo:
 
 teclas = dados["keys"]
 
+posição = 0
 
 if __name__ == "__main__":
     if not os.path.exists(rf"{endereço}\usuario.json"):
@@ -27,8 +28,8 @@ if __name__ == "__main__":
 
 endereco_banco_de_dados = rf"{endereço}\banco_de_dados.db"
 
-# cenario_combate = pygame.image.load(rf"{endereço}\imagens\cenario_combate.png")
-# cenario_combate = pygame.transform.scale(cenario_combate, (LARGURA, ALTURA))
+cenario_combate = pygame.image.load(rf"{endereço}\imagens\cenario\cenario_combate.png")
+cenario_combate = pygame.transform.scale(cenario_combate, (LARGURA * 3, ALTURA))
 
 if dados["dados_pessoais"]["Classe"] == "arqueiro":
     habilidade_1_usavel = 
@@ -185,7 +186,15 @@ if __name__ == "__main__":
                 click_e = False
 
         if estado == COMBATE:
-            screen.blit(cenario_combate, (0, 0))
+            screen.blit(cenario_combate, (posição, 0))
+            screen.blit(cenario_combate, (LARGURA * 3, 0))
+            screen.blit(cenario_combate, (LARGURA * 6, 0))
+
+            if key[pygame.K_d]:
+                posição += 20
+            if key[pygame.K_a]:
+                posição -= 20
+            
             if dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
                 alvo = {"dano": 0,
                         "nome": 0,

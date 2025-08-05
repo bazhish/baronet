@@ -87,7 +87,7 @@ OPCOES = "opcoes"
 MENU = "menu"
 INVENTARIO = "inventario"
 COMBATE = "combate"
-estado = JOGO
+estado = COMBATE
 
 quadrado = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
 quadrado_2 = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
@@ -181,13 +181,12 @@ if __name__ == "__main__":
 
         if estado == COMBATE:
             screen.blit(cenario_combate, (posição, 0))
-            screen.blit(cenario_combate, (LARGURA * 3, 0))
-            screen.blit(cenario_combate, (LARGURA * 6, 0))
+
 
             if key[pygame.K_d]:
-                posição += 20
-            if key[pygame.K_a]:
                 posição -= 20
+            if key[pygame.K_a]:
+                posição += 20
             
             if dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
                 alvo = {"dano": 0,

@@ -8,7 +8,7 @@ import sqlite3
 import pyautogui
 from subprocess import Popen
 import json
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'backend', 'app', 'models', 'sistema')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from backend.app.models.sistema.habilidade_ativa import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
 from backend.app.models.sistema.habilidade_passiva import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
 LARGURA, ALTURA = pyautogui.size()
@@ -32,44 +32,38 @@ cenario_combate = pygame.image.load(rf"{endereço}\imagens\cenario\cenario_comba
 cenario_combate = pygame.transform.scale(cenario_combate, (LARGURA * 3, ALTURA))
 
 if dados["dados_pessoais"]["Classe"] == "arqueiro":
-    habilidade_1_usavel = 
-    habilidade_2_usavel = 
-    habilidade_3_usavel = 
+    habilidade_1_usavel = disparo_perfurante
+    habilidade_2_usavel = camuflagem
     habilidade_passiva_1 = disparo_preciso
     habilidade_passiva_2 = passos_silenciosos
     habilidade_passiva_3 = flecha_dupla
 elif dados["dados_pessoais"]["Classe"] == "espadachin":
-    habilidade_1_usavel = 
-    habilidade_2_usavel = 
-    habilidade_3_usavel = 
+    habilidade_1_usavel = impacto_cruzado
+    habilidade_2_usavel = bloqueio_de_espada
     habilidade_passiva_1 = vontade_da_espada
     habilidade_passiva_2 = heranca_da_espada
     habilidade_passiva_3 = ataque_rapido
 elif dados["dados_pessoais"]["Classe"] == "assassino":
-    habilidade_1_usavel = 
-    habilidade_2_usavel = 
-    habilidade_3_usavel = 
+    habilidade_1_usavel = golpe_mortal
+    habilidade_2_usavel = intangibilidade
     habilidade_passiva_1 = furtividade
     habilidade_passiva_2 = evasao
     habilidade_passiva_3 = sangramento
 elif dados["dados_pessoais"]["Classe"] == "escudeiro":
-    habilidade_1_usavel = 
-    habilidade_2_usavel = 
-    habilidade_3_usavel = 
+    habilidade_1_usavel = ataque_com_escudo
+    habilidade_2_usavel = defesa_reforcada
     habilidade_passiva_1 = bloqueio_de_ataque
     habilidade_passiva_2 = repelir
     habilidade_passiva_3 = peso_pena
 elif dados["dados_pessoais"]["Classe"] == "lanceiro":
-    habilidade_1_usavel = 
-    habilidade_2_usavel = 
-    habilidade_3_usavel = 
+    habilidade_1_usavel = giro_de_lanca
+    habilidade_2_usavel = arremesso_de_lanca
     habilidade_passiva_1 = danca_da_lanca
     habilidade_passiva_2 = controle_passivo
     habilidade_passiva_3 = controle_total
 elif dados["dados_pessoais"]["Classe"] == "batedor":
-    habilidade_1_usavel = 
-    habilidade_2_usavel = 
-    habilidade_3_usavel = 
+    habilidade_1_usavel = ataque_surpresa
+    habilidade_2_usavel = fuga_rapida
     habilidade_passiva_1 = ataque_silencioso
     habilidade_passiva_2 = evasao_rapida
     habilidade_passiva_3 = exploracao_furtiva

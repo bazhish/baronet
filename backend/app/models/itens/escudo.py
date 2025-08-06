@@ -122,10 +122,3 @@ def criar_escudo(nome: str, raridade, usuario):
     escudo.aplicar_bonus_no_usuario(usuario)
     escudo.atualizar_descrição() 
     return escudo  
-
-escudo_titanico = criar_escudo("Escudo Titânico", "lendario", jogador)
-print(f"antes:\n{jogador.descrição}\n")
-print(f"escudo:\n{escudo_titanico.descrição}\n")
-jogador.escudo = escudo_titanico
-jogador.atualizar_descrição()
-print(f"depois:\n{jogador.descrição}\n")

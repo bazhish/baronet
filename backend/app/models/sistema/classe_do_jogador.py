@@ -1,5 +1,5 @@
 from random import choice
-from classe_atributos import assassino, escudeiro, espadachim, lanceiro, batedor, arqueiro
+from backend.app.models.sistema.classes_combatentes import assassino, escudeiro, espadachim, lanceiro, batedor, arqueiro
 from os import system
 
 dados_pessoais = {}

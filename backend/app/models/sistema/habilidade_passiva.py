@@ -6,122 +6,155 @@ class HabilidadePassiva:
     nome: str
     efeito: Callable[[dict], None]
     nivel_minimo: int
-    aplicar: Optional[bool] = field(default=None, init=False)
+    aplicar: Optional[bool] = field(default = None, init = False)
 
-    def verificar_nivel(self, usuario: dict):
-        self.aplicar = usuario.get("nível", 0) >= self.nivel_minimo
+    def verificar_nivel(self, usuario):
+        self.aplicar = usuario.nível_atual >= self.nivel_minimo
 
-    def aplicar_habilidade(self, usuario: dict):
+    def aplicar_habilidade(self, usuario):
         if self.aplicar:
             self.efeito(usuario)
 
-
-# --- ASSASSINO ---
-
+# ASSASSINO
 def efeito_furtividade(usuario):
-    usuario["dano"] *= 1.25
-    usuario["velocidade"] *= 1.25
-    usuario["defesa"] *= 0.75
-    usuario["estamina"] *= 0.75
-    usuario["vida"] *= 1.25
+    usuario.dano_bonus *= 1.25
+    usuario.velocidade_bonus *= 1.25
+    usuario.defesa_bonus *= 0.75
+    usuario.estamina *= 0.75
+    usuario.vida *= 1.25
 
 def efeito_evasao(usuario):
-    usuario["velocidade"] *= 1.5
-    usuario["defesa"] *= 1.5
-    usuario["estamina"] *= 1.5
-    usuario["vida"] *= 1.5
+    usuario.velocidade_bonus *= 1.5
+    usuario.defesa_bonus *= 1.5
+    usuario.estamina_bonus *= 1.5
+    usuario.vida_bonus *= 1.5
 
 def efeito_sangramento(usuario):
-    usuario["dano"] *= 2
-    usuario["vida"] *= 0.8
+    usuario.dano_bonus *= 2
+    usuario.vida_bonus *= 0.8
 
-# --- ESPADACHIN ---
-
+# ESPADACHIN
 def efeito_vontade_da_espada(usuario):
-    for stat in ["dano", "velocidade", "defesa", "estamina", "vida"]:
-        usuario[stat] *= 1.2
+    for status in ["dano", "velocidade", "defesa", "estamina", "vida"]:
+        valor = getattr(usuario, status)
+        setattr(usuario, status, valor * 1.2)
+
 def efeito_heranca_da_espada(usuario):
-    for stat in ["dano", "velocidade", "defesa", "estamina", "vida"]:
-        usuario[stat] *= 1.45
+    for status in ["dano", "velocidade", "defesa", "estamina", "vida"]:
+        valor = getattr(usuario, status)
+        setattr(usuario, status, valor * 1.2)
 
 def efeito_ataque_rapido(usuario):
-    usuario["dano"] *= 1.85
-    usuario["velocidade"] *= 1.85
-    usuario["defesa"] *= 0.7
-    usuario["estamina"] *= 0.9
+    usuario.dano_bonus *= 1.85
+    usuario.velocidade_bonus *= 1.85
+    usuario.defesa_bonus *= 0.7
+    usuario.estamina_bonus *= 0.9
 
-# --- ESCUDEIRO ---
-
+# ESCUDEIRO
 def efeito_bloqueio_de_ataque(usuario):
-    usuario["defesa"] *= 2
-    usuario["estamina"] *= 1.75
-    usuario["vida"] *= 1.1
+    usuario.defesa_bonus *= 2
+    usuario.estamina_bonus *= 1.75
+    usuario.vida_bonus *= 1.1
 
 def efeito_repelir(adversario):
-    dano = adversario["dano"] * 0.75
-    adversario["defesa"] *= 0.5
-    adversario["vida"] -= dano
+    dano = adversario.dano_final * 0.75
+    adversario.defesa_final *= 0.5
+    adversario.vida_atual -= dano
 
 def efeito_peso_pena(usuario):
-    usuario["velocidade"] *= 1.5
-    usuario["estamina"] *= 1.5
-    usuario["vida"] *= 1.5
+    usuario.velocidade_bonus *= 1.5
+    usuario.estamina_bonus *= 1.5
+    usuario.vida_bonus *= 1.5
 
-# --- LANCEIRO ---
-
+# LANCEIRO
 def efeito_danca_da_lanca(usuario):
-    usuario["estamina"] *= 1.3
-    usuario["velocidade"] *= 1.3
+    usuario.estamina_bonus *= 1.3
+    usuario.velocidade_bonus *= 1.3
 
 def efeito_controle_passivo(usuario):
-    usuario["estamina"] *= 1.2
-    usuario["defesa"] *= 1.5
-    usuario["velocidade"] *= 1.2
-    usuario["dano"] *= 1.5
-    usuario["vida"] *= 1.5
+    usuario.estamina_bonus *= 1.2
+    usuario.defesa_bonus *= 1.5
+    usuario.velocidade_bonus *= 1.2
+    usuario.dano_bonus *= 1.5
+    usuario.vida_bonus *= 1.5
 
 def efeito_controle_total(usuario):
-    for stat in ["estamina", "defesa", "velocidade", "dano", "vida"]:
-        usuario[stat] *= 1.35
+    for status in ["dano", "velocidade", "defesa", "estamina", "vida"]:
+        valor = getattr(usuario, status)
+        setattr(usuario, status, valor * 1.35)
 
-# --- ARQUEIRO ---
-
+#  ARQUEIRO
 def efeito_disparo_preciso(usuario):
-    usuario["dano"] *= 1.25
-    usuario["velocidade"] *= 0.75
-    usuario["defesa"] *= 0.75
+    usuario.dano_bonus *= 1.25
+    usuario.velocidade_bonus *= 0.75
+    usuario.defesa_bonus *= 0.75
 
 def efeito_passos_silenciosos(usuario):
-    usuario["velocidade"] *= 1.4
-    usuario["estamina"] *= 1.4
-    usuario["vida"] *= 1.4
-    usuario["defesa"] *= 0.6
+    usuario.velocidade_bonus *= 1.4
+    usuario.estamina_bonus *= 1.4
+    usuario.vida_bonus *= 1.4
+    usuario.defesa_bonus *= 0.6
 
 def efeito_flecha_dupla(usuario):
-    usuario["dano"] *= 1.75
-    usuario["velocidade"] *= 0.8
-    usuario["defesa"] *= 0.8
+    usuario.dano_bonus *= 1.75
+    usuario.velocidade_bonus *= 0.8
+    usuario.defesa_bonus *= 0.8
 
-# --- BATEDOR ---
-
+# BATEDOR
 def efeito_ataque_silencioso(usuario):
-    usuario["velocidade"] *= 1.8
-    usuario["defesa"] *= 0.85
-    usuario["dano"] *= 1.3
+    usuario.velocidade_bonus *= 1.8
+    usuario.defesa_bonus *= 0.85
+    usuario.dano_bonus *= 1.3
 
 def efeito_evasao_rapida(usuario):
-    usuario["velocidade"] *= 1.5
-    usuario["defesa"] *= 1.2
-    usuario["estamina"] *= 0.7
-    usuario["vida"] *= 1.5
+    usuario.velocidade_bonus *= 1.5
+    usuario.defesa_bonus *= 1.2
+    usuario.estamina_bonus *= 0.7
+    usuario.vida_bonus *= 1.5
 
 def efeito_exploracao_furtiva(usuario):
-    usuario["velocidade"] *= 1.3
-    usuario["dano"] *= 1.2
-    usuario["defesa"] *= 1.1
-    usuario["estamina"] *= 0.9
-    usuario["vida"] *= 1.3
+    usuario.velocidade_bonus *= 1.3
+    usuario.dano_bonus *= 1.2
+    usuario.defesa_bonus *= 1.1
+    usuario.estamina_bonus *= 0.9
+    usuario.vida_bonus *= 1.3
 
+# ARTILHEIRO
+def efeito_mira_aprimorada(usuario):
+    usuario.dano_bonus *= 1.6
+    usuario.velocidade_bonus *= 1.1
+    usuario.estamina_bonus *= 0.9
+
+def efeito_arsenal_tatico(usuario):
+    usuario.dano_bonus *= 1.3
+    usuario.defesa_bonus *= 1.3
+    usuario.vida_bonus *= 1.2
+
+def efeito_fogo_sucessivo(usuario):
+    usuario.velocidade_bonus *= 1.5
+    usuario.dano_bonus *= 1.4
+    usuario.estamina_bonus *= 0.8
+    usuario.defesa_bonus *= 0.85
+
+# ARTISTA MARCIAL
+def efeito_foco_interno(usuario):
+    usuario.estamina_bonus *= 1.6
+    usuario.velocidade_bonus *= 1.2
+    usuario.dano_bonus *= 1.1
+
+def efeito_tecnica_perfeita(usuario):
+    usuario.dano_bonus *= 1.4
+    usuario.defesa_bonus *= 1.4
+    usuario.estamina_bonus *= 1.1
+
+def efeito_golpe_fatal(usuario):
+    usuario.dano_bonus *= 2.0
+    usuario.vida_bonus *= 0.75
+    usuario.defesa_bonus *= 0.85
+
+foco_interno = HabilidadePassiva("foco interno", efeito_foco_interno, 12)
+tecnica_perfeita = HabilidadePassiva("técnica perfeita", efeito_tecnica_perfeita, 45)
+golpe_fatal = HabilidadePassiva("golpe fatal", efeito_golpe_fatal, 70)
 furtividade = HabilidadePassiva("furtividade", efeito_furtividade, 12)
 evasao = HabilidadePassiva("evasão", efeito_evasao, 45)
 sangramento = HabilidadePassiva("sangramento", efeito_sangramento, 70)
@@ -139,6 +172,7 @@ passos_silenciosos = HabilidadePassiva("passos silenciosos", efeito_passos_silen
 flecha_dupla = HabilidadePassiva("flecha dupla", efeito_flecha_dupla, 70)
 ataque_silencioso = HabilidadePassiva("ataque silencioso", efeito_ataque_silencioso, 12)
 evasao_rapida = HabilidadePassiva("evasão rápida", efeito_evasao_rapida, 45)
+mira_aprimorada = HabilidadePassiva("mira aprimorada", efeito_mira_aprimorada, 12)
+arsenal_tatico = HabilidadePassiva("arsenal tático", efeito_arsenal_tatico, 45)
+fogo_sucessivo = HabilidadePassiva("fogo sucessivo", efeito_fogo_sucessivo, 70)
 exploracao_furtiva = HabilidadePassiva("exploração furtiva", efeito_exploracao_furtiva, 70)
-
-print(furtividade.efeito)

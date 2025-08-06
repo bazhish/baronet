@@ -26,27 +26,27 @@ class Usuario:
     vida_base = 100
     estamina_base = 150
 
-    arma: None  = field(default = "",init=False)
-    escudo: None  = field(default = "",init=False)
+    arma: None  = field(default = "nenhuma",init=False)
+    escudo: None  = field(default = "nenhum",init=False)
 
-    elmo: None  = field(default = "",init=False)
-    peitoral: None  = field(default = "",init=False)
-    calça: None  = field(default = "",init=False)
+    elmo: None  = field(default = "nenhum",init=False)
+    peitoral: None  = field(default = "nenhum",init=False)
+    calça: None  = field(default = "nenhum",init=False)
     botas: None  = field(default = "",init=False)
 
-    vida_atual: int = field(default = "",init=False)
-    vida_máxima: int = field(default = "",init=False)
-    estamina_atual: int = field(default = "",init=False)
-    estamina_máxima: int = field(default = "",init=False)
+    vida_atual: int = field(default = 1,init=False)
+    vida_máxima: int = field(default = 1,init=False)
+    estamina_atual: int = field(default = 1,init=False)
+    estamina_máxima: int = field(default = 1,init=False)
 
-    classe_do_usuário: None = field(default = "",init=False)
+    classe_do_usuário: None = field(default = "nenhuma",init=False)
 
-    primeira_habilidade_passiva: None = field(default = "",init=False)
-    segunda_habilidade_passiva: None = field(default = "",init=False)
+    primeira_habilidade_passiva: None = field(default = "nenhuma",init=False)
+    segunda_habilidade_passiva: None = field(default = "nenhuma",init=False)
     terceira_habilidade_passiva: None = field(init=False)
 
-    habilidade_ativa: None = field(default = "",init=False)
-    habilidade_especial: None = field(default = "",init=False)
+    habilidade_ativa: None = field(default = "nenhuma",init=False)
+    habilidade_especial: None = field(default = "nenhuma",init=False)
 
     descrição: str = field(default = "", init = False)
 
@@ -85,7 +85,7 @@ class Usuario:
         return self.estamina_base + self.estamina_bonus
     
     def equipar_arma(self, arma):
-        self.arma = arma
+        self.arma = arma.nome
         self.dano_bonus = arma.dano if arma else 0
         self.velocidade_bonus = arma.velocidade if arma else 0
 
@@ -95,19 +95,19 @@ class Usuario:
         self.velocidade_bonus = 0
 
     def equipar_escudo(self, escudo):
-        self.escudo = escudo
+        self.escudo = escudo.nome 
         self.defesa_bonus = escudo.defesa_final if escudo else 0
 
     def remover_escudo(self):
         self.escudo = None
         self.defesa_bonus = 0
 
-    def receber_experiencia(self, xp: int):
+    def receber_experiencia(self, experiência: int):
         self.bonus_de_experiencia = 0
         if self.bonus_de_experiencia > 0:
-            xp *= self.bonus_de_experiencia
+            experiência *= self.bonus_de_experiencia
 
-        self.experiência_atual += xp
+        self.experiência_atual += experiência
         while self.experiência_atual >= self.experiência_máxima and self.nível_atual < self.nível_máximo:
             self.experiência_atual -= self.experiência_máxima
             self.subir_nivel()

@@ -1,7 +1,7 @@
 from random import choice, randint, uniform
 from typing import Dict, Any
 from dataclasses import dataclass
-from classes_permitidas import definir_classes_permitidas
+
 
 @dataclass
 class Arma:

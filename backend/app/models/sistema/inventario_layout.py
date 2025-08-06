@@ -87,7 +87,7 @@ clock = pygame.time.Clock()
 icon_surface1 = pygame.Surface((40, 40))
 icon_surface1.fill((255, 255, 0))  # Amarelo
 
-icon_surface2 = pygame.Surface((40, 40))
+icon_surface2 = pygame.Surface((90, 40))
 icon_surface2.fill((0, 255, 0))  # Verde
 
 # Criar inventário
@@ -96,8 +96,10 @@ inventory = Inventory(entity_owner="Jogador")
 # Criar itens e adicionar
 item1 = Item(id="pocao", icon_surface=icon_surface1)
 item2 = Item(id="espada", icon_surface=icon_surface2)
+
 inventory.add_item(item1)
 inventory.add_item(item2)
+
 
 # Definir item rápido
 inventory.set_quick_item(item1, 1)

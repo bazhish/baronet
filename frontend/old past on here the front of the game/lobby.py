@@ -8,7 +8,6 @@ import pyautogui
 from subprocess import Popen
 import json
 
-pygame.mixer.music.play(0)
 
 LARGURA, ALTURA = pyautogui.size()
 endereço = os.path.dirname(os.path.abspath(__file__))

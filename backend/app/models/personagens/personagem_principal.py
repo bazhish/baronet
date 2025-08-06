@@ -2,65 +2,66 @@
 from dataclasses import field, dataclass
 from typing import Any
 
-@dataclass
 class Usuario:
-    
-    nome: str
-    idade: int
-    peso: float
-    genero: str
-    altura: float
-
-    tentativas_restantes = 3
-    tentativas = 3
-
-    nível_atual = 1
-    nível_máximo = 100
-    
-    experiência_atual = 0
-    experiência_máxima = 100
-
-    dano_base = 2
-    velocidade_base = 4
-    defesa_base = 5
-    vida_base = 100
-    estamina_base = 150
-
-    arma: None  = field(default = "nenhuma",init=False)
-    escudo: None  = field(default = "nenhum",init=False)
-
-    elmo: None  = field(default = "nenhum",init=False)
-    peitoral: None  = field(default = "nenhum",init=False)
-    calça: None  = field(default = "nenhum",init=False)
-    botas: None  = field(default = "",init=False)
-
-    vida_atual: int = field(default = 1,init=False)
-    vida_máxima: int = field(default = 1,init=False)
-    estamina_atual: int = field(default = 1,init=False)
-    estamina_máxima: int = field(default = 1,init=False)
-
-    classe_do_usuário: None = field(default = "nenhuma",init=False)
-
-    primeira_habilidade_passiva: None = field(default = "nenhuma",init=False)
-    segunda_habilidade_passiva: None = field(default = "nenhuma",init=False)
-    terceira_habilidade_passiva: None = field(init=False)
-
-    habilidade_ativa: None = field(default = "nenhuma",init=False)
-    habilidade_especial: None = field(default = "nenhuma",init=False)
-
-    descrição: str = field(default = "", init = False)
-
-    def __post_init__(self):
+    def __init__(self, nome):
+    # DADOS PESSOAIS
+        self.nome = nome
+        self.idade = 17
+        self.peso = 80
+        self.genero = "feminino"
+        self.altura = 1.76
+        # TENTATIVAS
+        self.tentativas_restantes = 3
+        self.tentativas = 3
+        # NÍVEL
+        self.nível_atual = 1
+        self.nível_máximo = 100
+        #  EXPERIÊNCIA
+        self.experiência_atual = 0
+        self.experiência_máxima = 100
+        # ATRIBUTOS
+        self.dano_base = 2
+        self.velocidade_base = 4
+        self.defesa_base = 5
+        self.vida_base = 100
+        self.estamina_base = 150
+        # CLASSE 
+        self.classe_do_usuário = "nenhuma"
+        # ATRIBUTOS
+        self.vida_atual = int
+        self.vida_máxima = int
+        self.estamina_atual = int
+        self.estamina_máxima = int
+        # ARMADURA
+        self.elmo = "nenhum"
+        self.peitoral= "nenhum"
+        self.calça = "nenhuma"
+        self.botas = "nenhuma"
+        # DESCRIÇÃO
+        self.descrição = "nenhuma"
+        # HABLIDIDADES
+        self.primeira_habilidade_passiva = None
+        self.segunda_habilidade_passiva = None
+        self.terceira_habilidade_passiva = None
+        self.habilidade_ativa = None
+        self.habilidade_especial = None
+        # ITENS
+        self.arma = "nenhuma"
+        self.escudo = "nenhum"
+        # BONUS DE ATRIBUTOS
         self.dano_bonus = 0
         self.velocidade_bonus = 0
         self.defesa_bonus = 0
         self.vida_bonus = 0
         self.estamina_bonus = 0
         self.bonus_de_experiencia = 0
+        # DEFINIÇÕES
         self.vida_máxima = self.vida_base
         self.vida_atual = self.vida_máxima
         self.estamina_máxima = self.estamina_base
         self.estamina_atual = self.estamina_máxima
+    def __post_init__(self):
+        # ATUALIZAÇÕES
         self.atualizar_atributos()
         self.atualizar_descrição()
 
@@ -79,11 +80,37 @@ class Usuario:
     @property
     def vida_final(self):
         return self.vida_base + self.vida_bonus
-
+    
     @property
     def estamina_final(self):
         return self.estamina_base + self.estamina_bonus
     
+    def atualizar_status_com_bonus(self):
+        self.vida_máxima = self.vida_final
+        self.estamina_máxima = self.estamina_final
+        self.vida_atual = self.vida_máxima
+        self.estamina_atual = self.estamina_máxima
+
+    def aplicar_primeira_habilidade_passiva(self, habilidade):
+        self.primeira_habilidade_passiva = habilidade.nome
+        habilidade.aplicar_habilidade(self)
+
+    def aplicar_segunda_habilidade_passiva(self, habilidade):
+        self.segunda_habilidade_passiva = habilidade.nome
+        habilidade.aplicar_habilidade(self)
+
+    def aplicar_terceira_habilidade_passiva(self, habilidade):
+        self.terceira_habilidade_passiva = habilidade.nome
+        habilidade.aplicar_habilidade(self)
+
+    def aplicar_habilidade_ativa(self, habilidade):
+        self.habilidade_ativa = habilidade.nome
+        habilidade.aplicar_habilidade(self)
+
+    def aplicar_habilidade_especial(self, habilidade):
+        self.habilidade_especial = habilidade.nome
+        habilidade.aplicar_habilidade(self)
+
     def equipar_arma(self, arma):
         self.arma = arma.nome
         self.dano_bonus = arma.dano if arma else 0
@@ -177,4 +204,9 @@ class Usuario:
                           f"arma: {self.arma}\n"
                           f"escudo: {self.escudo}\n"
                           f"tentativas: {self.tentativas_restantes}\n"
-                          f"classe: {self.classe_do_usuário}\n")
+                          f"classe: {self.classe_do_usuário}\n"
+                          f"primeira habilidade passiva: {self.primeira_habilidade_passiva}\n"
+                          f"segunda habilidade passiva: {self.segunda_habilidade_passiva}\n"
+                          f"terceira habilidade passiva: {self.terceira_habilidade_passiva}\n"
+                          f"habilidade especial: {self.habilidade_especial}\n"
+                          f"habilidade ativa: {self.habilidade_ativa}\n")

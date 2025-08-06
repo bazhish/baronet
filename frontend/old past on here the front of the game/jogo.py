@@ -14,6 +14,8 @@ from backend.app.models.sistema.habilidade_passiva import furtividade, evasao, s
 LARGURA, ALTURA = pyautogui.size()
 endereço = os.path.dirname(os.path.abspath(__file__))
 
+pygame.mixer.music.play(0)
+
 with open(rf"{endereço}\usuario.json", "r") as arquivo:
     dados = json.load(arquivo)
 
@@ -30,6 +32,8 @@ endereco_banco_de_dados = rf"{endereço}\banco_de_dados.db"
 
 cenario_combate = pygame.image.load(rf"{endereço}\imagens\cenario\cenario_combate.png")
 cenario_combate = pygame.transform.scale(cenario_combate, (LARGURA * 3, ALTURA))
+
+
 
 if dados["dados_pessoais"]["Classe"] == "arqueiro":
     habilidade_1_usavel = disparo_perfurante
@@ -141,7 +145,7 @@ if __name__ == "__main__":
         
 
         
-        tecla = [teclas["inventario"].lower(), teclas["correr"].lower(), teclas["habilidade"].lower(), teclas["habilidade_1"].lower(), teclas["habilidade_2"].lower(), teclas["habilidade_3"].lower(), teclas["mapa"].lower()]
+        tecla = [teclas["inventario"].lower(), teclas["correr"].lower(), teclas["habilidade"].lower(), teclas["habilidade_1"].lower(), teclas["habilidade_2"].lower(), teclas["mapa"].lower()]
         for nome_tecla in tecla:
             if nome_tecla == "caps":
                 tecla[tecla.index(nome_tecla)] = "CAPSLOCK"
@@ -155,15 +159,13 @@ if __name__ == "__main__":
         habilidade = getattr(pygame, f"K_{tecla[2]}")
         habilidade_1 = getattr(pygame, f"K_{tecla[3]}")
         habilidade_2 = getattr(pygame, f"K_{tecla[4]}")
-        habilidade_3 = getattr(pygame, f"K_{tecla[5]}")
-        mapa = getattr(pygame, f"K_{tecla[6]}")
-
-
+        mapa = getattr(pygame, f"K_{tecla[5]}")
 
 
 
 
         if estado == JOGO:
+            anterior = JOGO
             dados_do_alvo_recebidos = False
             screen.fill((210, 210, 210))
             if key[pygame.K_ESCAPE] and not click:
@@ -180,6 +182,7 @@ if __name__ == "__main__":
                 click_e = False
 
         if estado == COMBATE:
+            anterior = COMBATE
             screen.blit(cenario_combate, (posição, 0))
 
 
@@ -330,18 +333,11 @@ if __name__ == "__main__":
                 estado = OPCOES
             if not key[pygame.K_ESCAPE]:
                 click = False
-            if key[habilidade_1] and not click:
-                click = True
-            if not key[habilidade_1]:
-                click = False
-            if key[habilidade_2] and not click:
-                click = True
-            if not key[habilidade_2]:
-                click = False
-            if key[habilidade_3] and not click:
-                click = True
-            if not key[habilidade_3]:
-                click = False
+            if key[habilidade_1]:
+                habilidade_1_usavel(usuario, alvo)
+            if key[habilidade_2]:
+                habilidade_2_usavel(usuario, alvo)
+
             
 
 
@@ -352,7 +348,8 @@ if __name__ == "__main__":
         if estado == OPCOES:
             if key[pygame.K_ESCAPE] and not click:
                 click = True
-                estado = JOGO
+                contador = 0
+                estado = COMBATE
             if not key[pygame.K_ESCAPE]:
                 click = False
             if contador == 0:
@@ -390,10 +387,9 @@ if __name__ == "__main__":
                                 {"label": "Habilidades", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade"]}", "active": False, "peritido": TEXTO_S},
                                 {"label": "Habilidade 1", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade_1"]}", "active": False, "peritido": TEXTO_S},
                                 {"label": "Habilidade 2", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade_2"]}", "active": False, "peritido": TEXTO_S},
-                                {"label": "Habilidade 3", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade_3"]}", "active": False, "peritido": TEXTO_S},
                                 {"label": "Mapa", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["mapa"]}", "active": False, "peritido": TEXTO_S},
                             ]
-                estado = JOGO
+                estado = MENU
             
             rect_box = pygame.Rect(LARGURA // 2.7, ALTURA // 4.5, LARGURA // 3.9, ALTURA // 1.4)
             pygame.draw.rect(screen, (210, 210, 210), rect_box, border_radius=15)
@@ -408,8 +404,7 @@ if __name__ == "__main__":
                 input_boxes[2]["text"] != teclas["habilidade"] or
                 input_boxes[3]["text"] != teclas["habilidade_1"] or
                 input_boxes[4]["text"] != teclas["habilidade_2"] or
-                input_boxes[5]["text"] != teclas["habilidade_3"] or
-                input_boxes[6]["text"] != teclas["mapa"]
+                input_boxes[5]["text"] != teclas["mapa"]
             )
 
             # Aplica as cores dependendo das condições
@@ -428,10 +423,9 @@ if __name__ == "__main__":
                     teclas["habilidade"] = input_boxes[2]["text"]
                     teclas["habilidade_1"] = input_boxes[3]["text"]
                     teclas["habilidade_2"] = input_boxes[4]["text"]
-                    teclas["habilidade_3"] = input_boxes[5]["text"]
-                    teclas["mapa"] = input_boxes[6]["text"]
+                    teclas["mapa"] = input_boxes[5]["text"]
                     salvar(teclas)
-                    estado = MENU
+                    estado = anterior
 
             
             for box in input_boxes:

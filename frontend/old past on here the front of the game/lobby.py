@@ -8,7 +8,7 @@ import pyautogui
 from subprocess import Popen
 import json
 
-
+pygame.mixer.music.play(0)
 
 LARGURA, ALTURA = pyautogui.size()
 endereço = os.path.dirname(os.path.abspath(__file__))
@@ -80,8 +80,7 @@ input_boxes = [
                 {"label": "Habilidades", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade"]}", "active": False, "peritido": TEXTO_S},
                 {"label": "Habilidade 1", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade_1"]}", "active": False, "peritido": TEXTO_S},
                 {"label": "Habilidade 2", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade_2"]}", "active": False, "peritido": TEXTO_S},
-                {"label": "Habilidade 3", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade_3"]}", "active": False, "peritido": TEXTO_S},
-                {"label": "Mapa", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["mapa"]}", "active": False, "peritido": TEXTO_S},
+                {"label": "Mapa", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["mapa"]}", "active": False, "peritido": TEXTO_S},
             ]
 
 id_usuario = obter_id_usuario_por_nome(dados["usuario"])
@@ -120,7 +119,7 @@ def salvar(teclas):
 
     cursor.execute("""
         UPDATE keys
-        SET inventario = ?, correr = ?, habilidades = ?, habilidade_1 = ?, habilidade_2 = ?, habilidade_3 = ?, mapa = ?
+        SET inventario = ?, correr = ?, habilidades = ?, habilidade_1 = ?, habilidade_2 = ?, mapa = ?
         WHERE usuario_id = ?
     """, (
         teclas["inventario"],
@@ -128,7 +127,6 @@ def salvar(teclas):
         teclas["habilidade"],
         teclas["habilidade_1"],
         teclas["habilidade_2"],
-        teclas["habilidade_3"],
         teclas["mapa"],
         id_usuario
     ))
@@ -259,7 +257,6 @@ if __name__ == "__main__":
                                 {"label": "Habilidades", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade"]}", "active": False, "peritido": TEXTO_S},
                                 {"label": "Habilidade 1", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade_1"]}", "active": False, "peritido": TEXTO_S},
                                 {"label": "Habilidade 2", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade_2"]}", "active": False, "peritido": TEXTO_S},
-                                {"label": "Habilidade 3", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade_3"]}", "active": False, "peritido": TEXTO_S},
                                 {"label": "Mapa", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["mapa"]}", "active": False, "peritido": TEXTO_S},
                             ]
                 estado = MENU
@@ -277,8 +274,7 @@ if __name__ == "__main__":
                 input_boxes[2]["text"] != teclas["habilidade"] or
                 input_boxes[3]["text"] != teclas["habilidade_1"] or
                 input_boxes[4]["text"] != teclas["habilidade_2"] or
-                input_boxes[5]["text"] != teclas["habilidade_3"] or
-                input_boxes[6]["text"] != teclas["mapa"]
+                input_boxes[5]["text"] != teclas["mapa"]
             )
 
             # Aplica as cores dependendo das condições
@@ -297,9 +293,7 @@ if __name__ == "__main__":
                     teclas["habilidade"] = input_boxes[2]["text"]
                     teclas["habilidade_1"] = input_boxes[3]["text"]
                     teclas["habilidade_2"] = input_boxes[4]["text"]
-                    teclas["habilidade_3"] = input_boxes[5]["text"]
-                    teclas["mapa"] = input_boxes[6]["text"]
-                    print(input_boxes[0]["text"])
+                    teclas["mapa"] = input_boxes[5]["text"]
                     salvar(teclas)
                     estado = MENU
 

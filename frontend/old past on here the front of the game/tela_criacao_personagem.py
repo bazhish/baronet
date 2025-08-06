@@ -207,6 +207,7 @@ def botao_de_confirmação(texto):
         screen.blit(imagem_fundo_secundario, (0, 0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                pygame.mixer.music.play(0)
                 pygame.quit()
                 sys.exit()
 
@@ -388,7 +389,6 @@ def inicializar_banco():
         habilidades TEXT,
         habilidade_1 TEXT,
         habilidade_2 TEXT,
-        habilidade_3 TEXT,
         mapa TEXT,
         FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
     )""")
@@ -434,9 +434,9 @@ def criar_personagem(nome, classe, dano, velocidade, defesa, vida, arma):
 """, (usuario_id, arma, 1))
 
     cursor.execute("""
-        INSERT INTO keys (usuario_id, inventario, correr, habilidades, habilidade_1, habilidade_2, habilidade_3, mapa)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    """, (usuario_id, "E", "Lctrl", "R", "Z", "X", "C", "M"))
+        INSERT INTO keys (usuario_id, inventario, correr, habilidades, habilidade_1, habilidade_2, mapa)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    """, (usuario_id, "E", "Lctrl", "R", "Z", "X", "M"))
 
     conexao.commit()
     conexao.close()
@@ -506,7 +506,7 @@ def obter_keys_do_usuario(usuario_id):
     cursor = conexao.cursor()
 
     cursor.execute("""
-        SELECT inventario, correr, habilidades, habilidade_1, habilidade_2, habilidade_3, mapa
+        SELECT inventario, correr, habilidades, habilidade_1, habilidade_2, mapa
         FROM keys
         WHERE usuario_id = ?
     """, (usuario_id,))
@@ -574,6 +574,7 @@ if __name__ == "__main__":
             # Eventos que tem no jogo
             for evento in pygame.event.get():
                 if evento.type == pygame.QUIT:
+                    pygame.mixer.music.play(0)
                     pygame.quit()
                     sys.exit()
 
@@ -726,11 +727,11 @@ if __name__ == "__main__":
                                                  "habilidade": dados["keys"][0][2],
                                                  "habilidade_1": dados["keys"][0][3],
                                                  "habilidade_2": dados["keys"][0][4],
-                                                 "habilidade_3": dados["keys"][0][5],
-                                                 "mapa": dados["keys"][0][6]
+                                                 "mapa": dados["keys"][0][5]
                                                  }}, arquivo, indent=4)
                         if os.path.exists(rf"{endereço}\usuario2.json"):
                             os.remove(rf"{endereço}\usuario2.json")
+                        pygame.mixer.music.play(0)
                         break
                         
                 
@@ -1494,12 +1495,11 @@ if __name__ == "__main__":
                                          "habilidade": "R",
                                          "habilidade_1": "Z",
                                          "habilidade_2": "X",
-                                         "habilidade_3": "C",
                                          "mapa": "M"
                                          }}, arquivo, indent=4)
                     
 
-                               
+                pygame.mixer.music.play(0)
                 break
 
 

@@ -8,7 +8,7 @@ import sqlite3
 import pyautogui
 from subprocess import Popen
 import json
-from Imagens.personagem_principal import personagem, personagem_andando_D
+from Imagens.personagem_principal import personagem_parado, personagem_andando_D
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from backend.app.models.sistema.habilidade_ativa import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
 from backend.app.models.sistema.habilidade_passiva import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
@@ -23,8 +23,12 @@ with open(rf"{endereço}\usuario.json", "r") as arquivo:
 teclas = dados["keys"]
 
 posição = 0
+colisao_chao = True
+posição_personagem_X = 500
+posição_personagem_Y = 520
 frame_personagem = 0
-estado_personagem = personagem
+estado_personagem = personagem_parado
+diresao = "parado"
 
 if __name__ == "__main__":
     if not os.path.exists(rf"{endereço}\usuario.json"):
@@ -96,6 +100,10 @@ INVENTARIO = "inventario"
 COMBATE = "combate"
 estado = COMBATE
 
+sombra = pygame.Surface((100, 20), pygame.SRCALPHA)
+
+
+
 quadrado = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
 quadrado_2 = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
 quadrado_3 = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
@@ -145,7 +153,7 @@ if __name__ == "__main__":
 
         key = pygame.key.get_pressed()
 
-        
+        pygame.draw.ellipse(sombra, (0, 0, 0, 150), sombra.get_rect())
 
         
         tecla = [teclas["inventario"].lower(), teclas["correr"].lower(), teclas["habilidade"].lower(), teclas["habilidade_1"].lower(), teclas["habilidade_2"].lower(), teclas["mapa"].lower()]
@@ -187,21 +195,59 @@ if __name__ == "__main__":
         if estado == COMBATE:
             anterior = COMBATE
             screen.blit(cenario_combate, (posição, 0))
-            screen.blit(estado_personagem, (200, 500))
+
+            if posição >= -LARGURA * 2 and posição_personagem_X >= 500:
+                if key[pygame.K_d]:
+                    posição -= 20
+                    diresao = "direita"
+            else:
+                if -posição_personagem_X >= -LARGURA + 150:
+                    if key[pygame.K_d]:
+                        posição_personagem_X += 20
+                        diresao = "direita"
+                else:
+                    diresao = "parado"
 
 
-            if key[pygame.K_d]:
-                posição -= 20
+                
+            if posição <= 0 and posição_personagem_X <= 500:
+                if key[pygame.K_a]:
+                    posição += 20
+                    diresao = "esquerda"
+
+            else:
+                if posição_personagem_X >= -20:
+                    if key[pygame.K_a]:
+                        posição_personagem_X -= 20
+                        diresao = "esquerda"
+
+            if key[pygame.K_SPACE]:
+                if posição_personagem_Y > 520:
+                    posição_personagem_Y = 521
+
+                else:
+                    if posição_personagem_Y <= 440 and colisao_chao:
+                        posição_personagem_Y -= 10
+                    else:
+                        posição_personagem_Y += 10
+                        colisao_chao = False
+
+
+
+            
+            if not key[pygame.K_a] and not key[pygame.K_d]:
+                diresao = "parado"
+
+            if diresao == "parado":
+                screen.blit(sombra, (posição_personagem_X + 40, 670))
+                screen.blit(personagem_parado, (posição_personagem_X, posição_personagem_Y))
+            else:
+                screen.blit(sombra, (posição_personagem_X + 40, 670))
+                screen.blit(personagem_andando_D[frame_personagem], (posição_personagem_X, posição_personagem_Y))
+                frame_personagem += 1
                 if frame_personagem >= len(personagem_andando_D):
                     frame_personagem = 0
-                estado_personagem = personagem_andando_D[frame_personagem]
-                frame_personagem += 1
-            else:
-                estado_personagem = personagem
-            if key[pygame.K_a]:
-                posição += 20
-            else:
-                estado_personagem = personagem
+            
             
             if dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
                 alvo = {"dano": 0,

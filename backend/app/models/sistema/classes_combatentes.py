@@ -1,14 +1,16 @@
 from dataclasses import dataclass, field
-from habilidade_ativa import (
+from backend.app.models.sistema.habilidades_ativa_combatentes import (
     golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada,
     ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca,
     disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
 )
-from habilidade_passiva import (
+from backend.app.models.sistema.habilidades_passivas_combatentes import (
     furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada,
     ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca,
     controle_passivo, controle_total, disparo_preciso, passos_silenciosos,
-    flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
+    flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva, 
+    foco_interno, tecnica_perfeita, golpe_fatal, mira_aprimorada,
+    arsenal_tatico, fogo_sucessivo
 )
 
 @dataclass
@@ -99,8 +101,7 @@ class Artilheiro(Classe):
     def __init__(self, usuario):
         super().__init__(
             "Artilheiro", 15, 3, 2, 20,
-            None, None,
-            None, None,
+            foco_interno, tecnica_perfeita, golpe_fatal, None,
             None)
         self
 
@@ -109,7 +110,7 @@ class ArtistaMarcial(Classe):
     def __init__(self, usuario):
         super().__init__(
             "Artista Marcial", 10, 6, 4, 18, 1.5,
-            None, None, None,
+            mira_aprimorada, arsenal_tatico, fogo_sucessivo,
             None, None)
         self.atualizar_descrição()
 
@@ -119,3 +120,5 @@ escudeiro = Escudeiro()
 lanceiro = Lanceiro()
 arqueiro = Arqueiro()
 batedor = Batedor()
+artilheiro = Artilheiro()
+artista_marcial = ArtistaMarcial()

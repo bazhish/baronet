@@ -1,7 +1,6 @@
 import pygame
 import sys
 import os
-from spritesheet import SpriteSheet, Origin
 from random import choice
 from tela_criacao_personagem import desenhar_botao, TEXTO_S, COR_TEXTO, COR_INATIVA, COR_ATIVA
 from lobby import input_boxes, salvar, fonte_input, font_title
@@ -9,9 +8,10 @@ import sqlite3
 import pyautogui
 from subprocess import Popen
 import json
+from Imagens.personagem_principal import personagem_parado, personagem_andando_D
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from backend.app.models.sistema.habilidade_ativa import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
-from backend.app.models.sistema.habilidade_passiva import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
+#from backend.app.models.sistema.habilidades_ativa_combatentes import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
+from backend.app.models.sistema.habilidades_passivas_combatentes import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
 LARGURA, ALTURA = pyautogui.size()
 endereço = os.path.dirname(os.path.abspath(__file__))
 
@@ -23,7 +23,20 @@ with open(rf"{endereço}\usuario.json", "r") as arquivo:
 teclas = dados["keys"]
 
 posição = 0
-
+colisao_chao = True
+continuar_esquerda = False
+continuar_direita = False
+vel_y = 0
+gravidade = 0.9
+forca_pulo = -8
+pulo_detectado = False
+limite_de_pulo = 2
+qnt_de_pulo = 0
+posição_personagem_X = 500
+posição_personagem_Y = 520
+frame_personagem = 0
+estado_personagem = personagem_parado
+diresao = "parado"
 
 if __name__ == "__main__":
     if not os.path.exists(rf"{endereço}\usuario.json"):
@@ -37,46 +50,44 @@ cenario_combate = pygame.transform.scale(cenario_combate, (LARGURA * 3, ALTURA))
 
 
 
-if dados["dados_pessoais"]["Classe"] == "arqueiro":
-    habilidade_1_usavel = disparo_perfurante
-    habilidade_2_usavel = camuflagem
-    habilidade_passiva_1 = disparo_preciso
-    habilidade_passiva_2 = passos_silenciosos
-    habilidade_passiva_3 = flecha_dupla
-elif dados["dados_pessoais"]["Classe"] == "espadachin":
-    habilidade_1_usavel = impacto_cruzado
-    habilidade_2_usavel = bloqueio_de_espada
-    habilidade_passiva_1 = vontade_da_espada
-    habilidade_passiva_2 = heranca_da_espada
-    habilidade_passiva_3 = ataque_rapido
-elif dados["dados_pessoais"]["Classe"] == "assassino":
-    habilidade_1_usavel = golpe_mortal
-    habilidade_2_usavel = intangibilidade
-    habilidade_passiva_1 = furtividade
-    habilidade_passiva_2 = evasao
-    habilidade_passiva_3 = sangramento
-elif dados["dados_pessoais"]["Classe"] == "escudeiro":
-    habilidade_1_usavel = ataque_com_escudo
-    habilidade_2_usavel = defesa_reforcada
-    habilidade_passiva_1 = bloqueio_de_ataque
-    habilidade_passiva_2 = repelir
-    habilidade_passiva_3 = peso_pena
-elif dados["dados_pessoais"]["Classe"] == "lanceiro":
-    habilidade_1_usavel = giro_de_lanca
-    habilidade_2_usavel = arremesso_de_lanca
-    habilidade_passiva_1 = danca_da_lanca
-    habilidade_passiva_2 = controle_passivo
-    habilidade_passiva_3 = controle_total
-elif dados["dados_pessoais"]["Classe"] == "batedor":
-    habilidade_1_usavel = ataque_surpresa
-    habilidade_2_usavel = fuga_rapida
-    habilidade_passiva_1 = ataque_silencioso
-    habilidade_passiva_2 = evasao_rapida
-    habilidade_passiva_3 = exploracao_furtiva
+# if dados["dados_pessoais"]["Classe"] == "arqueiro":
+#     habilidade_1_usavel = disparo_perfurante
+#     habilidade_2_usavel = camuflagem
+#     habilidade_passiva_1 = disparo_preciso
+#     habilidade_passiva_2 = passos_silenciosos
+#     habilidade_passiva_3 = flecha_dupla
+# elif dados["dados_pessoais"]["Classe"] == "espadachin":
+#     habilidade_1_usavel = impacto_cruzado
+#     habilidade_2_usavel = bloqueio_de_espada
+#     habilidade_passiva_1 = vontade_da_espada
+#     habilidade_passiva_2 = heranca_da_espada
+#     habilidade_passiva_3 = ataque_rapido
+# elif dados["dados_pessoais"]["Classe"] == "assassino":
+#     habilidade_1_usavel = golpe_mortal
+#     habilidade_2_usavel = intangibilidade
+#     habilidade_passiva_1 = furtividade
+#     habilidade_passiva_2 = evasao
+#     habilidade_passiva_3 = sangramento
+# elif dados["dados_pessoais"]["Classe"] == "escudeiro":
+#     habilidade_1_usavel = ataque_com_escudo
+#     habilidade_2_usavel = defesa_reforcada
+#     habilidade_passiva_1 = bloqueio_de_ataque
+#     habilidade_passiva_2 = repelir
+#     habilidade_passiva_3 = peso_pena
+# elif dados["dados_pessoais"]["Classe"] == "lanceiro":
+#     habilidade_1_usavel = giro_de_lanca
+#     habilidade_2_usavel = arremesso_de_lanca
+#     habilidade_passiva_1 = danca_da_lanca
+#     habilidade_passiva_2 = controle_passivo
+#     habilidade_passiva_3 = controle_total
+# elif dados["dados_pessoais"]["Classe"] == "batedor":
+#     habilidade_1_usavel = ataque_surpresa
+#     habilidade_2_usavel = fuga_rapida
+#     habilidade_passiva_1 = ataque_silencioso
+#     habilidade_passiva_2 = evasao_rapida
+#     habilidade_passiva_3 = exploracao_furtiva
 
-animação_andar_D = SpriteSheet(rf"{endereço}\imagens\personagem_principal\andar.png", 4, 2)
-quantidadeDeFremesAndarD = animação_andar_D.sprite_count() - 1
-frameAtualAndarD = 0
+
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -96,6 +107,11 @@ MENU = "menu"
 INVENTARIO = "inventario"
 COMBATE = "combate"
 estado = COMBATE
+
+tranparencia = 150
+sombra = pygame.Surface((100, 20), pygame.SRCALPHA)
+
+
 
 quadrado = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
 quadrado_2 = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
@@ -145,6 +161,9 @@ if __name__ == "__main__":
                                 box["text"] = "Tab"
 
         key = pygame.key.get_pressed()
+
+        pygame.draw.ellipse(sombra, (0, 0, 0, tranparencia), sombra.get_rect())
+
         
         tecla = [teclas["inventario"].lower(), teclas["correr"].lower(), teclas["habilidade"].lower(), teclas["habilidade_1"].lower(), teclas["habilidade_2"].lower(), teclas["mapa"].lower()]
         for nome_tecla in tecla:
@@ -186,16 +205,75 @@ if __name__ == "__main__":
             anterior = COMBATE
             screen.blit(cenario_combate, (posição, 0))
 
-
-            if key[pygame.K_d]:
-                if frameAtualAndarD < quantidadeDeFremesAndarD:
-                    frameAtualAndarD += .3
+            if posição - 1 >= -LARGURA * 2  and posição_personagem_X >= 500:
+                if key[pygame.K_d]:
+                    posição -= 20
+                    diresao = "direita"
+            else:
+                if -posição_personagem_X >= -LARGURA + 150:
+                    if key[pygame.K_d]:
+                        posição_personagem_X += 20
+                        diresao = "direita"
                 else:
-                    frameAtualAndarD = 0
-                posição -= 20
-                animação_andar_D.blit(screen, int(frameAtualAndarD), (100, 430), Origin.Center)
-            if key[pygame.K_a]:
-                posição += 20
+                    diresao = "parado"
+
+
+                
+            if posição <= -20 and posição_personagem_X <= 500:
+                if key[pygame.K_a]:
+                    posição += 20
+                    diresao = "esquerda"
+
+            else:
+                if posição_personagem_X >= -21:
+                    if key[pygame.K_a]:
+                        posição_personagem_X -= 20
+                        diresao = "esquerda"
+                else:
+                    diresao = "parado"
+
+            if key[pygame.K_SPACE] and colisao_chao:
+                qnt_de_pulo += 0.5
+                pulo_detectado = True
+                vel_y = forca_pulo
+                sombra.set_alpha(tranparencia - (qnt_de_pulo * 25))
+                
+                if qnt_de_pulo == limite_de_pulo:
+                    colisao_chao = False
+
+
+               
+            vel_y += gravidade
+            posição_personagem_Y += vel_y
+            if posição_personagem_Y + 200 >= 710:
+                sombra.set_alpha(tranparencia - (qnt_de_pulo * 10))
+
+            if posição_personagem_Y + 200 >= 700:
+                sombra.set_alpha(tranparencia - (qnt_de_pulo * 5))
+
+            if posição_personagem_Y + 200 >= 720:
+                sombra.set_alpha(tranparencia)
+                pulo_detectado = False
+                posição_personagem_Y = 720 - 200
+                vel_y = 0
+                colisao_chao = True
+                qnt_de_pulo = 0
+
+
+            
+            if not key[pygame.K_a] and not key[pygame.K_d]:
+                diresao = "parado"
+
+            if diresao == "parado":
+                screen.blit(sombra, (posição_personagem_X + 40, 670))
+                screen.blit(personagem_parado, (posição_personagem_X, posição_personagem_Y))
+            else:
+                screen.blit(sombra, (posição_personagem_X + 40, 670))
+                screen.blit(personagem_andando_D[frame_personagem], (posição_personagem_X, posição_personagem_Y))
+                frame_personagem += 1
+                if frame_personagem >= len(personagem_andando_D):
+                    frame_personagem = 0
+            
             
             if dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
                 alvo = {"dano": 0,
@@ -340,9 +418,11 @@ if __name__ == "__main__":
             if not key[pygame.K_ESCAPE]:
                 click = False
             if key[habilidade_1]:
-                habilidade_1_usavel(usuario, alvo)
+                None
+                #habilidade_1_usavel(usuario, alvo)
             if key[habilidade_2]:
-                habilidade_2_usavel(usuario, alvo)
+                None
+                #habilidade_2_usavel(usuario, alvo)
 
             
 
@@ -355,7 +435,7 @@ if __name__ == "__main__":
             if key[pygame.K_ESCAPE] and not click:
                 click = True
                 contador = 0
-                estado = COMBATE
+                estado = anterior
             if not key[pygame.K_ESCAPE]:
                 click = False
             if contador == 0:
@@ -366,7 +446,7 @@ if __name__ == "__main__":
             pygame.draw.rect(screen, (180, 180, 180), rect_box, border_radius=15)
 
             if desenhar_botao("Continuar", LARGURA // 2.86, ALTURA // 4.7, LARGURA // 3.3, ALTURA // 8, ALTURA // 18, (150, 150, 150), (120, 120, 120), ALTURA // 30, fonte= ALTURA // 18):
-                estado = JOGO
+                estado = anterior
 
             if desenhar_botao("Opçoes", LARGURA // 2.86, ALTURA // 2.2, LARGURA // 3.3, ALTURA // 8, ALTURA // 18, (150, 150, 150), (120, 120, 120), ALTURA // 30, fonte= ALTURA // 18):
                 contador = 0

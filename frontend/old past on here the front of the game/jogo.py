@@ -1,6 +1,7 @@
 import pygame
 import sys
 import os
+from spritesheet import SpriteSheet, Origin
 from random import choice
 from tela_criacao_personagem import desenhar_botao, TEXTO_S, COR_TEXTO, COR_INATIVA, COR_ATIVA
 from lobby import input_boxes, salvar, fonte_input, font_title
@@ -8,7 +9,6 @@ import sqlite3
 import pyautogui
 from subprocess import Popen
 import json
-from Imagens.personagem_principal import personagem, personagem_andando_D
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from backend.app.models.sistema.habilidade_ativa import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
 from backend.app.models.sistema.habilidade_passiva import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
@@ -23,8 +23,7 @@ with open(rf"{endereço}\usuario.json", "r") as arquivo:
 teclas = dados["keys"]
 
 posição = 0
-frame_personagem = 0
-estado_personagem = personagem
+
 
 if __name__ == "__main__":
     if not os.path.exists(rf"{endereço}\usuario.json"):
@@ -75,7 +74,9 @@ elif dados["dados_pessoais"]["Classe"] == "batedor":
     habilidade_passiva_2 = evasao_rapida
     habilidade_passiva_3 = exploracao_furtiva
 
-
+animação_andar_D = SpriteSheet(rf"{endereço}\imagens\personagem_principal\andar.png", 4, 2)
+quantidadeDeFremesAndarD = animação_andar_D.sprite_count() - 1
+frameAtualAndarD = 0
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -144,9 +145,6 @@ if __name__ == "__main__":
                                 box["text"] = "Tab"
 
         key = pygame.key.get_pressed()
-
-        
-
         
         tecla = [teclas["inventario"].lower(), teclas["correr"].lower(), teclas["habilidade"].lower(), teclas["habilidade_1"].lower(), teclas["habilidade_2"].lower(), teclas["mapa"].lower()]
         for nome_tecla in tecla:
@@ -187,21 +185,17 @@ if __name__ == "__main__":
         if estado == COMBATE:
             anterior = COMBATE
             screen.blit(cenario_combate, (posição, 0))
-            screen.blit(estado_personagem, (200, 500))
 
 
             if key[pygame.K_d]:
+                if frameAtualAndarD < quantidadeDeFremesAndarD:
+                    frameAtualAndarD += .3
+                else:
+                    frameAtualAndarD = 0
                 posição -= 20
-                if frame_personagem >= len(personagem_andando_D):
-                    frame_personagem = 0
-                estado_personagem = personagem_andando_D[frame_personagem]
-                frame_personagem += 1
-            else:
-                estado_personagem = personagem
+                animação_andar_D.blit(screen, int(frameAtualAndarD), (100, 430), Origin.Center)
             if key[pygame.K_a]:
                 posição += 20
-            else:
-                estado_personagem = personagem
             
             if dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
                 alvo = {"dano": 0,

@@ -12,10 +12,12 @@ def atualizar_pip():
 def instalar_pygame():
     try:
         import pygame
+        import spritesheet
         print("Pygame já está instalado.")
     except ImportError:
         print("Instalando Pygame...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", "pygame"])
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "pygame-spritesheet"])
         print("Pygame instalado com sucesso!\n")
 
 def instalar_pyautogui():

@@ -25,6 +25,8 @@ class Usuario:
         self.defesa_base = 5
         self.vida_base = 100
         self.estamina_base = 150
+        # ESTADO
+        self.estado = "normal"
         # CLASSE 
         self.classe_do_usuário = "nenhuma"
         # ATRIBUTOS
@@ -186,7 +188,8 @@ class Usuario:
             raise SystemExit("suas tentativas acabaram, você perdeu o jogo")
 
     def atacar(self, alvo):
-        alvo.vida_atual -= self.dano_final
+        if alvo.estado is not "intangivel":
+            alvo.vida_atual -= self.dano_final
 
     def atualizar_descrição(self) -> None:
         self.descrição = (f"nome: {self.nome}\n"

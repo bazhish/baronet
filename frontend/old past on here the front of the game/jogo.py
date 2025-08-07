@@ -245,6 +245,10 @@ if __name__ == "__main__":
                
             vel_y += gravidade
             posição_personagem_Y += vel_y
+<<<<<<< HEAD
+=======
+            
+>>>>>>> 435f4b5eaada1a4adba3af83cf6fbcd4fae945d0
             if posição_personagem_Y + 200 >= 710:
                 sombra.set_alpha(tranparencia - (qnt_de_pulo * 10))
 

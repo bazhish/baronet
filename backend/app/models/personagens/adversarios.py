@@ -30,6 +30,8 @@ class AdversarioDemiHumano:
     habilidade_ativa: Any = None
     habilidade_especial: Any = None
 
+    estado: str = field(default = "normal", init = False)
+
     descrição: str = field(default = "", init = False)
 
     vida_atual: int = field(init = False)
@@ -77,7 +79,8 @@ class AdversarioDemiHumano:
         self.vida_máxima + self.vida_bonus
 
     def atacar(self, alvo) -> None:
-        alvo.vida_atual -= self.dano
+        if alvo.estado is not "intangivel":
+            alvo.vida_atual -= self.dano
 
     def estar_vivo(self):
         return self.vida_atual > 0
@@ -87,6 +90,7 @@ class AdversarioMonstro:
     nome: str
     peso: float
     altura: float
+
 
     nível: int
     experiência: int
@@ -98,6 +102,8 @@ class AdversarioMonstro:
 
     arma: Any = None
     escudo: Any = None
+
+    estado: str = field(default = "normal", init = False)
 
     descrição: str = field(default = "", init = False)
 
@@ -150,7 +156,8 @@ class AdversarioMonstro:
         self.vida_máxima = self.vida_base * self.nível + self.vida_bonus
 
     def atacar(self, alvo) -> None:
-        alvo.vida_atual -= self.dano_final
+        if alvo.estado is not "intangivel":
+            alvo.vida_atual -= self.dano_final
 
     def estar_vivo(self):
         return self.vida_atual > 0

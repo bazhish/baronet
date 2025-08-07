@@ -3,6 +3,7 @@ import sys, os
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..')))
+from backend.app.models.personagens.adversarios import AdversarioDemiHumano
 
 @dataclass
 class EnfraquecimentoBase(ABC):
@@ -28,7 +29,8 @@ class EnfraquecimentoBase(ABC):
             f"duração: {self.duração} "
             f"dano: {self.dano} "
             f"velocidade: {self.velocidade} "
-            f"defesa: {self.defesa}"
+            f"defesa: {self.defesa} "
+            f"estado: {self.estado}"
         )
 
 # desvantagens
@@ -42,6 +44,7 @@ class Queimadura(EnfraquecimentoBase):
             alvo.vida_atual -= self.dano
             alvo.velocidade = max(0, alvo.velocidade - self.velocidade)
             alvo.defesa = max(0, alvo.defesa - self.defesa)
+            alvo.estado = "queimado"
 
 class Veneno(EnfraquecimentoBase):
     def __init__(self):
@@ -52,6 +55,7 @@ class Veneno(EnfraquecimentoBase):
             alvo.vida_atual -= self.dano
             alvo.velocidade = max(0, alvo.velocidade - self.velocidade)
             alvo.defesa = max(0, alvo.defesa - self.defesa)
+            alvo.estado = "envenenado"
 
 class Sangramento(EnfraquecimentoBase):
     def __init__(self):
@@ -62,6 +66,7 @@ class Sangramento(EnfraquecimentoBase):
             alvo.vida_atual -= self.dano
             alvo.velocidade = max(0, alvo.velocidade - self.velocidade)
             alvo.defesa = max(0, alvo.defesa - self.defesa)
+            alvo.estado = "sangrando"
 
 class Atordoamento(EnfraquecimentoBase):
     def __init__(self):
@@ -71,6 +76,7 @@ class Atordoamento(EnfraquecimentoBase):
         for segundos in range(self.duração):
             alvo.velocidade = max(0, alvo.velocidade - self.velocidade)
             alvo.defesa = max(0, alvo.defesa - self.defesa)
+            alvo.estado = "atordoado"
 
 class Silencio(EnfraquecimentoBase):
     def __init__(self):
@@ -84,6 +90,7 @@ class Silencio(EnfraquecimentoBase):
                 alvo.terceira_habilidade_passiva = None
                 alvo.habilidade_ativa = None
                 alvo.habilidade_especial = None
+                alvo.estado = "silenciado"
 
 class Lentidao(EnfraquecimentoBase):
     def __init__(self):
@@ -93,6 +100,7 @@ class Lentidao(EnfraquecimentoBase):
         for segundos in range(self.duração):
             alvo.velocidade = max(0, alvo.velocidade - self.velocidade)
             alvo.defesa = max(0, alvo.defesa - self.defesa)
+            alvo.estado = "lentificado"
 
 class Explosivo(EnfraquecimentoBase):
     def __init__(self):
@@ -100,6 +108,7 @@ class Explosivo(EnfraquecimentoBase):
 
     def aplicar_efeito(self, alvo):
         alvo.vida_atual -= self.dano
+
 
 # vantagens
 
@@ -182,6 +191,7 @@ class FortalecimentoDefesa(FortalecimentoBase):
         bonus = valor_base * self.porcentagem
         for segundos in range(self.duração):
             setattr(usuario, f"{self.atributo}_bonus", bonus)
+            usuario.estado = "defessa reforçada"
 
 class FortalecimentoVelocidade(FortalecimentoBase):
     def __init__(self, porcentagem: float, duração: int):
@@ -192,6 +202,7 @@ class FortalecimentoVelocidade(FortalecimentoBase):
         bonus = valor_base * self.porcentagem
         for segundos in range(self.duração):
             setattr(usuario, f"{self.atributo}_bonus", bonus)
+            usuario.estado = "velocidade reforçada"
 
 class FortalecimentoVida(FortalecimentoBase):
     def __init__(self, porcentagem: float, duração: int):
@@ -202,6 +213,7 @@ class FortalecimentoVida(FortalecimentoBase):
         bonus = valor_base * self.porcentagem
         for segundos in range(self.duração):
             setattr(usuario, f"{self.atributo}_bonus", bonus)
+            usuario.estado = "vida reforçada"
 
 class FortalecimentoEstamina(FortalecimentoBase):
     def __init__(self, porcentagem: float, duração: int):
@@ -212,6 +224,7 @@ class FortalecimentoEstamina(FortalecimentoBase):
         bonus = valor_base * self.porcentagem
         for segundos in range(self.duração):
             setattr(usuario, f"{self.atributo}_bonus", bonus)
+            usuario.estado = "estamina reforçada"
 
 class FortalecimentoDano(FortalecimentoBase):
     def __init__(self, porcentagem: float, duração: int):
@@ -222,3 +235,4 @@ class FortalecimentoDano(FortalecimentoBase):
         bonus = valor_base * self.porcentagem
         for segundos in range(self.duração):
             setattr(usuario, f"{self.atributo}_bonus", bonus)
+            usuario.estado = "dano reforçado"

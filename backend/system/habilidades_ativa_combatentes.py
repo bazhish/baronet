@@ -35,9 +35,8 @@ def efeito_golpe_mortal(usuario, alvo):
     if alvo:
         alvo.vida -= max(0, ((usuario.dano_final) * 3) - (alvo.defesa_final* uniform(0.6, 0.8)))
 
-def efeito_intangibilidade(alvo):
-    if alvo:
-        alvo.dano_final = 0
+def efeito_intangibilidade(usuario):
+    usuario.estado = "intangivel"
 
 # ESPADACHIN
 def efeito_impacto_cruzado(usuario, alvo):

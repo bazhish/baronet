@@ -20,15 +20,17 @@ class Usuario:
         self.experiência_atual = 0
         self.experiência_máxima = 100
         # ATRIBUTOS
-        self.dano_base = 2
-        self.velocidade_base = 4
-        self.defesa_base = 5
-        self.vida_base = 100
-        self.estamina_base = 150
+        self.dano_base = int
+        self.velocidade_base = int
+        self.defesa_base = int
+        self.vida_base = int
+        self.estamina_base = int
+        self.multiplicador_de_experiência = int
         # ESTADO
         self.estado = "normal"
         # CLASSE 
-        self.classe_do_usuário = "nenhuma"
+        self.nome_da_classe_do_usuário = "nenhuma"
+        self.classe = None
         # ATRIBUTOS
         self.vida_atual = int
         self.vida_máxima = int
@@ -56,13 +58,30 @@ class Usuario:
         self.defesa_bonus = 0
         self.vida_bonus = 0
         self.estamina_bonus = 0
-        self.bonus_de_experiencia = 0
         # DEFINIÇÕES
         self.vida_máxima = self.vida_base
         self.vida_atual = self.vida_máxima
         self.estamina_máxima = self.estamina_base
         self.estamina_atual = self.estamina_máxima
     def __post_init__(self):
+        self.dano_base = self.classe.dano_base
+        self.velocidade_base = self.classe.velocidade_base
+        self.defesa_base = self.classe.defesa_base
+        self.vida_base = self.classe.vida_base
+        self.estamina_base = self.classe.estamina_base
+        self.multiplicador_de_experiência = self.classe.multiplicador_de_experiência
+        self.arma= self.classe.arma
+        self.primeira_habilidade_passiva = self.classe.primeira_habilidade_passiva.nome
+        self.classe.primeira_habilidade_passiva.aplicar_habilidade(self)
+        self.segunda_habilidade_passiva = self.classe.segunda_habilidade_passiva.nome
+        self.classe.segunda_habilidade_passiva.aplicar_habilidade(self)
+        self.terceira_habilidade_passiva = self.classe.terceira_habilidade_passiva.nome
+        self.classe.terceira_habilidade_passiva.aplicar_habilidade(self)
+        self.habilidade_ativa = self.classe.habilidade_ativa.nome
+        self.classe.habilidade_ativa.aplicar_habilidade(self)
+        self.habilidade_especial = self.classe.habilidade_especial.nome
+        self.classe.habilidade_especial.aplicar_habilidade(self)
+
         # ATUALIZAÇÕES
         self.atualizar_atributos()
         self.atualizar_descrição()
@@ -93,26 +112,6 @@ class Usuario:
         self.vida_atual = self.vida_máxima
         self.estamina_atual = self.estamina_máxima
 
-    def aplicar_primeira_habilidade_passiva(self, habilidade):
-        self.primeira_habilidade_passiva = habilidade.nome
-        habilidade.aplicar_habilidade(self)
-
-    def aplicar_segunda_habilidade_passiva(self, habilidade):
-        self.segunda_habilidade_passiva = habilidade.nome
-        habilidade.aplicar_habilidade(self)
-
-    def aplicar_terceira_habilidade_passiva(self, habilidade):
-        self.terceira_habilidade_passiva = habilidade.nome
-        habilidade.aplicar_habilidade(self)
-
-    def aplicar_habilidade_ativa(self, habilidade):
-        self.habilidade_ativa = habilidade.nome
-        habilidade.aplicar_habilidade(self)
-
-    def aplicar_habilidade_especial(self, habilidade):
-        self.habilidade_especial = habilidade.nome
-        habilidade.aplicar_habilidade(self)
-
     def equipar_arma(self, arma):
         self.arma = arma.nome
         self.dano_bonus = arma.dano if arma else 0
@@ -132,9 +131,9 @@ class Usuario:
         self.defesa_bonus = 0
 
     def receber_experiencia(self, experiência: int):
-        self.bonus_de_experiencia = 0
-        if self.bonus_de_experiencia > 0:
-            experiência *= self.bonus_de_experiencia
+        self.multiplicador_de_experiência = 0
+        if self.multiplicador_de_experiência > 0:
+            experiência *= self.multiplicador_de_experiência
 
         self.experiência_atual += experiência
         while self.experiência_atual >= self.experiência_máxima and self.nível_atual < self.nível_máximo:
@@ -207,7 +206,7 @@ class Usuario:
                           f"arma: {self.arma}\n"
                           f"escudo: {self.escudo}\n"
                           f"tentativas: {self.tentativas_restantes}\n"
-                          f"classe: {self.classe_do_usuário}\n"
+                          f"classe: {self.nome_da_classe_do_usuário}\n"
                           f"primeira habilidade passiva: {self.primeira_habilidade_passiva}\n"
                           f"segunda habilidade passiva: {self.segunda_habilidade_passiva}\n"
                           f"terceira habilidade passiva: {self.terceira_habilidade_passiva}\n"

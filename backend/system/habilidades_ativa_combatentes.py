@@ -36,11 +36,9 @@ class HabilidadeAtiva:
             self.duração_restante = self.duração
             self.tempo_de_recarga_restante = self.tempo_de_recarga
 
-    def atualizar_atualizar_tempo(self):
-        while self.duração_restante > 0:
-            self.duração_restante -= 1
-        while self.tempo_de_recarga_restante > 0:
-            self.tempo_de_recarga_restante -= 1
+    def iniciar_cooldown(self):
+        self.tempo_de_recarga_restante = self.tempo_de_recarga
+
 
 #  ASSASSINO
 class GolpeMortal(HabilidadeAtiva):
@@ -100,7 +98,6 @@ class Intangibilidade(HabilidadeAtiva):
     def __init__(self, usuario):
         super().__init__(
             nome="Intangibilidade",
-            efeito=self.efeito_intangibilidade,
             tempo_de_recarga=1,
             nivel_minimo=1,
             duração=1
@@ -126,10 +123,6 @@ class Intangibilidade(HabilidadeAtiva):
         if tempo_passado > self.duração:
             self.ativa = False
             self.usuario.estado = "normal"
-
-    def efeito_intangibilidade(self, usuario):
-        pass
-
 # ESPADACHIN
 class ImpactoCruzado(HabilidadeAtiva):
     def __init__(self, usuario, alvo, range_pixel=100):
@@ -492,11 +485,11 @@ class DisparoPerfurante(HabilidadeAtiva):
 
         self.disparo_ativo = False
         self.projetil = None
-        self.tempo_ativacao = None
+        self.tempo_de_ativação = None
 
     def ativar(self):
         self.disparo_ativo = True
-        self.tempo_ativacao = time.time()
+        self.tempo_de_ativação = time.time()
 
     def atacar(self, direção):
         if not self.disparo_ativo:
@@ -513,7 +506,7 @@ class DisparoPerfurante(HabilidadeAtiva):
         else:
             self.projetil = None
 
-        if self.disparo_ativo and (time.time() - self.tempo_ativacao) > self.duração:
+        if self.disparo_ativo and (time.time() - self.tempo_de_ativação) > self.duração:
             self.disparo_ativo = False
 
 class Camuflagem(HabilidadeAtiva):
@@ -525,20 +518,25 @@ class Camuflagem(HabilidadeAtiva):
             nivel_minimo=1,
             duração=10 
         )
+        self.timer = None
+
+    def iniciar_cooldown(self):
+        self.tempo_de_recarga_restante = self.tempo_de_recarga
 
     def efeito_camuflagem(self, usuario):
         usuario.estado = "camuflado"
+        self.tempo_de_recarga_restante = 0
 
-        self.agendar_desativacao(usuario)
-
-    def agendar_desativacao(self, usuario):
-        import threading
+        if self.timer and self.timer.is_alive():
+            self.timer.cancel()
 
         def desativar():
             usuario.estado = "normal"
+            self.iniciar_cooldown()
 
-        timer = threading.Timer(self.duração, desativar)
-        timer.start()
+        self.timer = threading.Timer(self.duração, desativar)
+        self.timer.start()
+
 
 # BATEDOR
 class AtaqueSurpresa(HabilidadeAtiva):
@@ -553,16 +551,22 @@ class AtaqueSurpresa(HabilidadeAtiva):
 
     def efeito_ataque_surpresa(self, usuario, alvo):
         if alvo:
-            defesa_original = alvo.defesa_final
-            alvo.defesa_final = defesa_original * 0.1
-            
-            def aplicar_dano():
-                dano = int(max(0, (usuario.dano_final * 2) - alvo.defesa_final))
-                alvo.vida -= dano
-                alvo.defesa_final = defesa_original
-            
-            timer = threading.Timer(self.duração, aplicar_dano)
+            debuff_valor = int(alvo.defesa_base * 0.9)
+            alvo.defesa_bonus -= debuff_valor
+
+            def restaurar():
+                alvo.defesa_bonus += debuff_valor
+
+            timer = threading.Timer(self.duração, restaurar)
             timer.start()
+
+            def aplicar_dano():
+                dano = int(max(0, (usuario.dano_final * 2) - (alvo.defesa_base + alvo.defesa_bonus)))
+                alvo.vida -= dano
+
+            damage_timer = threading.Timer(self.duração, aplicar_dano)
+            damage_timer.start()
+
 
 class FugaRapida(HabilidadeAtiva):
     def __init__(self):
@@ -598,13 +602,13 @@ class PassoFantasma(HabilidadeAtiva):
         )
         self.usuario = usuario
         self.distancia = distancia
-        self.tempo_ativacao = None
+        self.tempo_de_ativação = None
         self.ativa = False
         self.direcao = (0, 0)
 
     def ativar(self, direcao):
         self.direcao = direcao
-        self.tempo_ativacao = time.time()
+        self.tempo_de_ativação = time.time()
         self.ativa = True
         self.usuario.estado = "intangivel"
 
@@ -615,7 +619,7 @@ class PassoFantasma(HabilidadeAtiva):
         self.usuario.posição_x += self.direcao[0] * self.distancia
         self.usuario.posição_y += self.direcao[1] * self.distancia
 
-        if (time.time() - self.tempo_ativacao) > self.duração:
+        if (time.time() - self.tempo_de_ativação) > self.duração:
             self.usuario.estado = "normal"
             self.ativa = False
             self.iniciar_cooldown()

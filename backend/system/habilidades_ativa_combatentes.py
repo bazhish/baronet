@@ -42,7 +42,7 @@ class HabilidadeAtiva:
 
 #  ASSASSINO
 class GolpeMortal(HabilidadeAtiva):
-    def __init__(self, usuario, alvo, range_pixel=100):
+    def __init__(self, usuario = None, alvo = None, range_pixel=100):
         super().__init__(
             name = "Golpe Mortal",
             efeito = self.efeito_golpe_mortal,
@@ -69,9 +69,9 @@ class GolpeMortal(HabilidadeAtiva):
         self.ativa = True
 
     def esta_no_range(self):
-        distancia_x = self.usuario.posição_x - self.alvo.posição_x
-        distancia_y = self.usuario.posição_y - self.alvo.posição_y
-        distancia = math.sqrt(distancia_x*distancia_x + distancia_y*distancia_y)
+        direção_x = self.usuario.posição_x - self.alvo.posição_x
+        direção_y = self.usuario.posição_y - self.alvo.posição_y
+        distancia = math.sqrt(direção_x*direção_x + direção_y*direção_y)
         return distancia <= self.range_pixel
 
     def atualizar(self):
@@ -144,9 +144,9 @@ class ImpactoCruzado(HabilidadeAtiva):
         self.ativa = True
 
     def esta_no_range(self):
-        distancia_x = self.usuario.posição_x - self.alvo.posição_x
-        distancia_y = self.usuario.posição_y - self.alvo.posição_y
-        distancia = math.sqrt(distancia_x*distancia_x + distancia_y*distancia_y)
+        direção_x = self.usuario.posição_x - self.alvo.posição_x
+        direção_y = self.usuario.posição_y - self.alvo.posição_y
+        distancia = math.sqrt(direção_x*direção_x + direção_y*direção_y)
         return distancia <= self.range_pixel
 
     def atualizar(self):
@@ -255,9 +255,9 @@ class DefesaReforçada(HabilidadeAtiva):
         self.ativa = True
 
     def esta_dentro_campo(self, personagem):
-        distancia_x = personagem.posição_x - self.centro_x
-        distancia_y = personagem.posição_y - self.centro_y
-        distancia = math.sqrt(distancia_x*distancia_x + distancia_y*distancia_y)
+        direção_x = personagem.posição_x - self.centro_x
+        direção_y = personagem.posição_y - self.centro_y
+        distancia = math.sqrt(direção_x*direção_x + direção_y*direção_y)
         return distancia <= self.raio
 
     def atualizar(self, personagens): 
@@ -309,9 +309,9 @@ class GiroDeLanca(HabilidadeAtiva):
         self.usuario.pode_mover = False
 
     def esta_dentro_area(self, inimigo):
-        distancia_x = inimigo.posição_x - self.usuario.posição_x
-        distancia_y = inimigo.posição_y - self.usuario.posição_y
-        distancia = math.sqrt(distancia_x*distancia_x + distancia_y*distancia_y)
+        direção_x = inimigo.posição_x - self.usuario.posição_x
+        direção_y = inimigo.posição_y - self.usuario.posição_y
+        distancia = math.sqrt(direção_x*direção_x + direção_y*direção_y)
         return distancia <= self.raio
 
     def atualizar(self):
@@ -350,13 +350,13 @@ class LancaArremessada:
         if not self.ativa:
             return
 
-        distancia_x = self.direção[0] * self.velocidade
-        distancia_y = self.direção[1] * self.velocidade
+        direção_x = self.direção[0] * self.velocidade
+        direção_y = self.direção[1] * self.velocidade
 
-        self.posição_x += distancia_x
-        self.posição_y += distancia_y
+        self.posição_x += direção_x
+        self.posição_y += direção_y
 
-        self.distancia_percorrida += math.sqrt(distancia_x*distancia_x + distancia_y*distancia_y)
+        self.distancia_percorrida += math.sqrt(direção_x*direção_x + direção_y*direção_y)
 
         if self.distancia_percorrida >= self.alcance_maximo or (time.time() - self.tempo_ativação) > self.duração_maxima:
             self.retornar()
@@ -380,9 +380,9 @@ class LancaArremessada:
                     return
 
     def colidiu_com(self, objeto):
-        distancia_x = self.posição_x - objeto.posição_x
-        distancia_y = self.posição_y - objeto.posição_y
-        distancia = math.sqrt(distancia_x*distancia_x + distancia_y*distancia_y)
+        direção_x = self.posição_x - objeto.posição_x
+        direção_y = self.posição_y - objeto.posição_y
+        distancia = math.sqrt(direção_x*direção_x + direção_y*direção_y)
         return distancia < (objeto.raio + 5)
 
     def retornar(self):

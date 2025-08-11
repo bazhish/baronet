@@ -20,12 +20,12 @@ class Usuario:
         self.experiência_atual = 0
         self.experiência_máxima = 100
         # ATRIBUTOS
-        self.dano_base = int
-        self.velocidade_base = int
-        self.defesa_base = int
-        self.vida_base = int
-        self.estamina_base = int
-        self.multiplicador_de_experiência = int
+        self.dano_base = 2
+        self.velocidade_base = 4
+        self.defesa_base = 5
+        self.vida_base = 100
+        self.estamina_base = 150
+        self.multiplicador_de_experiência = 1.0
         # ESTADO
         self.estado = "normal"
         # CLASSE 
@@ -106,6 +106,14 @@ class Usuario:
     def estamina_final(self):
         return self.estamina_base + self.estamina_bonus
     
+    def aplicar_habilidade_ativa(self, habilidade):
+        self.habilidade_ativa = habilidade.nome
+        habilidade.aplicar_habilidade(self)
+
+    def aplicar_habilidade_especial(self, habilidade):
+        self.habilidade_especial = habilidade.nome
+        habilidade.aplicar_habilidade(self)
+
     def atualizar_status_com_bonus(self):
         self.vida_máxima = self.vida_final
         self.estamina_máxima = self.estamina_final

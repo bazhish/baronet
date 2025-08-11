@@ -52,7 +52,7 @@ def efeito_vontade_da_espada(usuario):
 def efeito_heranca_da_espada(usuario):
     for status in ["dano_base", "velocidade_base", "defesa_base", "estamina_base", "vida_base"]:
         valor = getattr(usuario, status)
-        setattr(usuario, status, valor * 0.2)
+        setattr(usuario, status, valor * 0.6)
 
 def efeito_ataque_rapido(usuario):
     usuario.dano_bonus += usuario.dano_base * 0.85

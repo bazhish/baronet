@@ -11,7 +11,7 @@ import json
 from Imagens.personagem_principal import personagem_parado, personagem_andando_D
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 #from backend.app.models.sistema.habilidades_ativa_combatentes import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
-from backend.app.models.sistema.habilidades_passivas_combatentes import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
+#from backend.app.models.sistema.habilidades_passivas_combatentes import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
 LARGURA, ALTURA = pyautogui.size()
 endereço = os.path.dirname(os.path.abspath(__file__))
 
@@ -27,8 +27,9 @@ colisao_chao = True
 continuar_esquerda = False
 continuar_direita = False
 vel_y = 0
-gravidade = 0.9
-forca_pulo = -8
+travar = False
+gravidade = 1.5
+forca_pulo = -10
 pulo_detectado = False
 limite_de_pulo = 2
 qnt_de_pulo = 0
@@ -46,7 +47,7 @@ if __name__ == "__main__":
 endereco_banco_de_dados = rf"{endereço}\banco_de_dados.db"
 
 cenario_combate = pygame.image.load(rf"{endereço}\imagens\cenario\cenario_combate.png")
-cenario_combate = pygame.transform.scale(cenario_combate, (LARGURA * 3, ALTURA))
+cenario_combate = pygame.transform.scale(cenario_combate, (LARGURA * 5, ALTURA))
 
 
 
@@ -121,7 +122,167 @@ rect_opcoes = pygame.Rect(LARGURA // 2.5, LARGURA // 1.5, ALTURA // 1.6, ALTURA 
 click = False
 click_e = False
 
-print(furtividade.efeito)
+
+
+
+def colisao_chao_batalha():
+    global posição_chao, posição_personagem_X, posição
+    if posição_personagem_X <= 200:
+        posição_chao = 684
+    elif posição_personagem_X <= 220:
+        posição_chao = 680
+    elif posição_personagem_X <= 240:
+        posição_chao = 676
+    elif posição_personagem_X <= 260:
+        posição_chao = 672
+    elif posição_personagem_X <= 280:
+        posição_chao = 668
+    elif posição_personagem_X <= 300:
+        posição_chao = 666
+    elif posição_personagem_X <= 320:
+        posição_chao = 664
+    elif posição_personagem_X <= 340:
+        posição_chao = 662
+    elif posição_personagem_X <= 360:
+        posição_chao = 660
+    elif posição_personagem_X <= 380:
+        posição_chao = 658
+    elif posição_personagem_X <= 400:
+        posição_chao = 656
+    elif posição_personagem_X < 500:
+        posição_chao = 653
+    elif posição >= -10:
+        posição_chao = 659
+    elif posição >= -20:
+        posição_chao = 663
+    elif posição >= -30:
+        posição_chao = 667
+    elif posição >= -40:
+        posição_chao = 669
+    elif posição >= -50:
+        posição_chao = 672
+    elif posição >= -60:
+        posição_chao = 677
+    elif posição >= -70:
+        posição_chao = 681
+    elif posição >= -80:
+        posição_chao = 685
+    elif posição >= -90:
+        posição_chao = 693
+    elif posição >= -100:
+        posição_chao = 705
+    elif posição >= -110:
+        posição_chao = 715
+    elif posição >= -180:
+        posição_chao = 723
+    elif posição >= -200:
+        posição_chao = 730
+    elif posição >= -220:
+        posição_chao = 734
+    elif posição >= -240:
+        posição_chao = 738
+    elif posição >= -250:
+        posição_chao = 742
+    elif posição >= -260:
+        posição_chao = 748
+    elif posição >= -270:
+        posição_chao = 752
+    elif posição >= -290:
+        posição_chao = 748
+    elif posição >= -400:
+        posição_chao = 752
+    elif posição >= -540:
+        posição_chao = 690
+    elif posição >= -600:
+        posição_chao = 685
+    elif posição >= -630:
+        posição_chao = 690
+    elif posição >= -650:
+        posição_chao = 685
+    elif posição >= -680:
+        posição_chao = 680
+    elif posição >= -700:
+        posição_chao = 675
+    elif posição >= -720:
+        posição_chao = 672
+    elif posição >= -830:
+        posição_chao = 670
+    elif posição >= -840:
+        posição_chao = 673
+    elif posição >= -850:
+        posição_chao = 676
+    elif posição >= -860:
+        posição_chao = 680
+    elif posição >= -870:
+        posição_chao = 683
+    elif posição >= -880:
+        posição_chao = 686
+    elif posição >= -890:
+        posição_chao = 689
+    elif posição >= -900:
+        posição_chao = 694
+    elif posição >= -910:
+        posição_chao = 700
+    elif posição >= -920:
+        posição_chao = 705
+    elif posição >= -930:
+        posição_chao = 710
+    elif posição >= -940:
+        posição_chao = 720
+    elif posição >= -950:
+        posição_chao = 730
+    elif posição >= -960:
+        posição_chao = 735
+    elif posição >= -970:
+        posição_chao = 738
+    elif posição >= -980:
+        posição_chao = 735
+    elif posição >= -1120:
+        posição_chao = 730
+    elif posição >= -1130:
+        posição_chao = 725
+    elif posição >= -1140:
+        posição_chao = 720
+    elif posição >= -1150:
+        posição_chao = 715
+    elif posição >= -1160:
+        posição_chao = 710
+    elif posição >= -1310:
+        posição_chao = 705
+    elif posição >= -1320:
+        posição_chao = 700
+    elif posição >= -1330:
+        posição_chao = 695
+    elif posição >= -1340:
+        posição_chao = 690
+    elif posição >= -1350:
+        posição_chao = 684
+    elif posição >= -1600:
+        posição_chao = 680
+    elif posição >= -1620:
+        posição_chao = 676
+    elif posição >= -1640:
+        posição_chao = 672
+    elif posição >= -1660:
+        posição_chao = 668
+    elif posição >= -1680:
+        posição_chao = 666
+    elif posição >= -1700:
+        posição_chao = 664
+    elif posição >= -1720:
+        posição_chao = 662
+    elif posição >= -1740:
+        posição_chao = 660
+    elif posição >= -1760:
+        posição_chao = 658
+    elif posição >= -1780:
+        posição_chao = 656
+    elif posição >= -1800:
+        posição_chao = 653
+
+
+
+    return posição_chao
 
 if __name__ == "__main__":
     screen = pygame.display.set_mode((LARGURA, ALTURA), pygame.FULLSCREEN)
@@ -181,6 +342,16 @@ if __name__ == "__main__":
         habilidade_2 = getattr(pygame, f"K_{tecla[4]}")
         mapa = getattr(pygame, f"K_{tecla[5]}")
 
+        posição_chao = colisao_chao_batalha()
+
+
+        if posição_chao == 752 and posição <= -400 and colisao_chao:
+            travar = True
+        elif not colisao_chao or posição > -400 or key[pygame.K_SPACE]:
+            travar = False
+
+        
+
 
 
 
@@ -205,14 +376,14 @@ if __name__ == "__main__":
             anterior = COMBATE
             screen.blit(cenario_combate, (posição, 0))
 
-            if posição - 1 >= -LARGURA * 2  and posição_personagem_X >= 500:
+            if posição - 1 >= -LARGURA * 2  and posição_personagem_X >= 500 and not travar:
                 if key[pygame.K_d]:
-                    posição -= 20
+                    posição -= 10
                     diresao = "direita"
             else:
-                if -posição_personagem_X >= -LARGURA + 150:
+                if -posição_personagem_X >= -LARGURA + 150 and not travar:
                     if key[pygame.K_d]:
-                        posição_personagem_X += 20
+                        posição_personagem_X += 10
                         diresao = "direita"
                 else:
                     diresao = "parado"
@@ -221,13 +392,13 @@ if __name__ == "__main__":
                 
             if posição <= -20 and posição_personagem_X <= 500:
                 if key[pygame.K_a]:
-                    posição += 20
+                    posição += 10
                     diresao = "esquerda"
 
             else:
                 if posição_personagem_X >= -21:
                     if key[pygame.K_a]:
-                        posição_personagem_X -= 20
+                        posição_personagem_X -= 10
                         diresao = "esquerda"
                 else:
                     diresao = "parado"
@@ -237,28 +408,26 @@ if __name__ == "__main__":
                 pulo_detectado = True
                 vel_y = forca_pulo
                 sombra.set_alpha(tranparencia - (qnt_de_pulo * 25))
+                travar = False
                 
                 if qnt_de_pulo == limite_de_pulo:
                     colisao_chao = False
 
 
+
                
             vel_y += gravidade
             posição_personagem_Y += vel_y
-<<<<<<< HEAD
-=======
-            
->>>>>>> 435f4b5eaada1a4adba3af83cf6fbcd4fae945d0
-            if posição_personagem_Y + 200 >= 710:
+            if posição_personagem_Y + 200 >= posição_chao - 10:
                 sombra.set_alpha(tranparencia - (qnt_de_pulo * 10))
 
-            if posição_personagem_Y + 200 >= 700:
+            if posição_personagem_Y + 200 >= posição_chao - 20:
                 sombra.set_alpha(tranparencia - (qnt_de_pulo * 5))
 
-            if posição_personagem_Y + 200 >= 720:
+            if posição_personagem_Y + 200 >= posição_chao:
                 sombra.set_alpha(tranparencia)
                 pulo_detectado = False
-                posição_personagem_Y = 720 - 200
+                posição_personagem_Y = posição_chao - 200
                 vel_y = 0
                 colisao_chao = True
                 qnt_de_pulo = 0
@@ -269,10 +438,10 @@ if __name__ == "__main__":
                 diresao = "parado"
 
             if diresao == "parado":
-                screen.blit(sombra, (posição_personagem_X + 40, 670))
+                screen.blit(sombra, (posição_personagem_X + 40, posição_chao - 50))
                 screen.blit(personagem_parado, (posição_personagem_X, posição_personagem_Y))
             else:
-                screen.blit(sombra, (posição_personagem_X + 40, 670))
+                screen.blit(sombra, (posição_personagem_X + 40, posição_chao - 50))
                 screen.blit(personagem_andando_D[frame_personagem], (posição_personagem_X, posição_personagem_Y))
                 frame_personagem += 1
                 if frame_personagem >= len(personagem_andando_D):

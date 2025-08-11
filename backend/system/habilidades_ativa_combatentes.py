@@ -39,7 +39,6 @@ class HabilidadeAtiva:
     def iniciar_cooldown(self):
         self.tempo_de_recarga_restante = self.tempo_de_recarga
 
-
 #  ASSASSINO
 class GolpeMortal(HabilidadeAtiva):
     def __init__(self, range_pixel=100):

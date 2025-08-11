@@ -25,12 +25,9 @@ class Usuario:
         self.defesa_base = 5
         self.vida_base = 100
         self.estamina_base = 150
-<<<<<<< HEAD:backend/app/models/personagens/personagem_principal.py
-=======
         self.multiplicador_de_experiência = 1.0
         # ESTADO
         self.estado = "normal"
->>>>>>> 84476a6b9f5ab85bb297234a812e014bc9be41da:backend/system/personagem_principal.py
         # CLASSE 
         self.nome_da_classe_do_usuário = "nenhuma"
         self.classe = None

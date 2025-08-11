@@ -7,9 +7,10 @@ while not os.path.isdir(os.path.join(project_root, ".git")) and os.path.dirname(
 sys.path.append(project_root)
 
 from backend.system.habilidades_ativa_combatentes import (
-    death_blow, intangibility, cross_impact, sword_block, shield_attack, reinforced_defense,
-    spear_swing, spear_throwing, armor_piercing_shot, camouflage, surprise_attack,
-    quick_escape, ghost_step, sand, lightning_combo, iron_posture
+    GolpeMortal, Intangibilidade, ImpactoCruzado, BloqueioDeEspada,
+    AtaqueComEscudo, DefesaReforçada, GiroDeLanca, ArremessoDeLanca,
+    DisparoPerfurante, Camuflagem, AtaqueSurpresa, FugaRapida,
+    PassoFantasma, Areia, ComboRelampago, PosturaDeFerro 
 )
 from backend.system.habilidades_passiva_combatentes import (
     furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada,
@@ -56,7 +57,7 @@ class Classe:
 class Assassino(Classe):
     def __init__(self):
         super().__init__("Assassino", 100, 5, 2, 10, 130 , 1.5,
-            furtividade, evasao, sangramento, death_blow, intangibility)
+            furtividade, evasao, sangramento, GolpeMortal, Intangibilidade)
         self.atualizar_descrição()
 
 class Espadachim(Classe):
@@ -64,7 +65,7 @@ class Espadachim(Classe):
         super().__init__(
             "Espadachim", 120, 4, 3, 12, 150 , 1.2,
             vontade_da_espada, heranca_da_espada,
-            ataque_rapido, cross_impact, sword_block)
+            ataque_rapido, ImpactoCruzado, BloqueioDeEspada)
         self.atualizar_descrição()
 
 class Escudeiro(Classe):
@@ -72,7 +73,7 @@ class Escudeiro(Classe):
         super().__init__(
             "Escudeiro", 80, 3, 5, 15, 100 , 1.0,
             bloqueio_de_ataque, repelir,
-            peso_pena, shield_attack, reinforced_defense)
+            peso_pena, AtaqueComEscudo, DefesaReforçada)
         self.atualizar_descrição()
 
 
@@ -81,7 +82,7 @@ class Lanceiro(Classe):
         super().__init__(
             "Lanceiro", 11, 4, 4, 13, 110 , 1.3,
             danca_da_lanca, controle_passivo,
-            controle_total,  spear_swing, spear_throwing)
+            controle_total, GiroDeLanca, ArremessoDeLanca)
         self.atualizar_descrição()
 
 class Arqueiro(Classe):
@@ -89,7 +90,7 @@ class Arqueiro(Classe):
         super().__init__(
             "Arqueiro", 90, 6, 2, 11, 110 , 1.4,
             disparo_preciso, passos_silenciosos,
-            flecha_dupla, armor_piercing_shot, camouflage)
+            flecha_dupla, DisparoPerfurante, Camuflagem)
         self.atualizar_descrição()
 
 class Batedor(Classe):
@@ -97,15 +98,14 @@ class Batedor(Classe):
         super().__init__(
             "Batedor", 70, 5, 3, 14, 120 , 1.1,
             ataque_silencioso, evasao_rapida,
-            exploracao_furtiva, surprise_attack,
-    quick_escape)
+            exploracao_furtiva, AtaqueSurpresa, FugaRapida)
         self.atualizar_descrição()
 
 class Artilheiro(Classe):
     def __init__(self):
         super().__init__(
             "Artilheiro", 150, 3, 2, 90 , 20,
-            foco_interno, tecnica_perfeita, golpe_fatal, ghost_step, sand)
+            foco_interno, tecnica_perfeita, golpe_fatal, PassoFantasma, Areia)
         self
 
 
@@ -114,7 +114,7 @@ class ArtistaMarcial(Classe):
         super().__init__(
             "Artista Marcial", 100, 6, 4, 18, 90 , 1.5,
             mira_aprimorada, arsenal_tatico, fogo_sucessivo,
-            lightning_combo, iron_posture)
+            ComboRelampago, PosturaDeFerro )
         self.atualizar_descrição()
 
 assassino = Assassino()

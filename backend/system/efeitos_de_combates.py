@@ -3,10 +3,7 @@ import sys, os
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..')))
-<<<<<<< HEAD:backend/app/models/sistema/efeitos_de_combates.py
-=======
 from backend.system import AdversarioDemiHumano
->>>>>>> 84476a6b9f5ab85bb297234a812e014bc9be41da:backend/system/efeitos_de_combates.py
 
 @dataclass
 class EnfraquecimentoBase(ABC):

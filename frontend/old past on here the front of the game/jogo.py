@@ -280,6 +280,20 @@ def colisao_chao_batalha():
     elif posição >= -1800:
         posição_chao = 653
 
+    elif posição >= -1810:
+        posição_chao = 659
+    elif posição >= -1820:
+        posição_chao = 663
+    elif posição >= -1830:
+        posição_chao = 667
+    elif posição >= -1840:
+        posição_chao = 669
+    elif posição >= -1850:
+        posição_chao = 672
+    elif posição >= -1860:
+        posição_chao = 677
+    
+
 
 
     return posição_chao

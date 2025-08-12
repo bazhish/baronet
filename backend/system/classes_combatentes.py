@@ -56,65 +56,73 @@ class Classe:
 
 class Assassino(Classe):
     def __init__(self):
-        super().__init__("Assassino", 100, 5, 2, 10, 130 , 1.5,
-            furtividade, evasao, sangramento, GolpeMortal, Intangibilidade)
+        super().__init__(
+            "Assassino", 100, 5, 2, 10, 130, 1.5,
+            furtividade, evasao, sangramento, golpe_mortal, intangibilidade
+        )
         self.atualizar_descrição()
 
 class Espadachim(Classe):
     def __init__(self):
         super().__init__(
-            "Espadachim", 120, 4, 3, 12, 150 , 1.2,
+            "Espadachim", 120, 4, 3, 12, 150, 1.2,
             vontade_da_espada, heranca_da_espada,
-            ataque_rapido, ImpactoCruzado, BloqueioDeEspada)
+            ataque_rapido, impacto_cruzado, bloqueio_de_espada
+        )
         self.atualizar_descrição()
 
 class Escudeiro(Classe):
     def __init__(self):
         super().__init__(
-            "Escudeiro", 80, 3, 5, 15, 100 , 1.0,
+            "Escudeiro", 80, 3, 5, 15, 100, 1.0,
             bloqueio_de_ataque, repelir,
-            peso_pena, AtaqueComEscudo, DefesaReforçada)
+            peso_pena, ataque_com_escudo, defesa_reforcada
+        )
         self.atualizar_descrição()
 
 
 class Lanceiro(Classe):
     def __init__(self):
         super().__init__(
-            "Lanceiro", 11, 4, 4, 13, 110 , 1.3,
+            "Lanceiro", 11, 4, 4, 13, 110, 1.3,
             danca_da_lanca, controle_passivo,
-            controle_total, GiroDeLanca, ArremessoDeLanca)
+            controle_total, giro_de_lanca, arremesso_de_lanca
+        )
         self.atualizar_descrição()
 
 class Arqueiro(Classe):
     def __init__(self):
         super().__init__(
-            "Arqueiro", 90, 6, 2, 11, 110 , 1.4,
+            "Arqueiro", 90, 6, 2, 11, 110, 1.4,
             disparo_preciso, passos_silenciosos,
-            flecha_dupla, DisparoPerfurante, Camuflagem)
+            flecha_dupla, disparo_perfurante, camuflagem
+        )
         self.atualizar_descrição()
 
 class Batedor(Classe):
     def __init__(self):
         super().__init__(
-            "Batedor", 70, 5, 3, 14, 120 , 1.1,
+            "Batedor", 70, 5, 3, 14, 120, 1.1,
             ataque_silencioso, evasao_rapida,
-            exploracao_furtiva, AtaqueSurpresa, FugaRapida)
+            exploracao_furtiva, ataque_surpresa, fuga_rapida
+        )
         self.atualizar_descrição()
 
 class Artilheiro(Classe):
     def __init__(self):
         super().__init__(
-            "Artilheiro", 150, 3, 2, 90 , 20,
-            foco_interno, tecnica_perfeita, golpe_fatal, PassoFantasma, Areia)
-        self
-
+            "Artilheiro", 150, 3, 2, 9, 20, 1.6,
+            foco_interno, tecnica_perfeita, golpe_fatal, passo_fantasma, areia
+        )
+        self.atualizar_descrição()
 
 class ArtistaMarcial(Classe):
     def __init__(self):
         super().__init__(
-            "Artista Marcial", 100, 6, 4, 18, 90 , 1.5,
+            "Artista Marcial", 100, 6, 4, 18, 90, 1.5,
             mira_aprimorada, arsenal_tatico, fogo_sucessivo,
-            ComboRelampago, PosturaDeFerro )
+            combo_relampago, postura_de_ferro
+        )
         self.atualizar_descrição()
 
 assassino = Assassino()
@@ -125,6 +133,3 @@ arqueiro = Arqueiro()
 batedor = Batedor()
 artilheiro = Artilheiro()
 artista_marcial = ArtistaMarcial()
-print(artilheiro.descrição)
-print()
-print(artista_marcial.descrição)

@@ -789,7 +789,7 @@ if __name__ == "__main__":
                     diresao = "parado"
 
             if key[pygame.K_SPACE] and colisao_chao:
-                qnt_de_pulo += 0.5
+                qnt_de_pulo += 1
                 pulo_detectado = True
                 vel_y = forca_pulo
                 sombra.set_alpha(tranparencia - (qnt_de_pulo * 25))

@@ -8,4 +8,4 @@ sys.path.append(project_root)
 
 from backend.system.adversarios import AdversarioMonstro
 
-slime = AdversarioMonstro("slime", 50, 1.0, 3, 200, 5, 5, 5, 5)
+slime = AdversarioMonstro("slime", 50, 1.0, 3, 100, 2, 3, 4, 5, None, None)

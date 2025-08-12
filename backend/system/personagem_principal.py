@@ -63,6 +63,15 @@ class Usuario:
         self.vida_atual = self.vida_máxima
         self.estamina_máxima = self.estamina_base
         self.estamina_atual = self.estamina_máxima
+        # ATRIBUTOS DE POSICIONAMENTO E COMBATE
+        self.posição_x = 0
+        self.posição_y = 0
+        self.pode_atacar = True
+        self.pode_mover = True
+        self.bloqueio_ativo = False
+        self.precisao_bonus = 0
+        self.critico_bonus = 0
+        self.resistencia_empurrao = False
     def __post_init__(self):
         self.dano_base = self.classe.dano_base
         self.velocidade_base = self.classe.velocidade_base
@@ -105,14 +114,6 @@ class Usuario:
     @property
     def estamina_final(self):
         return self.estamina_base + self.estamina_bonus
-    
-    def aplicar_habilidade_ativa(self, habilidade):
-        self.habilidade_ativa = habilidade.nome
-        habilidade.aplicar_habilidade(self)
-
-    def aplicar_habilidade_especial(self, habilidade):
-        self.habilidade_especial = habilidade.nome
-        habilidade.aplicar_habilidade(self)
 
     def atualizar_status_com_bonus(self):
         self.vida_máxima = self.vida_final
@@ -210,6 +211,7 @@ class Usuario:
                           f"defesa: {self.defesa_final}\n"
                           f"vida: {self.vida_atual}/{self.vida_máxima}\n"
                           f"estamina: {self.estamina_atual}/{self.estamina_máxima}\n"
+                          f"estado: {self.estado}\n"
                           f"arma: {self.arma}\n"
                           f"escudo: {self.escudo}\n"
                           f"tentativas: {self.tentativas_restantes}\n"

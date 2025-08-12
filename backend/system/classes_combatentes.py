@@ -7,10 +7,10 @@ while not os.path.isdir(os.path.join(project_root, ".git")) and os.path.dirname(
 sys.path.append(project_root)
 
 from backend.system.habilidades_ativa_combatentes import (
-    GolpeMortal, Intangibilidade, ImpactoCruzado, BloqueioDeEspada,
-    AtaqueComEscudo, DefesaReforçada, GiroDeLanca, ArremessoDeLanca,
-    DisparoPerfurante, Camuflagem, AtaqueSurpresa, FugaRapida,
-    PassoFantasma, Areia, ComboRelampago, PosturaDeFerro 
+    golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada,
+    ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca,
+    disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida,
+    passo_fantasma, areia, combo_relampago, postura_de_ferro 
 )
 from backend.system.habilidades_passiva_combatentes import (
     furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada,

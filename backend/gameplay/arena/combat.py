@@ -16,7 +16,7 @@ LARGURA, ALTURA = 1200, 600
 TELA = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption("Arena de Combate - Baronet")
 
-FPS = 60
+FPS = 32
 clock = pygame.time.Clock()
 
 # Cores
@@ -86,7 +86,7 @@ adversario = AdversarioDemiHumano(
 adversario.posição_x, adversario.posição_y = 900, ALTURA - 100
 
 # Variável para controlar o intervalo de ataque do adversário
-INTERVALO_ATAQUE_ADVERSARIO = 60  # em ticks (1 segundo se FPS=60)
+INTERVALO_ATAQUE_ADVERSARIO = 32 # em ticks (1 segundo se FPS=60)
 contador_ataque_adversario = 0
 
 # Defina teclas para habilidades
@@ -104,15 +104,18 @@ while rodando:
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
             rodando = False
+
         # Ataque com o botão esquerdo do mouse
         if evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
             if dentro_do_range(jogador, adversario, ALCANCE_ATAQUE):
                 jogador.atacar(adversario)
+
         # Usar habilidade ativa (Q)
         if evento.type == pygame.KEYDOWN and evento.key == TECLA_HABILIDADE_ATIVA:
             if hasattr(jogador, "habilidade_ativa") and jogador.habilidade_ativa:
                 if dentro_do_range(jogador, adversario, ALCANCE_ATAQUE):
                     jogador.habilidade_ativa.ativar(jogador, adversario)
+
         # Usar habilidade especial (E)
         if evento.type == pygame.KEYDOWN and evento.key == TECLA_HABILIDADE_ESPECIAL:
             if hasattr(jogador, "habilidade_especial") and jogador.habilidade_especial:
@@ -151,9 +154,9 @@ while rodando:
         adversario.posição_y = ALTURA - 80
 
     # Movimento simples do adversário (segue o jogador)
-    if adversario.posição_x > jogador.posição_x:
+    if adversario.posição_x > jogador.posição_x and not dentro_do_range_adversario(adversario, jogador, ALCANCE_ATAQUE_ADVERSARIO):
         adversario.posição_x -= 2
-    elif adversario.posição_x < jogador.posição_x:
+    elif adversario.posição_x < jogador.posição_x and not dentro_do_range_adversario(adversario, jogador, ALCANCE_ATAQUE_ADVERSARIO):
         adversario.posição_x += 2
 
     # Ataque do adversário em intervalo de ticks se o jogador estiver dentro do range
@@ -184,5 +187,6 @@ while rodando:
     TELA.blit(vida_adversario, (LARGURA - 250, 20))
 
     pygame.display.flip()
+    clock.tick(32)
 
 pygame.quit()

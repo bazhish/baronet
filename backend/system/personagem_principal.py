@@ -208,7 +208,11 @@ class Usuario:
             raise SystemExit("suas tentativas acabaram, você perdeu o jogo")
 
     def atacar(self, alvo):
-        alvo.vida_atual -= self.dano_final
+        if alvo.defesa_final >= self.dano_final:
+            dano = 0
+        else:
+            dano = int(self.dano_final - alvo.defesa_final)
+            alvo.vida_atual -= dano
 
     def atualizar_descrição(self) -> None:
         self.descrição = (f"nome: {self.nome}\n"

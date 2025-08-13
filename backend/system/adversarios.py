@@ -17,7 +17,7 @@ class AdversarioDemiHumano:
     velocidade_base: int
     defesa_base: int
     vida_base: int
-    estamina_base: int = 100  # Novo atributo
+    estamina_base: int
 
     arma: Any = None
     escudo: Any = None
@@ -100,19 +100,6 @@ class AdversarioDemiHumano:
         self.vida_atual = self._vida_máxima
         self.estamina_atual = self._estamina_máxima
 
-    def receber_experiencia(self, experiencia: int):
-        self.experiência += experiencia
-        # Adapte conforme regras de evolução dos adversários
-
-    def subir_nivel(self):
-        self.nível += 1
-        self.dano_base += 1
-        self.velocidade_base += 1
-        self.defesa_base += 1
-        self.vida_base += 10
-        self.estamina_base += 10
-        self.atualizar_status_com_bonus()
-
     def aplicar_habilidades_passivas(self):
         if self.primeira_habilidade_passiva:
             self.primeira_habilidade_passiva.aplicar_habilidade(self)
@@ -158,7 +145,7 @@ class AdversarioDemiHumano:
         )
 
     def atacar(self, alvo) -> None:
-        dano = max(0, self.dano_final - getattr(alvo, 'defesa_final', 0))
+        dano = max(1, self.dano_final - getattr(alvo, 'defesa_final', 0))
         alvo.vida_atual = max(0, alvo.vida_atual - dano)
 
     def estar_vivo(self):

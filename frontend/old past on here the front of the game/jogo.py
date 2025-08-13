@@ -129,543 +129,609 @@ click_e = False
 def colisao_chao_batalha():
     global posição_chao, posição_personagem_X, posição, parede
     if posição_personagem_X <= 200 * LARGURA // 1920:
-        posição_chao = 684 * LARGURA // 1920
+        posição_chao = 684 + 5 * LARGURA // 1920
     elif posição_personagem_X <= 220 * LARGURA // 1920:
-        posição_chao = 680 * LARGURA // 1920
+        posição_chao = 680 + 5 * LARGURA // 1920
     elif posição_personagem_X <= 240 * LARGURA // 1920:
-        posição_chao = 676 * LARGURA // 1920
+        posição_chao = 676 + 5 * LARGURA // 1920
     elif posição_personagem_X <= 260:
-        posição_chao = 672 * LARGURA // 1920
+        posição_chao = 672 + 5 * LARGURA // 1920
     elif posição_personagem_X <= 280 * LARGURA // 1920:
-        posição_chao = 668 * LARGURA // 1920
+        posição_chao = 668 + 5 * LARGURA // 1920
     elif posição_personagem_X <= 300 * LARGURA // 1920:
-        posição_chao = 666 * LARGURA // 1920
+        posição_chao = 666 + 5 * LARGURA // 1920
     elif posição_personagem_X <= 320 * LARGURA // 1920:
-        posição_chao = 664 * LARGURA // 1920
+        posição_chao = 664 + 5 * LARGURA // 1920
     elif posição_personagem_X <= 340 * LARGURA // 1920:
-        posição_chao = 662 * LARGURA // 1920
+        posição_chao = 662 + 5 * LARGURA // 1920
     elif posição_personagem_X <= 360 * LARGURA // 1920:
-        posição_chao = 660 * LARGURA // 1920
+        posição_chao = 660 + 5 * LARGURA // 1920
     elif posição_personagem_X <= 380 * LARGURA // 1920:
-        posição_chao = 658 * LARGURA // 1920
+        posição_chao = 658 + 5 * LARGURA // 1920
     elif posição_personagem_X <= 400 * LARGURA // 1920:
-        posição_chao = 656 * LARGURA // 1920
+        posição_chao = 656 + 5 * LARGURA // 1920
     elif posição_personagem_X < 500 * LARGURA // 1920:
-        posição_chao = 653 * LARGURA // 1920
+        posição_chao = 653 + 5 * LARGURA // 1920
     elif posição >= -10 * LARGURA // 1920:
-        posição_chao = 659 * LARGURA // 1920
+        posição_chao = 659 + 5 * LARGURA // 1920
     elif posição >= -20 * LARGURA // 1920:
-        posição_chao = 663 * LARGURA // 1920
+        posição_chao = 663 + 5 * LARGURA // 1920
     elif posição >= -30 * LARGURA // 1920:
-        posição_chao = 667 * LARGURA // 1920
+        posição_chao = 667 + 5 * LARGURA // 1920
     elif posição >= -40 * LARGURA // 1920:
-        posição_chao = 669 * LARGURA // 1920
+        posição_chao = 669 + 5 * LARGURA // 1920
     elif posição >= -50 * LARGURA // 1920:
-        posição_chao = 672 * LARGURA // 1920
+        posição_chao = 672 + 5 * LARGURA // 1920
     elif posição >= -60 * LARGURA // 1920:
-        posição_chao = 677 * LARGURA // 1920
+        posição_chao = 677 + 5 * LARGURA // 1920
     elif posição >= -70 * LARGURA // 1920:
-        posição_chao = 681 * LARGURA // 1920
+        posição_chao = 681 + 5 * LARGURA // 1920
     elif posição >= -80 * LARGURA // 1920:
-        posição_chao = 685 * LARGURA // 1920
+        posição_chao = 685 + 5 * LARGURA // 1920
     elif posição >= -90 * LARGURA // 1920:
-        posição_chao = 693 * LARGURA // 1920
+        posição_chao = 693 + 5 * LARGURA // 1920
     elif posição >= -100 * LARGURA // 1920:
-        posição_chao = 705 * LARGURA // 1920
+        posição_chao = 705 + 5 * LARGURA // 1920
     elif posição >= -110 * LARGURA // 1920:
-        posição_chao = 715 * LARGURA // 1920
+        posição_chao = 715 + 5 * LARGURA // 1920
     elif posição >= -180 * LARGURA // 1920:
-        posição_chao = 723 * LARGURA // 1920
+        posição_chao = 723 + 5 * LARGURA // 1920
     elif posição >= -200 * LARGURA // 1920:
-        posição_chao = 730 * LARGURA // 1920
+        posição_chao = 730 + 5 * LARGURA // 1920
     elif posição >= -220 * LARGURA // 1920:
-        posição_chao = 734 * LARGURA // 1920
+        posição_chao = 734 + 5 * LARGURA // 1920
     elif posição >= -240 * LARGURA // 1920:
-        posição_chao = 738 * LARGURA // 1920
+        posição_chao = 738 + 5 * LARGURA // 1920
     elif posição >= -250 * LARGURA // 1920:
-        posição_chao = 742 * LARGURA // 1920
+        posição_chao = 742 + 5 * LARGURA // 1920
     elif posição >= -260 * LARGURA // 1920:
-        posição_chao = 748 * LARGURA // 1920
+        posição_chao = 748 + 5 * LARGURA // 1920
     elif posição >= -270 * LARGURA // 1920:
-        posição_chao = 752 * LARGURA // 1920
+        posição_chao = 752 + 5 * LARGURA // 1920
     elif posição >= -290 * LARGURA // 1920:
-        posição_chao = 748 * LARGURA // 1920
+        posição_chao = 748 + 5 * LARGURA // 1920
     elif posição >= -400 * LARGURA // 1920:
-        posição_chao = 752 * LARGURA // 1920
+        posição_chao = 752 + 5 * LARGURA // 1920
         if posição <= -400 * LARGURA // 1920:
             parede = True
         else:
             parede = False
     elif posição >= -540 * LARGURA // 1920:
-        posição_chao = 690 * LARGURA // 1920
+        posição_chao = 690 + 5 * LARGURA // 1920
     elif posição >= -600 * LARGURA // 1920:
-        posição_chao = 685 * LARGURA // 1920
+        posição_chao = 685 + 5 * LARGURA // 1920
     elif posição >= -630 * LARGURA // 1920:
-        posição_chao = 690 * LARGURA // 1920
+        posição_chao = 690 + 5 * LARGURA // 1920
     elif posição >= -650 * LARGURA // 1920:
-        posição_chao = 685 * LARGURA // 1920
+        posição_chao = 685 + 5 * LARGURA // 1920
     elif posição >= -680 * LARGURA // 1920:
-        posição_chao = 680 * LARGURA // 1920
+        posição_chao = 680 + 5 * LARGURA // 1920
     elif posição >= -700 * LARGURA // 1920:
-        posição_chao = 675 * LARGURA // 1920
+        posição_chao = 675 + 5 * LARGURA // 1920
     elif posição >= -720 * LARGURA // 1920:
-        posição_chao = 672 * LARGURA // 1920
+        posição_chao = 672 + 5 * LARGURA // 1920
     elif posição >= -830 * LARGURA // 1920:
-        posição_chao = 670 * LARGURA // 1920
+        posição_chao = 670 + 5 * LARGURA // 1920
     elif posição >= -840 * LARGURA // 1920:
-        posição_chao = 673 * LARGURA // 1920
+        posição_chao = 673 + 5 * LARGURA // 1920
     elif posição >= -850 * LARGURA // 1920:
-        posição_chao = 676 * LARGURA // 1920
+        posição_chao = 676 + 5 * LARGURA // 1920
     elif posição >= -860 * LARGURA // 1920:
-        posição_chao = 680 * LARGURA // 1920
+        posição_chao = 680 + 5 * LARGURA // 1920
     elif posição >= -870 * LARGURA // 1920:
-        posição_chao = 683 * LARGURA // 1920
+        posição_chao = 683 + 5 * LARGURA // 1920
     elif posição >= -880 * LARGURA // 1920:
-        posição_chao = 686 * LARGURA // 1920
+        posição_chao = 686 + 5 * LARGURA // 1920
     elif posição >= -890 * LARGURA // 1920:
-        posição_chao = 689 * LARGURA // 1920
+        posição_chao = 689 + 5 * LARGURA // 1920
     elif posição >= -900 * LARGURA // 1920:
-        posição_chao = 694 * LARGURA // 1920
+        posição_chao = 694 + 5 * LARGURA // 1920
     elif posição >= -910 * LARGURA // 1920:
-        posição_chao = 700 * LARGURA // 1920
+        posição_chao = 700 + 5 * LARGURA // 1920
     elif posição >= -920 * LARGURA // 1920:
-        posição_chao = 705 * LARGURA // 1920
+        posição_chao = 705 + 5 * LARGURA // 1920
     elif posição >= -930 * LARGURA // 1920:
-        posição_chao = 710 * LARGURA // 1920
+        posição_chao = 710 + 5 * LARGURA // 1920
     elif posição >= -940 * LARGURA // 1920:
-        posição_chao = 720 * LARGURA // 1920
+        posição_chao = 720 + 5 * LARGURA // 1920
     elif posição >= -950 * LARGURA // 1920:
-        posição_chao = 730 * LARGURA // 1920
+        posição_chao = 730 + 5 * LARGURA // 1920
     elif posição >= -960 * LARGURA // 1920:
-        posição_chao = 735 * LARGURA // 1920
+        posição_chao = 735 + 5 * LARGURA // 1920
     elif posição >= -970 * LARGURA // 1920:
-        posição_chao = 738 * LARGURA // 1920
+        posição_chao = 738 + 5 * LARGURA // 1920
     elif posição >= -980 * LARGURA // 1920:
-        posição_chao = 735 * LARGURA // 1920
+        posição_chao = 735 + 5 * LARGURA // 1920
     elif posição >= -1120 * LARGURA // 1920:
-        posição_chao = 730 * LARGURA // 1920
+        posição_chao = 730 + 5 * LARGURA // 1920
     elif posição >= -1130 * LARGURA // 1920:
-        posição_chao = 725 * LARGURA // 1920
+        posição_chao = 725 + 5 * LARGURA // 1920
     elif posição >= -1140 * LARGURA // 1920:
-        posição_chao = 720 * LARGURA // 1920
+        posição_chao = 720 + 5 * LARGURA // 1920
     elif posição >= -1150 * LARGURA // 1920:
-        posição_chao = 715 * LARGURA // 1920
+        posição_chao = 715 + 5 * LARGURA // 1920
     elif posição >= -1160 * LARGURA // 1920:
-        posição_chao = 710 * LARGURA // 1920
+        posição_chao = 710 + 5 * LARGURA // 1920
     elif posição >= -1310 * LARGURA // 1920:
-        posição_chao = 705 * LARGURA // 1920
+        posição_chao = 705 + 5 * LARGURA // 1920
     elif posição >= -1320 * LARGURA // 1920:
-        posição_chao = 700 * LARGURA // 1920
+        posição_chao = 700 + 5 * LARGURA // 1920
     elif posição >= -1330 * LARGURA // 1920:
-        posição_chao = 695 * LARGURA // 1920
+        posição_chao = 695 + 5 * LARGURA // 1920
     elif posição >= -1340 * LARGURA // 1920:
-        posição_chao = 690 * LARGURA // 1920
+        posição_chao = 690 + 5 * LARGURA // 1920
     elif posição >= -1350 * LARGURA // 1920:
-        posição_chao = 684 * LARGURA // 1920
+        posição_chao = 684 + 5 * LARGURA // 1920
     elif posição >= -1600 * LARGURA // 1920:
-        posição_chao = 680 * LARGURA // 1920
+        posição_chao = 680 + 5 * LARGURA // 1920
     elif posição >= -1620 * LARGURA // 1920:
-        posição_chao = 676 * LARGURA // 1920
+        posição_chao = 676 + 5 * LARGURA // 1920
     elif posição >= -1640 * LARGURA // 1920:
-        posição_chao = 672 * LARGURA // 1920
+        posição_chao = 672 + 5 * LARGURA // 1920
     elif posição >= -1660 * LARGURA // 1920:
-        posição_chao = 668 * LARGURA // 1920
+        posição_chao = 668 + 5 * LARGURA // 1920
     elif posição >= -1680 * LARGURA // 1920:
-        posição_chao = 666 * LARGURA // 1920
+        posição_chao = 666 + 5 * LARGURA // 1920
     elif posição >= -1700 * LARGURA // 1920:
-        posição_chao = 664 * LARGURA // 1920
+        posição_chao = 664 + 5 * LARGURA // 1920
     elif posição >= -1720 * LARGURA // 1920:
-        posição_chao = 662 * LARGURA // 1920
+        posição_chao = 662 + 5 * LARGURA // 1920
     elif posição >= -1740 * LARGURA // 1920:
-        posição_chao = 660 * LARGURA // 1920
+        posição_chao = 660 + 5 * LARGURA // 1920
     elif posição >= -1760 * LARGURA // 1920:
-        posição_chao = 658 * LARGURA // 1920
+        posição_chao = 658 + 5 * LARGURA // 1920
     elif posição >= -1780 * LARGURA // 1920:
-        posição_chao = 656 * LARGURA // 1920
+        posição_chao = 656 + 5 * LARGURA // 1920
     elif posição >= -1920 * LARGURA // 1920:
-        posição_chao = 653 * LARGURA // 1920
+        posição_chao = 653 + 5 * LARGURA // 1920
     elif posição >= -1930 * LARGURA // 1920:
-        posição_chao = 659 * LARGURA // 1920
+        posição_chao = 659 + 5 * LARGURA // 1920
     elif posição >= -1940 * LARGURA // 1920:
-        posição_chao = 663 * LARGURA // 1920
+        posição_chao = 663 + 5 * LARGURA // 1920
     elif posição >= -1950 * LARGURA // 1920:
-        posição_chao = 667 * LARGURA // 1920
+        posição_chao = 667 + 5 * LARGURA // 1920
     elif posição >= -1960 * LARGURA // 1920:
-        posição_chao = 669 * LARGURA // 1920
+        posição_chao = 669 + 5 * LARGURA // 1920
     elif posição >= -1970 * LARGURA // 1920:
-        posição_chao = 672 * LARGURA // 1920
+        posição_chao = 672 + 5 * LARGURA // 1920
     elif posição >= -1980 * LARGURA // 1920:
-        posição_chao = 677 * LARGURA // 1920
+        posição_chao = 677 + 5 * LARGURA // 1920
     elif posição >= -1990 * LARGURA // 1920:
-        posição_chao = 681 * LARGURA // 1920
+        posição_chao = 681 + 5 * LARGURA // 1920
     elif posição >= -2000 * LARGURA // 1920:
-        posição_chao = 685 * LARGURA // 1920
+        posição_chao = 685 + 5 * LARGURA // 1920
     elif posição >= -2010 * LARGURA // 1920:
-        posição_chao = 693 * LARGURA // 1920
+        posição_chao = 693 + 5 * LARGURA // 1920
     elif posição >= -2020 * LARGURA // 1920:
-        posição_chao = 705 * LARGURA // 1920
+        posição_chao = 705 + 5 * LARGURA // 1920
     elif posição >= -2030 * LARGURA // 1920:
-        posição_chao = 715 * LARGURA // 1920
+        posição_chao = 715 + 5 * LARGURA // 1920
     elif posição >= -2100 * LARGURA // 1920:
-        posição_chao = 723 * LARGURA // 1920
+        posição_chao = 723 + 5 * LARGURA // 1920
     elif posição >= -2120 * LARGURA // 1920:
-        posição_chao = 730 * LARGURA // 1920
+        posição_chao = 730 + 5 * LARGURA // 1920
     elif posição >= -2140 * LARGURA // 1920:
-        posição_chao = 734 * LARGURA // 1920
+        posição_chao = 734 + 5 * LARGURA // 1920
     elif posição >= -2160 * LARGURA // 1920:
-        posição_chao = 738 * LARGURA // 1920
+        posição_chao = 738 + 5 * LARGURA // 1920
     elif posição >= -2170 * LARGURA // 1920:
-        posição_chao = 742 * LARGURA // 1920
+        posição_chao = 742 + 5 * LARGURA // 1920
     elif posição >= -2180 * LARGURA // 1920:
-        posição_chao = 748 * LARGURA // 1920
+        posição_chao = 748 + 5 * LARGURA // 1920
     elif posição >= -2190 * LARGURA // 1920:
-        posição_chao = 752 * LARGURA // 1920
+        posição_chao = 752 + 5 * LARGURA // 1920
     elif posição >= -2210 * LARGURA // 1920:
-        posição_chao = 748 * LARGURA // 1920
+        posição_chao = 748 + 5 * LARGURA // 1920
     elif posição >= -2320 * LARGURA // 1920:
-        posição_chao = 752 * LARGURA // 1920
+        posição_chao = 752 + 5 * LARGURA // 1920
         if posição <= -2320 * LARGURA // 1920:
             parede = True
         else:
             parede = False
     elif posição >= -2460 * LARGURA // 1920:
-        posição_chao = 690 * LARGURA // 1920
+        posição_chao = 690 + 5 * LARGURA // 1920
     elif posição >= -2520 * LARGURA // 1920:
-        posição_chao = 685 * LARGURA // 1920
+        posição_chao = 685 + 5 * LARGURA // 1920
     elif posição >= -2550 * LARGURA // 1920:
-        posição_chao = 690 * LARGURA // 1920
+        posição_chao = 690 + 5 * LARGURA // 1920
     elif posição >= -2570 * LARGURA // 1920:
-        posição_chao = 685 * LARGURA // 1920
+        posição_chao = 685 + 5 * LARGURA // 1920
     elif posição >= -2600 * LARGURA // 1920:
-        posição_chao = 680 * LARGURA // 1920
+        posição_chao = 680 + 5 * LARGURA // 1920
     elif posição >= -2620 * LARGURA // 1920:
-        posição_chao = 675 * LARGURA // 1920
+        posição_chao = 675 + 5 * LARGURA // 1920
     elif posição >= -2640 * LARGURA // 1920:
-        posição_chao = 672 * LARGURA // 1920
+        posição_chao = 672 + 5 * LARGURA // 1920
     elif posição >= -2750 * LARGURA // 1920:
-        posição_chao = 670 * LARGURA // 1920
+        posição_chao = 670 + 5 * LARGURA // 1920
     elif posição >= -2760 * LARGURA // 1920:
-        posição_chao = 673 * LARGURA // 1920
+        posição_chao = 673 + 5 * LARGURA // 1920
     elif posição >= -2770 * LARGURA // 1920:
-        posição_chao = 676 * LARGURA // 1920
+        posição_chao = 676 + 5 * LARGURA // 1920
     elif posição >= -2780 * LARGURA // 1920:
-        posição_chao = 680 * LARGURA // 1920
+        posição_chao = 680 + 5 * LARGURA // 1920
     elif posição >= -2790 * LARGURA // 1920:
-        posição_chao = 683 * LARGURA // 1920
+        posição_chao = 683 + 5 * LARGURA // 1920
     elif posição >= -2800 * LARGURA // 1920:
-        posição_chao = 686 * LARGURA // 1920
+        posição_chao = 686 + 5 * LARGURA // 1920
     elif posição >= -2810 * LARGURA // 1920:
-        posição_chao = 689 * LARGURA // 1920
+        posição_chao = 689 + 5 * LARGURA // 1920
     elif posição >= -2820 * LARGURA // 1920:
-        posição_chao = 694 * LARGURA // 1920
+        posição_chao = 694 + 5 * LARGURA // 1920
     elif posição >= -2830 * LARGURA // 1920:
-        posição_chao = 700 * LARGURA // 1920
+        posição_chao = 700 + 5 * LARGURA // 1920
     elif posição >= -2840 * LARGURA // 1920:
-        posição_chao = 705 * LARGURA // 1920
+        posição_chao = 705 + 5 * LARGURA // 1920
     elif posição >= -2850 * LARGURA // 1920:
-        posição_chao = 710 * LARGURA // 1920
+        posição_chao = 710 + 5 * LARGURA // 1920
     elif posição >= -2860 * LARGURA // 1920:
-        posição_chao = 720 * LARGURA // 1920
+        posição_chao = 720 + 5 * LARGURA // 1920
     elif posição >= -2870 * LARGURA // 1920:
-        posição_chao = 730 * LARGURA // 1920
+        posição_chao = 730 + 5 * LARGURA // 1920
     elif posição >= -2880 * LARGURA // 1920:
-        posição_chao = 735 * LARGURA // 1920
+        posição_chao = 735 + 5 * LARGURA // 1920
     elif posição >= -2890 * LARGURA // 1920:
-        posição_chao = 738 * LARGURA // 1920
+        posição_chao = 738 + 5 * LARGURA // 1920
     elif posição >= -2900 * LARGURA // 1920:
-        posição_chao = 735 * LARGURA // 1920
+        posição_chao = 735 + 5 * LARGURA // 1920
     elif posição >= -3040 * LARGURA // 1920:
-        posição_chao = 730 * LARGURA // 1920
+        posição_chao = 730 + 5 * LARGURA // 1920
     elif posição >= -3050 * LARGURA // 1920:
-        posição_chao = 725 * LARGURA // 1920
+        posição_chao = 725 + 5 * LARGURA // 1920
     elif posição >= -3060 * LARGURA // 1920:
-        posição_chao = 720 * LARGURA // 1920
+        posição_chao = 720 + 5 * LARGURA // 1920
     elif posição >= -3070 * LARGURA // 1920:
-        posição_chao = 715 * LARGURA // 1920
+        posição_chao = 715 + 5 * LARGURA // 1920
     elif posição >= -3080 * LARGURA // 1920:
-        posição_chao = 710 * LARGURA // 1920
+        posição_chao = 710 + 5 * LARGURA // 1920
     elif posição >= -3230 * LARGURA // 1920:
-        posição_chao = 705 * LARGURA // 1920
+        posição_chao = 705 + 5 * LARGURA // 1920
     elif posição >= -3240 * LARGURA // 1920:
-        posição_chao = 700 * LARGURA // 1920
+        posição_chao = 700 + 5 * LARGURA // 1920
     elif posição >= -3250 * LARGURA // 1920:
-        posição_chao = 695 * LARGURA // 1920
+        posição_chao = 695 + 5 * LARGURA // 1920
     elif posição >= -3260 * LARGURA // 1920:
-        posição_chao = 690 * LARGURA // 1920
+        posição_chao = 690 + 5 * LARGURA // 1920
     elif posição >= -3270 * LARGURA // 1920:
-        posição_chao = 684 * LARGURA // 1920
+        posição_chao = 684 + 5 * LARGURA // 1920
     elif posição >= -3520 * LARGURA // 1920:
-        posição_chao = 680 * LARGURA // 1920
+        posição_chao = 680 + 5 * LARGURA // 1920
     elif posição >= -5460 * LARGURA // 1920:
-        posição_chao = 676 * LARGURA // 1920
+        posição_chao = 676 + 5 * LARGURA // 1920
     elif posição >= -5480 * LARGURA // 1920:
-        posição_chao = 672 * LARGURA // 1920
+        posição_chao = 672 + 5 * LARGURA // 1920
     elif posição >= -5500 * LARGURA // 1920:
-        posição_chao = 668 * LARGURA // 1920
+        posição_chao = 668 + 5 * LARGURA // 1920
     elif posição >= -5520 * LARGURA // 1920:
-        posição_chao = 666 * LARGURA // 1920
+        posição_chao = 666 + 5 * LARGURA // 1920
     elif posição >= -5540 * LARGURA // 1920:
-        posição_chao = 664 * LARGURA // 1920
+        posição_chao = 664 + 5 * LARGURA // 1920
     elif posição >= -5560 * LARGURA // 1920:
-        posição_chao = 662 * LARGURA // 1920
+        posição_chao = 662 + 5 * LARGURA // 1920
     elif posição >= -5580 * LARGURA // 1920:
-        posição_chao = 660 * LARGURA // 1920
+        posição_chao = 660 + 5 * LARGURA // 1920
     elif posição >= -5600 * LARGURA // 1920:
-        posição_chao = 658 * LARGURA // 1920
+        posição_chao = 658 + 5 * LARGURA // 1920
     elif posição >= -5620 * LARGURA // 1920:
-        posição_chao = 656 * LARGURA // 1920
+        posição_chao = 656 + 5 * LARGURA // 1920
     elif posição >= -5760 * LARGURA // 1920:
-        posição_chao = 653 * LARGURA // 1920
+        posição_chao = 653 + 5 * LARGURA // 1920
     elif posição >= -5770 * LARGURA // 1920:
-        posição_chao = 659 * LARGURA // 1920
+        posição_chao = 659 + 5 * LARGURA // 1920
     elif posição >= -5780 * LARGURA // 1920:
-        posição_chao = 663 * LARGURA // 1920
+        posição_chao = 663 + 5 * LARGURA // 1920
     elif posição >= -5790 * LARGURA // 1920:
-        posição_chao = 667 * LARGURA // 1920
+        posição_chao = 667 + 5 * LARGURA // 1920
     elif posição >= -5800 * LARGURA // 1920:
-        posição_chao = 669 * LARGURA // 1920
+        posição_chao = 669 + 5 * LARGURA // 1920
     elif posição >= -5810 * LARGURA // 1920:
-        posição_chao = 672 * LARGURA // 1920
+        posição_chao = 672 + 5 * LARGURA // 1920
     elif posição >= -5820 * LARGURA // 1920:
-        posição_chao = 677 * LARGURA // 1920
+        posição_chao = 677 + 5 * LARGURA // 1920
     elif posição >= -5830 * LARGURA // 1920:
-        posição_chao = 681 * LARGURA // 1920
+        posição_chao = 681 + 5 * LARGURA // 1920
     elif posição >= -5840 * LARGURA // 1920:
-        posição_chao = 685 * LARGURA // 1920
+        posição_chao = 685 + 5 * LARGURA // 1920
     elif posição >= -5850 * LARGURA // 1920:
-        posição_chao = 693 * LARGURA // 1920
+        posição_chao = 693 + 5 * LARGURA // 1920
     elif posição >= -5860 * LARGURA // 1920:
-        posição_chao = 705 * LARGURA // 1920
+        posição_chao = 705 + 5 * LARGURA // 1920
     elif posição >= -5870 * LARGURA // 1920:
-        posição_chao = 715 * LARGURA // 1920
+        posição_chao = 715 + 5 * LARGURA // 1920
     elif posição >= -5940 * LARGURA // 1920:
-        posição_chao = 723 * LARGURA // 1920
+        posição_chao = 723 + 5 * LARGURA // 1920
     elif posição >= -5960 * LARGURA // 1920:
-        posição_chao = 730 * LARGURA // 1920
+        posição_chao = 730 + 5 * LARGURA // 1920
     elif posição >= -5980 * LARGURA // 1920:
-        posição_chao = 734 * LARGURA // 1920
+        posição_chao = 734 + 5 * LARGURA // 1920
     elif posição >= -6000 * LARGURA // 1920:
-        posição_chao = 738 * LARGURA // 1920
+        posição_chao = 738 + 5 * LARGURA // 1920
     elif posição >= -6010 * LARGURA // 1920:
-        posição_chao = 742 * LARGURA // 1920
+        posição_chao = 742 + 5 * LARGURA // 1920
     elif posição >= -6020 * LARGURA // 1920:
-        posição_chao = 748 * LARGURA // 1920
+        posição_chao = 748 + 5 * LARGURA // 1920
     elif posição >= -6030 * LARGURA // 1920:
-        posição_chao = 752 * LARGURA // 1920
+        posição_chao = 752 + 5 * LARGURA // 1920
     elif posição >= -6050 * LARGURA // 1920:
-        posição_chao = 748 * LARGURA // 1920
+        posição_chao = 748 + 5 * LARGURA // 1920
     elif posição >= -6160 * LARGURA // 1920:
-        posição_chao = 752 * LARGURA // 1920
+        posição_chao = 752 + 5 * LARGURA // 1920
         if posição <= -6160 * LARGURA // 1920:
             parede = True
         else:
             parede = False
     elif posição >= -6300 * LARGURA // 1920:
-        posição_chao = 690 * LARGURA // 1920
+        posição_chao = 690 + 5 * LARGURA // 1920
     elif posição >= -6360 * LARGURA // 1920:
-        posição_chao = 685 * LARGURA // 1920
+        posição_chao = 685 + 5 * LARGURA // 1920
     elif posição >= -6390 * LARGURA // 1920:
-        posição_chao = 690 * LARGURA // 1920
+        posição_chao = 690 + 5 * LARGURA // 1920
     elif posição >= -6410 * LARGURA // 1920:
-        posição_chao = 685 * LARGURA // 1920
+        posição_chao = 685 + 5 * LARGURA // 1920
     elif posição >= -6440 * LARGURA // 1920:
-        posição_chao = 680 * LARGURA // 1920
+        posição_chao = 680 + 5 * LARGURA // 1920
     elif posição >= -6460 * LARGURA // 1920:
-        posição_chao = 675 * LARGURA // 1920
+        posição_chao = 675 + 5 * LARGURA // 1920
     elif posição >= -6480 * LARGURA // 1920:
-        posição_chao = 672 * LARGURA // 1920
+        posição_chao = 672 + 5 * LARGURA // 1920
     elif posição >= -6590 * LARGURA // 1920:
-        posição_chao = 670 * LARGURA // 1920
+        posição_chao = 670 + 5 * LARGURA // 1920
     elif posição >= -6600 * LARGURA // 1920:
-        posição_chao = 673 * LARGURA // 1920
+        posição_chao = 673 + 5 * LARGURA // 1920
     elif posição >= -6610 * LARGURA // 1920:
-        posição_chao = 676 * LARGURA // 1920
+        posição_chao = 676 + 5 * LARGURA // 1920
     elif posição >= -6620 * LARGURA // 1920:
-        posição_chao = 680 * LARGURA // 1920
+        posição_chao = 680 + 5 * LARGURA // 1920
     elif posição >= -6630 * LARGURA // 1920:
-        posição_chao = 683 * LARGURA // 1920
+        posição_chao = 683 + 5 * LARGURA // 1920
     elif posição >= -6640 * LARGURA // 1920:
-        posição_chao = 686 * LARGURA // 1920
+        posição_chao = 686 + 5 * LARGURA // 1920
     elif posição >= -6650 * LARGURA // 1920:
-        posição_chao = 689 * LARGURA // 1920
+        posição_chao = 689 + 5 * LARGURA // 1920
     elif posição >= -6660 * LARGURA // 1920:
-        posição_chao = 694 * LARGURA // 1920
+        posição_chao = 694 + 5 * LARGURA // 1920
     elif posição >= -6670 * LARGURA // 1920:
-        posição_chao = 700 * LARGURA // 1920
+        posição_chao = 700 + 5 * LARGURA // 1920
     elif posição >= -6680 * LARGURA // 1920:
-        posição_chao = 705 * LARGURA // 1920
+        posição_chao = 705 + 5 * LARGURA // 1920
     elif posição >= -6690 * LARGURA // 1920:
-        posição_chao = 710 * LARGURA // 1920
+        posição_chao = 710 + 5 * LARGURA // 1920
     elif posição >= -6700 * LARGURA // 1920:
-        posição_chao = 720 * LARGURA // 1920
+        posição_chao = 720 + 5 * LARGURA // 1920
     elif posição >= -6710 * LARGURA // 1920:
-        posição_chao = 730 * LARGURA // 1920
+        posição_chao = 730 + 5 * LARGURA // 1920
     elif posição >= -6720 * LARGURA // 1920:
-        posição_chao = 735 * LARGURA // 1920
+        posição_chao = 735 + 5 * LARGURA // 1920
     elif posição >= -6730 * LARGURA // 1920:
-        posição_chao = 738 * LARGURA // 1920
+        posição_chao = 738 + 5 * LARGURA // 1920
     elif posição >= -6740 * LARGURA // 1920:
-        posição_chao = 735 * LARGURA // 1920
+        posição_chao = 735 + 5 * LARGURA // 1920
     elif posição >= -6880 * LARGURA // 1920:
-        posição_chao = 730 * LARGURA // 1920
+        posição_chao = 730 + 5 * LARGURA // 1920
     elif posição >= -6890 * LARGURA // 1920:
-        posição_chao = 725 * LARGURA // 1920
+        posição_chao = 725 + 5 * LARGURA // 1920
     elif posição >= -6900 * LARGURA // 1920:
-        posição_chao = 720 * LARGURA // 1920
+        posição_chao = 720 + 5 * LARGURA // 1920
     elif posição >= -6910 * LARGURA // 1920:
-        posição_chao = 715 * LARGURA // 1920
+        posição_chao = 715 + 5 * LARGURA // 1920
     elif posição >= -6920 * LARGURA // 1920:
-        posição_chao = 710 * LARGURA // 1920
+        posição_chao = 710 + 5 * LARGURA // 1920
     elif posição >= -7070 * LARGURA // 1920:
-        posição_chao = 705 * LARGURA // 1920
+        posição_chao = 705 + 5 * LARGURA // 1920
     elif posição >= -7080 * LARGURA // 1920:
-        posição_chao = 700 * LARGURA // 1920
+        posição_chao = 700 + 5 * LARGURA // 1920
     elif posição >= -7090 * LARGURA // 1920:
-        posição_chao = 695 * LARGURA // 1920
+        posição_chao = 695 + 5 * LARGURA // 1920
     elif posição >= -7100 * LARGURA // 1920:
-        posição_chao = 690 * LARGURA // 1920
+        posição_chao = 690 + 5 * LARGURA // 1920
     elif posição >= -7110 * LARGURA // 1920:
-        posição_chao = 684 * LARGURA // 1920
+        posição_chao = 684 + 5 * LARGURA // 1920
     elif posição >= -7360 * LARGURA // 1920:
-        posição_chao = 680 * LARGURA // 1920
+        posição_chao = 680 + 5 * LARGURA // 1920
     elif posição >= -7380 * LARGURA // 1920:
-        posição_chao = 676 * LARGURA // 1920
+        posição_chao = 676 + 5 * LARGURA // 1920
     elif posição >= -7400 * LARGURA // 1920:
-        posição_chao = 672 * LARGURA // 1920
+        posição_chao = 672 + 5 * LARGURA // 1920
     elif posição >= -7420 * LARGURA // 1920:
-        posição_chao = 668 * LARGURA // 1920
+        posição_chao = 668 + 5 * LARGURA // 1920
     elif posição >= -7440 * LARGURA // 1920:
-        posição_chao = 666 * LARGURA // 1920
+        posição_chao = 666 + 5 * LARGURA // 1920
     elif posição >= -7460 * LARGURA // 1920:
-        posição_chao = 664 * LARGURA // 1920
+        posição_chao = 664 + 5 * LARGURA // 1920
     elif posição >= -7480 * LARGURA // 1920:
-        posição_chao = 662 * LARGURA // 1920
+        posição_chao = 662 + 5 * LARGURA // 1920
     elif posição >= -7500 * LARGURA // 1920:
-        posição_chao = 660 * LARGURA // 1920
+        posição_chao = 660 + 5 * LARGURA // 1920
     elif posição >= -7520 * LARGURA // 1920:
-        posição_chao = 658 * LARGURA // 1920
+        posição_chao = 658 + 5 * LARGURA // 1920
     elif posição >= -7540 * LARGURA // 1920:
-        posição_chao = 656 * LARGURA // 1920
+        posição_chao = 656 + 5 * LARGURA // 1920
     elif posição >= -7680 * LARGURA // 1920:
-        posição_chao = 653 * LARGURA // 1920
+        posição_chao = 653 + 5 * LARGURA // 1920
     elif posição >= -7690 * LARGURA // 1920:
-        posição_chao = 659 * LARGURA // 1920
+        posição_chao = 659 + 5 * LARGURA // 1920
     elif posição >= -7700 * LARGURA // 1920:
-        posição_chao = 663 * LARGURA // 1920
+        posição_chao = 663 + 5 * LARGURA // 1920
     elif posição >= -7710 * LARGURA // 1920:
-        posição_chao = 667 * LARGURA // 1920
+        posição_chao = 667 + 5 * LARGURA // 1920
     elif posição >= -7720 * LARGURA // 1920:
-        posição_chao = 669 * LARGURA // 1920
+        posição_chao = 669 + 5 * LARGURA // 1920
     elif posição >= -7730 * LARGURA // 1920:
-        posição_chao = 672 * LARGURA // 1920
+        posição_chao = 672 + 5 * LARGURA // 1920
     elif posição >= -7740 * LARGURA // 1920:
-        posição_chao = 677 * LARGURA // 1920
+        posição_chao = 677 + 5 * LARGURA // 1920
     elif posição >= -7750 * LARGURA // 1920:
-        posição_chao = 681 * LARGURA // 1920
+        posição_chao = 681 + 5 * LARGURA // 1920
     elif posição >= -7760 * LARGURA // 1920:
-        posição_chao = 685 * LARGURA // 1920
+        posição_chao = 685 + 5 * LARGURA // 1920
     elif posição >= -7770 * LARGURA // 1920:
-        posição_chao = 693 * LARGURA // 1920
+        posição_chao = 693 + 5 * LARGURA // 1920
     elif posição >= -7780 * LARGURA // 1920:
-        posição_chao = 705 * LARGURA // 1920
+        posição_chao = 705 + 5 * LARGURA // 1920
     elif posição >= -7790 * LARGURA // 1920:
-        posição_chao = 715 * LARGURA // 1920
+        posição_chao = 715 + 5 * LARGURA // 1920
     elif posição >= -7860 * LARGURA // 1920:
-        posição_chao = 723 * LARGURA // 1920
+        posição_chao = 723 + 5 * LARGURA // 1920
     elif posição >= -7880 * LARGURA // 1920:
-        posição_chao = 730 * LARGURA // 1920
+        posição_chao = 730 + 5 * LARGURA // 1920
     elif posição >= -7900 * LARGURA // 1920:
-        posição_chao = 734 * LARGURA // 1920
+        posição_chao = 734 + 5 * LARGURA // 1920
     elif posição >= -7920 * LARGURA // 1920:
-        posição_chao = 738 * LARGURA // 1920
+        posição_chao = 738 + 5 * LARGURA // 1920
     elif posição >= -7930 * LARGURA // 1920:
-        posição_chao = 742 * LARGURA // 1920
+        posição_chao = 742 + 5 * LARGURA // 1920
     elif posição >= -7940 * LARGURA // 1920:
-        posição_chao = 748 * LARGURA // 1920
+        posição_chao = 748 + 5 * LARGURA // 1920
     elif posição >= -7950 * LARGURA // 1920:
-        posição_chao = 752 * LARGURA // 1920
+        posição_chao = 752 + 5 * LARGURA // 1920
     elif posição >= -7970 * LARGURA // 1920:
-        posição_chao = 748 * LARGURA // 1920
+        posição_chao = 748 + 5 * LARGURA // 1920
     elif posição >= -8080 * LARGURA // 1920:
-        posição_chao = 752 * LARGURA // 1920
+        posição_chao = 752 + 5 * LARGURA // 1920
         if posição <= -8080 * LARGURA // 1920:
             parede = True
         else:
             parede = False
     elif posição >= -8220 * LARGURA // 1920:
-        posição_chao = 690 * LARGURA // 1920
+        posição_chao = 690 + 5 * LARGURA // 1920
     elif posição >= -8280 * LARGURA // 1920:
-        posição_chao = 685 * LARGURA // 1920
+        posição_chao = 685 + 5 * LARGURA // 1920
     elif posição >= -8310 * LARGURA // 1920:
-        posição_chao = 690 * LARGURA // 1920
+        posição_chao = 690 + 5 * LARGURA // 1920
     elif posição >= -8330 * LARGURA // 1920:
-        posição_chao = 685 * LARGURA // 1920
+        posição_chao = 685 + 5 * LARGURA // 1920
     elif posição >= -8360 * LARGURA // 1920:
-        posição_chao = 680 * LARGURA // 1920
+        posição_chao = 680 + 5 * LARGURA // 1920
     elif posição >= -8380 * LARGURA // 1920:
-        posição_chao = 675 * LARGURA // 1920
+        posição_chao = 675 + 5 * LARGURA // 1920
     elif posição >= -8400 * LARGURA // 1920:
-        posição_chao = 672 * LARGURA // 1920
+        posição_chao = 672 + 5 * LARGURA // 1920
     elif posição >= -8510 * LARGURA // 1920:
-        posição_chao = 670 * LARGURA // 1920
+        posição_chao = 670 + 5 * LARGURA // 1920
     elif posição >= -8520 * LARGURA // 1920:
-        posição_chao = 673 * LARGURA // 1920
+        posição_chao = 673 + 5 * LARGURA // 1920
     elif posição >= -8530 * LARGURA // 1920:
-        posição_chao = 676 * LARGURA // 1920
+        posição_chao = 676 + 5 * LARGURA // 1920
     elif posição >= -8540 * LARGURA // 1920:
-        posição_chao = 680 * LARGURA // 1920
+        posição_chao = 680 + 5 * LARGURA // 1920
     elif posição >= -8550 * LARGURA // 1920:
-        posição_chao = 683 * LARGURA // 1920
+        posição_chao = 683 + 5 * LARGURA // 1920
     elif posição >= -8560 * LARGURA // 1920:
-        posição_chao = 686 * LARGURA // 1920
+        posição_chao = 686 + 5 * LARGURA // 1920
     elif posição >= -8570 * LARGURA // 1920:
-        posição_chao = 689 * LARGURA // 1920
+        posição_chao = 689 + 5 * LARGURA // 1920
     elif posição >= -8580 * LARGURA // 1920:
-        posição_chao = 694 * LARGURA // 1920
+        posição_chao = 694 + 5 * LARGURA // 1920
     elif posição >= -8590 * LARGURA // 1920:
-        posição_chao = 700 * LARGURA // 1920
+        posição_chao = 700 + 5 * LARGURA // 1920
     elif posição >= -8600 * LARGURA // 1920:
-        posição_chao = 705 * LARGURA // 1920
+        posição_chao = 705 + 5 * LARGURA // 1920
     elif posição >= -8610 * LARGURA // 1920:
-        posição_chao = 710 * LARGURA // 1920
+        posição_chao = 710 + 5 * LARGURA // 1920
     elif posição >= -8620 * LARGURA // 1920:
-        posição_chao = 720 * LARGURA // 1920
+        posição_chao = 720 + 5 * LARGURA // 1920
     elif posição >= -8630 * LARGURA // 1920:
-        posição_chao = 730 * LARGURA // 1920
+        posição_chao = 730 + 5 * LARGURA // 1920
     elif posição >= -8640 * LARGURA // 1920:
-        posição_chao = 735 * LARGURA // 1920
+        posição_chao = 735 + 5 * LARGURA // 1920
     elif posição >= -8650 * LARGURA // 1920:
-        posição_chao = 738 * LARGURA // 1920
+        posição_chao = 738 + 5 * LARGURA // 1920
     elif posição >= -8660 * LARGURA // 1920:
-        posição_chao = 735 * LARGURA // 1920
+        posição_chao = 735 + 5 * LARGURA // 1920
     elif posição >= -8800 * LARGURA // 1920:
-        posição_chao = 730 * LARGURA // 1920
+        posição_chao = 730 + 5 * LARGURA // 1920
     elif posição >= -8810 * LARGURA // 1920:
-        posição_chao = 725 * LARGURA // 1920
+        posição_chao = 725 + 5 * LARGURA // 1920
     elif posição >= -8820 * LARGURA // 1920:
-        posição_chao = 720 * LARGURA // 1920
+        posição_chao = 720 + 5 * LARGURA // 1920
     elif posição >= -8830 * LARGURA // 1920:
-        posição_chao = 715 * LARGURA // 1920
+        posição_chao = 715 + 5 * LARGURA // 1920
     elif posição >= -8840 * LARGURA // 1920:
-        posição_chao = 710 * LARGURA // 1920
+        posição_chao = 710 + 5 * LARGURA // 1920
     elif posição >= -8990 * LARGURA // 1920:
-        posição_chao = 705 * LARGURA // 1920
+        posição_chao = 705 + 5 * LARGURA // 1920
     elif posição >= -9000 * LARGURA // 1920:
-        posição_chao = 700 * LARGURA // 1920
+        posição_chao = 700 + 5 * LARGURA // 1920
     elif posição >= -9010 * LARGURA // 1920:
-        posição_chao = 695 * LARGURA // 1920
+        posição_chao = 695 + 5 * LARGURA // 1920
     elif posição >= -9020 * LARGURA // 1920:
-        posição_chao = 690 * LARGURA // 1920
+        posição_chao = 690 + 5 * LARGURA // 1920
     elif posição >= -9030 * LARGURA // 1920:
-        posição_chao = 684 * LARGURA // 1920
+        posição_chao = 684 + 5 * LARGURA // 1920
     elif posição >= -9280 * LARGURA // 1920:
-        posição_chao = 680 * LARGURA // 1920
-    
-    
-    print(f"Posição do chão: {posição_chao}, Posição do personagem X: {posição_personagem_X}, Posição: {posição}   {parede}")
+        posição_chao = 680 + 5 * LARGURA // 1920
+    elif posição >= -9300 * LARGURA // 1920:
+        posição_chao = 676 + 5 * LARGURA // 1920
+    elif posição >= -9320 * LARGURA // 1920:
+        posição_chao = 672 + 5 * LARGURA // 1920
+    elif posição >= -9340 * LARGURA // 1920:
+        posição_chao = 668 + 5 * LARGURA // 1920
+    elif posição >= -9360 * LARGURA // 1920:
+        posição_chao = 666 + 5 * LARGURA // 1920
+    elif posição >= -9380 * LARGURA // 1920:
+        posição_chao = 664 + 5 * LARGURA // 1920
+    elif posição >= -9400 * LARGURA // 1920:
+        posição_chao = 662 + 5 * LARGURA // 1920
+    elif posição >= -9420 * LARGURA // 1920:
+        posição_chao = 660 + 5 * LARGURA // 1920
+    elif posição >= -9440 * LARGURA // 1920:
+        posição_chao = 658 + 5 * LARGURA // 1920
+    elif posição >= -9460 * LARGURA // 1920:
+        posição_chao = 656 + 5 * LARGURA // 1920
+    elif posição >= -9500 * LARGURA // 1920:
+        posição_chao = 653 + 5 * LARGURA // 1920
+    elif posição >= -9510 * LARGURA // 1920:
+        posição_chao = 659 + 5 * LARGURA // 1920
+    elif posição >= -9520 * LARGURA // 1920:
+        posição_chao = 663 + 5 * LARGURA // 1920
+    elif posição >= -9530 * LARGURA // 1920:
+        posição_chao = 667 + 5 * LARGURA // 1920
+    elif posição >= -9540 * LARGURA // 1920:
+        posição_chao = 669 + 5 * LARGURA // 1920
+    elif posição >= -9550 * LARGURA // 1920:
+        posição_chao = 672 + 5 * LARGURA // 1920
+    elif posição >= -9560 * LARGURA // 1920:
+        posição_chao = 677 + 5 * LARGURA // 1920
+    elif posição >= -9570 * LARGURA // 1920:
+        posição_chao = 681 + 5 * LARGURA // 1920
+    elif posição >= -9580 * LARGURA // 1920:
+        posição_chao = 685 + 5 * LARGURA // 1920
+    elif posição >= -9590 * LARGURA // 1920:
+        posição_chao = 693 + 5 * LARGURA // 1920
+    elif posição >= -9600 * LARGURA // 1920:
+        posição_chao = 705 + 5 * LARGURA // 1920
+
+    elif posição_personagem_X <= 510 * LARGURA // 1920:
+        posição_chao = 684 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 520 * LARGURA // 1920:
+        posição_chao = 680 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 530 * LARGURA // 1920:
+        posição_chao = 676 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 540:
+        posição_chao = 672 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 550 * LARGURA // 1920:
+        posição_chao = 668 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 560 * LARGURA // 1920:
+        posição_chao = 666 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 570 * LARGURA // 1920:
+        posição_chao = 664 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 580 * LARGURA // 1920:
+        posição_chao = 662 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 590 * LARGURA // 1920:
+        posição_chao = 660 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 600 * LARGURA // 1920:
+        posição_chao = 658 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 610 * LARGURA // 1920:
+        posição_chao = 656 + 5 * LARGURA // 1920
+    elif posição_personagem_X < 680 * LARGURA // 1920:
+        posição_chao = 653 + 5 * LARGURA // 1920
 
 
     return posição_chao
+
+posições_chao = list(range(0, -LARGURA * 5, -10 * LARGURA // 1920))
+print(len(posições_chao) // 5)
+
 
 if __name__ == "__main__":
     screen = pygame.display.set_mode((LARGURA, ALTURA), pygame.FULLSCREEN)
@@ -732,7 +798,7 @@ if __name__ == "__main__":
             travar = True
         elif not colisao_chao or posição > -400 * LARGURA // 1920 or key[pygame.K_SPACE]:
             parede = False
-            travar = False
+
 
         
         if not parede:
@@ -763,12 +829,12 @@ if __name__ == "__main__":
 
             if posição - 1 >= -LARGURA * 2  and posição_personagem_X >= 500 * LARGURA // 1920 and not travar:
                 if key[pygame.K_d]:
-                    posição -= 10 * LARGURA // 1920
+                    posição -= 8 * LARGURA // 1920
                     diresao = "direita"
             else:
                 if -posição_personagem_X >= -LARGURA + 150 and not travar:
                     if key[pygame.K_d]:
-                        posição_personagem_X += 10 * LARGURA // 1920
+                        posição_personagem_X += 8 * LARGURA // 1920
                         diresao = "direita"
                 else:
                     diresao = "parado"
@@ -777,23 +843,22 @@ if __name__ == "__main__":
                 
             if posição <= -20 * LARGURA // 1920 and posição_personagem_X <= 500 * LARGURA // 1920:
                 if key[pygame.K_a]:
-                    posição += 10 * LARGURA // 1920
+                    posição += 8 * LARGURA // 1920
                     diresao = "esquerda"
 
             else:
                 if posição_personagem_X >= -21 * LARGURA // 1920:
                     if key[pygame.K_a]:
-                        posição_personagem_X -= 10 * LARGURA // 1920
+                        posição_personagem_X -= 8 * LARGURA // 1920
                         diresao = "esquerda"
                 else:
                     diresao = "parado"
 
-            if key[pygame.K_SPACE] and colisao_chao:
+            if key[pygame.K_SPACE] and colisao_chao and limite_de_pulo > qnt_de_pulo:
                 qnt_de_pulo += 1
                 pulo_detectado = True
                 vel_y = forca_pulo
                 sombra.set_alpha(tranparencia - (qnt_de_pulo * 25))
-                travar = False
                 
                 if qnt_de_pulo == limite_de_pulo:
                     colisao_chao = False
@@ -833,139 +898,7 @@ if __name__ == "__main__":
                     frame_personagem = 0
             
             
-            if dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 1 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 2 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 3 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 4 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 5 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 6 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 7 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 8 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
+            
             
 
             

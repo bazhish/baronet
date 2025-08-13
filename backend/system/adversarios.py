@@ -146,7 +146,11 @@ class AdversarioDemiHumano:
 
     def atacar(self, alvo) -> None:
         dano = max(1, self.dano_final - getattr(alvo, 'defesa_final', 0))
+<<<<<<< HEAD
         alvo.vida_atual = max(0, alvo.vida_atual - dano)
+=======
+        alvo.vida_atual = max(1, alvo.vida_atual - dano)
+>>>>>>> 9780770656b768a18468949f9c25aa48669c0930
 
     def estar_vivo(self):
         return self.vida_atual > 0

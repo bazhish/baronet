@@ -86,7 +86,7 @@ adversario = AdversarioDemiHumano(
 adversario.posição_x, adversario.posição_y = 900, ALTURA - 100
 
 # Variável para controlar o intervalo de ataque do adversário
-INTERVALO_ATAQUE_ADVERSARIO = 32 # em ticks (1 segundo se FPS=60)
+INTERVALO_ATAQUE_ADVERSARIO = 60  # em ticks (1 segundo se FPS=60)
 contador_ataque_adversario = 0
 
 # Defina teclas para habilidades
@@ -162,7 +162,7 @@ while rodando:
     # Ataque do adversário em intervalo de ticks se o jogador estiver dentro do range
     if dentro_do_range_adversario(adversario, jogador, ALCANCE_ATAQUE_ADVERSARIO):
         contador_ataque_adversario += 1
-        if contador_ataque_adversario >= INTERVALO_ATAQUE_ADVERSARIO:
+        if contador_ataque_adversario >= 5:
             adversario.atacar(jogador)
             contador_ataque_adversario = 0
     else:

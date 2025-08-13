@@ -660,12 +660,78 @@ def colisao_chao_batalha():
         posição_chao = 684 + 5 * LARGURA // 1920
     elif posição >= -9280 * LARGURA // 1920:
         posição_chao = 680 + 5 * LARGURA // 1920
-    
-    
-    print(f"Posição do chão: {posição_chao}, Posição do personagem X: {posição_personagem_X}, Posição: {posição}   {parede}")
+    elif posição >= -9300 * LARGURA // 1920:
+        posição_chao = 676 + 5 * LARGURA // 1920
+    elif posição >= -9320 * LARGURA // 1920:
+        posição_chao = 672 + 5 * LARGURA // 1920
+    elif posição >= -9340 * LARGURA // 1920:
+        posição_chao = 668 + 5 * LARGURA // 1920
+    elif posição >= -9360 * LARGURA // 1920:
+        posição_chao = 666 + 5 * LARGURA // 1920
+    elif posição >= -9380 * LARGURA // 1920:
+        posição_chao = 664 + 5 * LARGURA // 1920
+    elif posição >= -9400 * LARGURA // 1920:
+        posição_chao = 662 + 5 * LARGURA // 1920
+    elif posição >= -9420 * LARGURA // 1920:
+        posição_chao = 660 + 5 * LARGURA // 1920
+    elif posição >= -9440 * LARGURA // 1920:
+        posição_chao = 658 + 5 * LARGURA // 1920
+    elif posição >= -9460 * LARGURA // 1920:
+        posição_chao = 656 + 5 * LARGURA // 1920
+    elif posição >= -9500 * LARGURA // 1920:
+        posição_chao = 653 + 5 * LARGURA // 1920
+    elif posição >= -9510 * LARGURA // 1920:
+        posição_chao = 659 + 5 * LARGURA // 1920
+    elif posição >= -9520 * LARGURA // 1920:
+        posição_chao = 663 + 5 * LARGURA // 1920
+    elif posição >= -9530 * LARGURA // 1920:
+        posição_chao = 667 + 5 * LARGURA // 1920
+    elif posição >= -9540 * LARGURA // 1920:
+        posição_chao = 669 + 5 * LARGURA // 1920
+    elif posição >= -9550 * LARGURA // 1920:
+        posição_chao = 672 + 5 * LARGURA // 1920
+    elif posição >= -9560 * LARGURA // 1920:
+        posição_chao = 677 + 5 * LARGURA // 1920
+    elif posição >= -9570 * LARGURA // 1920:
+        posição_chao = 681 + 5 * LARGURA // 1920
+    elif posição >= -9580 * LARGURA // 1920:
+        posição_chao = 685 + 5 * LARGURA // 1920
+    elif posição >= -9590 * LARGURA // 1920:
+        posição_chao = 693 + 5 * LARGURA // 1920
+    elif posição >= -9600 * LARGURA // 1920:
+        posição_chao = 705 + 5 * LARGURA // 1920
+
+    elif posição_personagem_X <= 510 * LARGURA // 1920:
+        posição_chao = 684 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 520 * LARGURA // 1920:
+        posição_chao = 680 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 530 * LARGURA // 1920:
+        posição_chao = 676 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 540:
+        posição_chao = 672 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 550 * LARGURA // 1920:
+        posição_chao = 668 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 560 * LARGURA // 1920:
+        posição_chao = 666 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 570 * LARGURA // 1920:
+        posição_chao = 664 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 580 * LARGURA // 1920:
+        posição_chao = 662 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 590 * LARGURA // 1920:
+        posição_chao = 660 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 600 * LARGURA // 1920:
+        posição_chao = 658 + 5 * LARGURA // 1920
+    elif posição_personagem_X <= 610 * LARGURA // 1920:
+        posição_chao = 656 + 5 * LARGURA // 1920
+    elif posição_personagem_X < 680 * LARGURA // 1920:
+        posição_chao = 653 + 5 * LARGURA // 1920
 
 
     return posição_chao
+
+posições_chao = list(range(0, -LARGURA * 5, -10 * LARGURA // 1920))
+print(len(posições_chao) // 5)
+
 
 if __name__ == "__main__":
     screen = pygame.display.set_mode((LARGURA, ALTURA), pygame.FULLSCREEN)
@@ -788,8 +854,8 @@ if __name__ == "__main__":
                 else:
                     diresao = "parado"
 
-            if key[pygame.K_SPACE] and colisao_chao:
-                qnt_de_pulo += 0.5
+            if key[pygame.K_SPACE] and colisao_chao and limite_de_pulo > qnt_de_pulo:
+                qnt_de_pulo += 1
                 pulo_detectado = True
                 vel_y = forca_pulo
                 sombra.set_alpha(tranparencia - (qnt_de_pulo * 25))
@@ -832,139 +898,7 @@ if __name__ == "__main__":
                     frame_personagem = 0
             
             
-            if dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 1 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 2 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 3 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 4 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 5 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 6 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 7 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 8 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
-            elif dados["progresso"]["capitulo"] == 1 and "missao" == 0 and not dados_do_alvo_recebidos:
-                alvo = {"dano": 0,
-                        "nome": 0,
-                        "vida": 0,
-                        "defesa": 0,
-                        "velocidade": 0}
-                dados_do_alvo_recebidos = True
+            
             
 
             

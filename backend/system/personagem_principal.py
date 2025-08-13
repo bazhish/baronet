@@ -4,7 +4,7 @@ from typing import Any
 
 class Usuario:
     def __init__(self, nome):
-    # DADOS PESSOAIS
+        # DADOS PESSOAIS
         self.nome = nome
         self.idade = 17
         self.peso = 80
@@ -23,14 +23,14 @@ class Usuario:
         self.dano_base = 0
         self.velocidade_base = 0
         self.defesa_base = 0
-        self.vida_base = 90
+        self.vida_base = 0
         self.estamina_base = 0
-        self.multiplicador_de_experiência = 1
+        self.multiplicador_de_experiência = 1.0
         # ESTADO
         self.estado = "normal"
         # CLASSE 
         self.nome_da_classe_do_usuário = "nenhuma"
-        self.classe = None
+        self.classe_do_usuário = None
         # ATRIBUTOS
         self.vida_atual = 0
         self.vida_máxima = 0
@@ -49,7 +49,7 @@ class Usuario:
         self.terceira_habilidade_passiva = None
         self.habilidade_ativa = None
         self.habilidade_especial = None
-        # HABILIDADES NOME
+        # --------------------------------------------
         self.nome_da_primeira_habilidade_passiva = str
         self.nome_da_segunda_habilidade_passiva = str
         self.nome_da_terceira_habilidade_passiva = str
@@ -104,7 +104,8 @@ class Usuario:
         return self.estamina_base + self.estamina_bonus
 
     def definir_classe(self, classe):
-        self.classe = classe
+        self.nome_da_classe_do_usuário = classe.nome
+        self.classe_do_usuário = classe
         self.dano_base = classe.dano_base
         self.velocidade_base = classe.velocidade_base
         self.defesa_base = classe.defesa_base
@@ -112,20 +113,20 @@ class Usuario:
         self.estamina_base = classe.estamina_base
         self.multiplicador_de_experiência = classe.multiplicador_de_experiência
         self.arma = classe.arma
-        self.nome_da_classe_do_usuário = classe.nome
+        self.atualizar_status_com_bonus()
 
     def definir_habilidades(self):
-        self.nome_da_primeira_habilidade_passiva = self.classe.primeira_habilidade_passiva.nome
-        self.nome_da_segunda_habilidade_passiva = self.classe.segunda_habilidade_passiva.nome
-        self.nome_da_terceira_habilidade_passiva = self.classe.terceira_habilidade_passiva.nome
-        self.nome_da_habilidade_ativa = self.classe.habilidade_ativa.nome
-        self.nome_da_habilidade_especial = self.classe.habilidade_especial.nome
+        self.nome_da_primeira_habilidade_passiva = self.classe_do_usuário.primeira_habilidade_passiva.nome
+        self.nome_da_segunda_habilidade_passiva = self.classe_do_usuário.segunda_habilidade_passiva.nome
+        self.nome_da_terceira_habilidade_passiva = self.classe_do_usuário.terceira_habilidade_passiva.nome
+        self.nome_da_habilidade_ativa = self.classe_do_usuário.habilidade_ativa.nome
+        self.nome_da_habilidade_especial = self.classe_do_usuário.habilidade_especial.nome
         # ---------------------------------------------------------------------
-        self.primeira_habilidade_passiva = self.classe.primeira_habilidade_passiva
-        self.segunda_habilidade_passiva = self.classe.segunda_habilidade_passiva
-        self.terceira_habilidade_passiva = self.classe.terceira_habilidade_passiva
-        self.habilidade_ativa = self.classe.habilidade_ativa
-        self.habilidade_especial = self.classe.habilidade_especial
+        self.primeira_habilidade_passiva = self.classe_do_usuário.primeira_habilidade_passiva
+        self.segunda_habilidade_passiva = self.classe_do_usuário.segunda_habilidade_passiva
+        self.terceira_habilidade_passiva = self.classe_do_usuário.terceira_habilidade_passiva
+        self.habilidade_ativa = self.classe_do_usuário.habilidade_ativa
+        self.habilidade_especial = self.classe_do_usuário.habilidade_especial
 
     def atualizar_status_com_bonus(self):
         self.vida_máxima = self.vida_final
@@ -152,9 +153,7 @@ class Usuario:
         self.defesa_bonus = 0
 
     def receber_experiencia(self, experiência: int):
-        self.multiplicador_de_experiência = 0
-        if self.multiplicador_de_experiência > 0:
-            experiência *= self.multiplicador_de_experiência
+        experiência *= self.multiplicador_de_experiência
 
         self.experiência_atual += experiência
         while self.experiência_atual >= self.experiência_máxima and self.nível_atual < self.nível_máximo:
@@ -221,6 +220,7 @@ class Usuario:
                           f"genero: {self.genero}\n"
                           f"altura: {self.altura}m\n"
                           f"experiência: {self.experiência_atual}/{self.experiência_máxima}\n"
+                          f"multiplicador de experiência: {self.multiplicador_de_experiência}\n"
                           f"nível: {self.nível_atual}/{self.nível_máximo}\n"
                           f"dano: {self.dano_final}\n"
                           f"velocidade: {self.velocidade_final}\n"

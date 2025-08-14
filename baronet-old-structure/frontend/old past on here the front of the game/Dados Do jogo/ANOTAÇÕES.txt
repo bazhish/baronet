@@ -1,0 +1,203 @@
+"w" — Write (escrever do zero)
+Cria o arquivo se não existir.
+Apaga tudo se o arquivo já existir.
+Só dá pra escrever, não dá pra ler.
+
+"a" — Append (acrescentar)
+Cria o arquivo se não existir.
+Não apaga o conteúdo anterior.
+Escreve no final do arquivo.
+Bom pra adicionar novas linhas sem perder as antigas.
+
+"r" — Read (ler)
+Só abre se o arquivo já existir.
+Só permite ler (usando .read(), .readline(), etc).
+Não dá pra escrever.
+
+"r+" — Read and Write (ler e escrever)
+Lê e escreve no mesmo arquivo.
+Não apaga o conteúdo automaticamente.
+Começa a escrever do início do arquivo (pode sobrescrever o que já tem, cuidado).
+Arquivo deve existir.
+
+"w+" — Write and Read (escrever e ler)
+Apaga tudo no começo.
+Dá pra ler e escrever depois.
+Se o arquivo não existir, cria.
+Igual ao "w", mas permite leitura também.
+
+"a+" — Append and Read (acrescentar e ler)
+Dá pra ler e acrescentar no final.
+Não apaga nada.
+Começa a escrever do fim.
+Cria o arquivo se não existir.
+
+A função choice() é usada para escolher um item aleatório de uma lista (ou de qualquer sequência, como tupla ou string).
+Ela faz parte do módulo random do Python.
+
+🟢 7 Monstros de Baixo Nível (nível 2 a 5)
+
+Goblin – Pequeno e rápido, usa adaga.
+Esqueleto – Frágil, mas usa espada básica.
+Lobo – Ágil e feroz, ataca com mordidas.
+Zumbi – Lento, resistente, dá golpes pesados.
+Cão Selvagem – Anda em bando, rápido e imprevisível.
+ratos saqueadores – Humano selvagem, usa pedaços de ferro ou madeira como arma.
+Macaco Gigante – Rápido, pula em cima da vítima e arranha com unhas grandes.
+
+🟡 5 Monstros de Nível Médio (nível 6 a 10)
+
+Orc Guerreiro – Forte e usa machado.
+Troll das Cavernas – Alta vida e força bruta.
+Caçador Sombrio – Rápido e mortal com adagas duplas.
+Fera da floresta – Um javali mutante ágil e feroz.
+Arqueiro Espectral – Ataca de longe com precisão.
+
+🔴 12 Monstros de Alto Nível (nível 11 a 15)
+
+espadachin Negro – Usa magia para causar dano em área.
+Demônio Infernal – Ataques flamejantes e forte defesa.
+Besta de Gelo – Congela inimigos e reduz velocidade.
+Carrasco – Guerreiro gigante com machado de duas mãos.
+Golem de pedra – Muito resistente, mas lento.
+Aranha Rainha – Usa veneno e invoca filhotes.
+Lobo Alfa – Lidera matilha e tem alta velocidade.
+Assassino das Sombras – Invisível até atacar.
+Cavaleiro esqueleto – Defensivo, montado num cavalo morto-vivo.
+Gigante da Montanha – Muito dano e área de ataque.
+Arqueiro Corrompido – Usa magias negras para se curar.
+Serpente Gigante – Envenena e esmaga.
+
+🟣 Monstros Lendários (nível 16 a 20)
+
+O Colosso Cego
+Rei dos Carniceiros
+A Máquina de Guerra
+
+🟣 boss final
+
+Rei tirano
+
+🛡️ TÍTULO: Terra de Sangue
+📜 Prólogo — A Queda dos Homens Livres
+Houve um tempo em que os reinos eram livres. Quatro grandes nações dividiam os territórios do continente de Gaern, e mesmo em tempos de guerra, havia honra. Mas isso acabou quando o Império de Volkar, movido pela ganância por recursos e terras férteis, iniciou uma campanha brutal que ficou conhecida como As Guerras Cinzentas.
+
+As outras nações, enfraquecidas e divididas internamente, caíram uma a uma. Os reinos foram incendiados, suas fortalezas derrubadas, suas culturas apagadas. Volkar não queria apenas o território — queria apagar o passado. Agora, o continente é controlado por uma força central tirânica, onde apenas quem serve com sangue sobrevive.
+
+🏴‍☠️ Capítulo I — O Mundo Atual
+Cem anos após a guerra, Gaern é um lugar devastado, onde o império reina com punho de ferro. Toda cidade é vigiada, os recursos são controlados, e o povo é mantido com medo. Mas nos ermos, fora das muralhas, vivem os que recusaram a submissão. Eles formam facções selvagens, clãs de caçadores, mercenários, assassinos e saqueadores.
+
+Os monstros são um legado da guerra: experimentos humanos, animais cruzados e aberrações criadas para vencer batalhas. Agora, soltos pelo mundo, eles vivem e se reproduzem como predadores.
+
+Você é um Renascido — uma criança tirada de sua aldeia ainda jovem, criada por forasteiros e treinada para sobreviver. Hoje, você retorna às terras de onde veio... mas tudo o que resta são cinzas.
+
+🧩 Capítulo II — Facções, Clãs e Sobreviventes
+O mundo é dividido por territórios dominados por facções e bestiários naturais:
+
+🪓 Clã dos Ossos
+Selvagens que vivem entre as montanhas.
+
+Usam os ossos dos inimigos como armaduras e armas.
+
+Seguem uma fé brutal onde o corpo é fraco e deve ser substituído.
+
+🔥 Os Portadores da Cinza
+Rebeldes formados por ex-soldados do Império.
+
+Vivem escondidos em florestas queimadas, usando táticas de guerrilha.
+
+Acreditam que o mundo só será purificado pelas chamas.
+
+⚙️ Engrenagem Negra
+Um grupo de ferreiros renegados.
+
+Criaram soldados fundidos com ferro e carne — monstros sem alma.
+
+Vendem armas e máquinas em troca de prisioneiros ou crianças.
+
+🧠 Ordem do Olhar
+Intelectuais e estrategistas escondidos sob ruínas de uma antiga biblioteca.
+
+Recolhem informações, histórias e segredos.
+
+Ajudam quem quer destruir o Império, mas cobram caro: conhecimento.
+
+💀 Capítulo III — Os Inimigos
+Bestas menores, como lobos alterados, saqueadores, cães selvagens, vivem por toda parte.
+Monstros médios guardam áreas importantes: ruínas, vales e cavernas.
+Grandes monstros são quase lendas — guardam relíquias, fortalezas esquecidas ou antigas prisões.
+
+Os três monstros lendários são considerados “os Guardiões do Fim”:
+
+O Colosso Cego – Protege uma muralha ancestral, onde dizem haver um arsenal capaz de derrubar o Império.
+
+O Flagelo – Prende toda uma cidade fantasma em um ciclo de morte e tortura.
+
+A Máquina de Guerra – Dorme sob os escombros de um laboratório da Engrenagem Negra — se despertar, nada restará.
+
+🎯 Capítulo IV — O Jogador (Você)
+Você pode escolher entre três origens:
+
+Exilado do Império — treinado, mas odiado por todos.
+
+Criado pelos Ossos — brutal, forte, porém desprezado fora dos ermos.
+
+Filho do Povo Livre — ágil, inteligente, mas sem lar.
+
+O jogador pode:
+
+Escolher armas (lanças, espadas, adagas, porretes, arco).
+
+Melhorar habilidades com base em prática, não pontos mágicos.
+
+Usar armaduras reais, feitas de couro, ferro ou ossos.
+
+Comer e descansar para sobreviver (sistema de resistência).
+
+🧨 Capítulo V — Objetivos e Caminhos
+Você começa buscando respostas sobre sua aldeia.
+Logo, descobre pistas de um plano do Império para libertar um antigo projeto militar — algo que pode destruir tudo.
+
+Você deve:
+
+Escolher se quer se vingar, libertar os povos, dominar os monstros, ou tomar o lugar do Império.
+
+Lutar, construir alianças, conquistar territórios, enfrentar traições.
+
+⚔️ Elementos Essenciais para o Jogo
+Sistema de Fadiga e alimentação
+
+Armas reais, cada uma com impacto, alcance e peso.
+
+Combate tático (ataque, defesa, esquiva, contra-ataque).
+
+Sistema de honra ou brutalidade: suas decisões mudam como o mundo te vê.
+
+Economia de sobrevivência: tudo vale algo — carne, couro, peças de ferro.
+
+Nenhum sistema mágico — tudo é suor, sangue e aço.
+
+🌑 Fim Aberto
+O jogo pode terminar de várias formas:
+
+Destruindo o Império.
+
+Se tornando o novo tirano.
+
+Unindo as facções.
+
+Morrendo sozinho, mas mudando o mundo.
+
+
+| Método                       | Função                                          |
+| ---------------------------- | ----------------------------------------------- |
+| `__init__`                   | Construtor. Chamado ao criar o objeto           |
+| `__str__`                    | Define o que aparece quando usamos `print(obj)` |
+| `__repr__`                   | Representação técnica do objeto                 |
+| `__len__`                    | Faz funcionar o `len(obj)`                      |
+| `__eq__`                     | Faz `obj1 == obj2` funcionar                    |
+| `__lt__`, `__gt__`           | Menor que (`<`), maior que (`>`)                |
+| `__call__`                   | Faz o objeto ser "chamável" como uma função     |
+| `__getitem__`, `__setitem__` | Para usar `obj[x]` como listas/dicionários      |
+
+

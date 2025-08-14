@@ -1,0 +1,5 @@
+python.exe -m pip install --upgrade pip
+
+pip install Pillow
+
+pip install customtkinter

@@ -1,22 +1,13 @@
 # BARONET
-*ENG*
-- **baronet is a school project of an rpg game that is in development.**
 
-*PORT*
-- **baronet é um projeto escolar de um jogo de RPG que está em desenvolvimento.**
-## GAME RESUME - RESUMO DO JOGO
-*ENG*
-- **The game "Baronet" is a medieval-themed RPG that combines 2D topdown and 2D platform perspectives with a focus on strategic combat and combo synergy combined with history and exploration.**
+- **baronet** is a school project **RPG** currently in development, designed to offer a **rich** and **immersive medieval-themed experience**. The game combines **2D top-down** and **2D platform perspectives**, creating a **dynamic world** where **exploration**, **strategy**, and **storytelling** merge.
 
-*PORT*
-- **O jogo "Baronet" é um RPG com temática medieval que combina perspectivas TopDown e plataforma 2D com foco em combate estratégico e sinergia de combos, combinados com história e exploração.**
-## REPOSITORY - REPOSITÓRIO
-*ENG*
-- **This repository is an area for all project members to have access all parts of to the project.**
-- **If it does not violate the license you can use the code for studies or tests.**
-- **I appreciate if you can share ideas on how We can improve :)**
+## ABOUT THE GAME
 
-*PORT*
-- **Este repositório é uma área para todos os integrantes projeto terem acesso à todas as partes do projeto.**
-- **Se não violar a licença, você pode usar o código para estudos ou testes.**
-- **Agradeceria se você pudesse compartilhar ideias sobre como podemos melhorar :)**
+- Players step into the role of a **noble warrior** navigating diverse environments, from *bustling medieval towns* to perilous dungeons, encountering *historically-inspired events* and **challenging combat scenarios**. The game emphasizes **strategic combat**, rewarding players who master *combo synergies* and carefully plan their moves.
+
+- Beyond combat, Baronet provides a *deep exploration experience* with *hidden secrets*, *interactive NPCs*, and **branching storylines**, allowing players to influence the journey. By blending *historical elements* with **engaging gameplay mechanics**, the game delivers an experience that is both *educational* and *entertaining*.
+
+## DEVELOPMENT
+
+- Baronet is being developed *collaboratively* as a **school project**, focusing on *teamwork*, **coding practices**, and *creative game design*. The project demonstrates a commitment to crafting a *polished*, *accessible*, and *enjoyable RPG experience* for all players.

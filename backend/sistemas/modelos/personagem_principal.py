@@ -141,9 +141,8 @@ class Usuario:
         self.estamina_atual = self.estamina_máxima
 
     def equipar_arma(self, arma):
-        self.arma = arma.nome
-        self.dano_bonus = arma.dano if arma else 0
-        self.velocidade_bonus = arma.velocidade if arma else 0
+        self.nome_da_arma = f"{arma.nome} {arma.raridade} nível {arma.nível}"
+        self.arma = arma 
 
     def remover_arma(self):
         self.arma = None
@@ -226,7 +225,7 @@ class Usuario:
                           f"genero: {self.genero}\n"
                           f"altura: {self.altura}m\n"
                           f"experiência: {self.experiência_atual}/{self.experiência_máxima}\n"
-                          f"multiplicador de experiência: {self.multiplicador_de_experiência}\n"
+                          f"multiplicador de experiência: {self.multiplicador_de_experiência:.2f}\n"
                           f"nível: {self.nível_atual}/{self.nível_máximo}\n"
                           f"dano: {self.dano_final}\n"
                           f"velocidade: {self.velocidade_final}\n"

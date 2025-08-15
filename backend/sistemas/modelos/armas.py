@@ -1,14 +1,8 @@
+# backend\sistemas\modelos\armas.py
 from random import choice, randint, uniform
-from typing import Dict, Any
-from dataclasses import dataclass
 
-
-@dataclass
 class Arma:
-    def __init__(self, tipo: str, nome: str, dano: int, peso: int,
-                durabilidade: int, experiência_máxima_inicial: int,
-                crescimento_de_experiência: float, porcentagem_de_reparo: float,
-                porcentagem_de_evolução: float):
+    def __init__(self, tipo, nome, dano, peso, durabilidade, experiência_máxima_inicial, crescimento_de_experiência, porcentagem_de_reparo, porcentagem_de_evolução):
         self.tipo_da_arma = tipo
         self.nome = nome
         self.raridades = ["comum", "rara", "épica", "lendaria"]
@@ -18,8 +12,8 @@ class Arma:
         self.bonus = float(uniform(1.1, 1.9) - 1)
         self.peso = peso
         self.atributos = ["dano", "vida", "velocidade", "defesa"]
-        self.atributo: Any
-        self.nível: Any
+        self.atributo: None
+        self.nível: None
         self.durabilidade = durabilidade 
         self.descrição: str
         self.experiência_atual = 0
@@ -27,7 +21,7 @@ class Arma:
         self.crescimento_de_experiência = crescimento_de_experiência
         self.porcentagem_de_reparo = porcentagem_de_reparo
         self.porcentagem_de_evolução = porcentagem_de_evolução
-        self.classes_permitidas = definir_classes_permitidas(tipo)  
+        self.classes_permitidas = tuple
         self.níveis_raridade = {
             "comum": (0, 25),
             "rara": (25, 50),
@@ -35,54 +29,57 @@ class Arma:
             "lendaria": (75, 100)
         }       
 
-    def pode_usar(self, usuario: Dict[str, Any]) -> bool:
+    def pode_usar(self, usuario) -> bool:
         nível_minimo, nível_máximo = self.níveis_raridade.get(self.raridade, (0, 100))
-        classe = usuario.get("classe", None)
+        classe = usuario.nome_da_classe
         classe = classe is not None and self.classes_permitidas is not None and classe in self.classes_permitidas
         return nível_minimo <= usuario.nível_atual < nível_máximo and classe
 
-    def nivel_da_arma_com_parametro_do_usuario(self, usuario: Dict[str, Any]):
+    def nivel_da_arma_com_parametro_do_usuario(self, usuario):
         self.nível = randint(max(1, usuario.nível_atual - 3), min(usuario.nível_atual + 3, 100))
 
-    def nivel_com_parametro_manual(self, nível: int):
+    def nivel_com_parametro_manual(self, nível):
         self.nível = nível
 
-    def dano_da_arma(self):
+    def dano_da_arma(self, usuario):
         self.dano = self.dano_base * self.nível
+        usuario.dano_bonus =self.dano * {"comum": 1, "rara": 1.5, "épica": 2.3, "lendaria": 2.8}.get(self.raridade, 1)
 
-    def velocidade_que_o_usuario_ira_perder(self, usuario: Dict[str, Any]):
-        usuario.velocidade_final -= self.peso
+    def velocidade_que_o_usuario_ira_perder(self, usuario):
+        usuario.velocidade_bonus -= self.peso
 
-    def escolha_de_raridade(self, raridade_escolhida: str):
+    def escolha_de_raridade(self, raridade_escolhida):
         self.raridade = raridade_escolhida
 
-    def aplicar_bonus_atributo(self, usuario: Dict[str, Any], atributo: str):
+    def aplicar_bonus_atributo(self, usuario, atributo):
         valores_base = {"dano": 2, "vida": 10, "velocidade": 3, "defesa": 1}
         multiplicador = {"comum": 1, "rara": 1.5, "épica": 2.3, "lendaria": 2.8}.get(self.raridade, 1)
         valor = valores_base[atributo] * multiplicador * self.nível
-        usuario[atributo] += valor
+        chave = f"{atributo}_bonus"
+        if hasattr(usuario, chave):
+            atual = getattr(usuario, chave)
+            setattr(usuario, chave, atual + valor)
+        else:
+            setattr(usuario, chave, valor)
 
-    def atributo_adicional_aleatorio(self, usuario: Dict[str, Any]):
+    def atributo_adicional_aleatorio(self, usuario):
         self.atributo_escolhido = choice(self.atributos)
         self.atributo = self.atributo_escolhido
         self.aplicar_bonus_atributo(usuario, self.atributo)
 
-    def atributo_adicional_manual(self, atributo: str, usuario: Dict[str, Any]):
+    def atributo_adicional_manual(self, atributo: str, usuario):
         self.atributo = atributo
         self.aplicar_bonus_atributo(usuario, self.atributo)
 
-    def checar_e_remover_se_quebrada(self, usuario: Dict[str, Any]):
+    def checar_e_remover_se_quebrada(self, usuario):
          if self.durabilidade <= 0:
             usuario.arma = None
 
-    def usar(self, usuario: Dict[str, Any], alvo: Dict[str, Any]):
-        dano_final = self.dano * {"comum": 1, "rara": 1.5, "épica": 2.3, "lendaria": 2.8}.get(self.raridade, 1)
-        alvo.vida_atual -= dano_final
-        self.aplicar_bonus_atributo(usuario, self.atributo)
+    def usar(self, usuario):
         self.durabilidade -= 1
         self.checar_e_remover_se_quebrada(usuario)
 
-    def receber_xp(self, experiência_dropada: int):
+    def receber_xp(self, experiência_dropada):
         ganho = int(experiência_dropada * self.porcentagem_de_evolução)
         experiência_de_reparo = int(experiência_dropada * self.porcentagem_de_reparo)
         self.experiência_atual += ganho
@@ -95,6 +92,9 @@ class Arma:
         if self.nível >= 100:
             self.nível = "nível máximo"
             self.experiência_atual = 0
+
+    def atualizar_atributos_jogador(self, usuario):
+        usuario.multiplicador_de_experiência += self.bonus
 
     def descrição_da_arma(self):
         raridades = {"comum": 1, "rara": 1.5, "épica": 2.3, "lendaria": 2.8}
@@ -114,7 +114,7 @@ class Arma:
         )
         return info
     
-def criar_arma(tipo: str, nome: str, raridade: str, usuario: Dict, durabilidade: int, experiência_máxima_inicial: int, crescimento_de_experiência: float, porcentagem_de_reparo: float, porcentagem_de_evolução: float ):
+def criar_arma(tipo: str, nome: str, raridade: str, usuario, durabilidade: int, experiência_máxima_inicial: int, crescimento_de_experiência: float, porcentagem_de_reparo: float, porcentagem_de_evolução: float ):
     tabela_armas = {
         "espada": {"comum": (6,3), "rara": (11,3), "épica": (18,2), "lendaria": (23,2)},
         "espada Curta": {"comum": (6,2), "rara": (8,2), "épica": (12,1), "lendaria": (18,1)},
@@ -133,24 +133,16 @@ def criar_arma(tipo: str, nome: str, raridade: str, usuario: Dict, durabilidade:
         "manopla": {"comum": (8,4), "rara": (13,4), "épica": (18,3), "lendaria": (23,3)},
         "katana": {"comum": (9,4), "rara": (15,4), "épica": (18,3), "lendaria": (20,33)},
         "sabre": {"comum": (7,4), "rara": (10,4), "épica": (15,3), "lendaria": (20,3)},
+        "punho": {"comum": (2,1), "rara": (4,1), "épica": (7,1), "lendaria": (10,1)},
     }
 
     dano, peso = tabela_armas[tipo][raridade]
     nova_arma = Arma(tipo, nome, dano, peso, durabilidade, experiência_máxima_inicial, crescimento_de_experiência, porcentagem_de_reparo, porcentagem_de_evolução)
     nova_arma.escolha_de_raridade(raridade)
     nova_arma.nivel_da_arma_com_parametro_do_usuario(usuario)
-    nova_arma.dano_da_arma()
+    nova_arma.dano_da_arma(usuario)
     nova_arma.atributo_adicional_aleatorio(usuario)
+    nova_arma.velocidade_que_o_usuario_ira_perder(usuario)
+    nova_arma.atualizar_atributos_jogador(usuario)
     nova_arma.descrição = nova_arma.descrição_da_arma()
     return nova_arma
-
-jogador = {
-    "nível": 10,
-    "dano": 0,
-    "vida": 100,
-    "velocidade": 10,
-    "defesa": 5
-}
-
-apocalipse = criar_arma("espada", "apocalipse", "lendaria", jogador, 20, 100, 0.1, 0.7, 1.0)
-print(apocalipse.descrição)

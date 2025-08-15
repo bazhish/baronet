@@ -1,4 +1,4 @@
-#  backend\system\habilidades_ativa_combatentes.py
+#  backend\sistemas\modelos\habilidades_ativa_combatentes.py
 from dataclasses import dataclass, field
 from random import uniform, randint
 from typing import Callable, Optional, Any

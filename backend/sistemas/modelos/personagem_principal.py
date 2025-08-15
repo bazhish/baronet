@@ -53,11 +53,11 @@ class Usuario:
         self.habilidade_ativa = None
         self.habilidade_especial = None
         # --------------------------------------------
-        self.nome_da_primeira_habilidade_passiva = str
-        self.nome_da_segunda_habilidade_passiva = str
-        self.nome_da_terceira_habilidade_passiva = str
-        self.nome_da_habilidade_ativa = str
-        self.nome_da_habilidade_especial = str
+        self.nome_da_primeira_habilidade_passiva = "nenhuma"
+        self.nome_da_segunda_habilidade_passiva = "nenhuma"
+        self.nome_da_terceira_habilidade_passiva = "nenhuma"
+        self.nome_da_habilidade_ativa = "nenhuma"
+        self.nome_da_habilidade_especial = "nenhuma"
         # ARMA
         self.nome_da_arma = "nenhuma"
         self.arma = None
@@ -234,8 +234,8 @@ class Usuario:
                           f"vida: {self.vida_atual}/{self.vida_máxima}\n"
                           f"estamina: {self.estamina_atual}/{self.estamina_máxima}\n"
                           f"estado: {self.estado}\n"
-                          f"arma: {self.arma}\n"
-                          f"escudo: {self.escudo}\n"
+                          f"arma: {self.nome_da_arma}\n"
+                          f"escudo: {self.nome_do_escudo}\n"
                           f"tentativas: {self.tentativas_restantes}\n"
                           f"classe: {self.nome_da_classe_do_usuário}\n"
                           f"primeira habilidade passiva: {self.nome_da_primeira_habilidade_passiva}\n"

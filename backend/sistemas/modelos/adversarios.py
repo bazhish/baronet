@@ -1,6 +1,8 @@
 # backend\sistemas\modelos\adversarios.py
+from random import random
+
 class AdversarioDemiHumano:
-    def __init__(self, nome, idade, peso, gênero, altura, nível, experiência, dano_base, velocidade_base, defesa_base, vida_base, estamina_base):
+    def __init__(self, nome, idade, peso, gênero, altura, nível, experiência, dano_base, velocidade_base, defesa_base, vida_base, estamina_base, queda, taxa_de_queda):
         # DADOS PESSOAIS
         self.nome = nome
         self.idade = idade
@@ -9,7 +11,7 @@ class AdversarioDemiHumano:
         self.altura = altura
         # NÍVEL
         self.nível = nível
-        # EXPERIÊNCIA DROPADA
+        # EXPERIÊNCIA quedaADA
         self.experiência = experiência
         # ATRIBUTOS BASE
         self.dano_base = dano_base
@@ -71,11 +73,22 @@ class AdversarioDemiHumano:
         self.defesa_bonus = 0
         self.vida_bonus = 0
         self.estamina_bonus = 0
+        # QUEDA
+        self.queda = queda
+        self.taxa_de_queda = taxa_de_queda
 
     def __post_init__(self):
         # ATUALIZAÇÕES
         self.atributos()
         self.atualizar_descrição()
+
+    def tentar_queda_de_itens(self):
+        tentativa = random(0, 100)
+        if tentativa >= self.taxa_de_queda:
+            return self.queda
+        else:
+            return None
+
 
     @property
     def dano_final(self):
@@ -177,14 +190,14 @@ class AdversarioDemiHumano:
         )
 
 class AdversarioMonstro:
-    def __init__(self, nome, peso, altura, nível, experiência, dano_base, defesa_base, vida_base, estamina_base, velocidade_base):
+    def __init__(self, nome, peso, altura, nível, experiência, dano_base, defesa_base, vida_base, estamina_base, velocidade_base, queda, taxa_de_queda):
         # DADOS PESSOAIS
         self.nome = nome
         self.peso = peso
         self.altura = altura
         # NÍVEL
         self.nível = nível
-        # EXPERIÊNCIA DROPADA
+        # EXPERIÊNCIA quedaADA
         self.experiência = experiência
         # ATRIBUTOS BASE
         self.dano_base = dano_base
@@ -215,10 +228,20 @@ class AdversarioMonstro:
         self.vida_máxima = 0
         self.estamina_atual = 0
         self.estamina_máxima = 0
+        # QUEDA
+        self.queda = queda
+        self.taxa_de_queda = taxa_de_queda
 
     def __post_init__(self):
         self.atributos()
         self.atualizar_descrição()
+
+    def tentar_queda_de_itens(self):
+        tentativa = random(0, 100)
+        if tentativa >= self.taxa_de_queda:
+            return self.queda
+        else:
+            return None
 
     def atualizar_atributos(self):
         self.dano_final = self.dano_base * self.nível

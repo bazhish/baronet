@@ -17,7 +17,7 @@ agnes.definir_habilidades()
 agnes.atualizar_descrição()
 agnes.atualizar_status_com_bonus()
 print(agnes.descrição)
-punho = criar_arma("punho", "punhos caleijados", "comum", agnes, 100, 50, 1.2, 0.5, 0.3)
+punho = criar_arma("espada curta", "espada inicial", "comum", agnes, 100, 50, 1.2, 0.5, 0.3)
 agnes.equipar_arma(punho)  # Equipa a arma corretamente
 agnes.atualizar_status_com_bonus()
 agnes.atualizar_descrição()

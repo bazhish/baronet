@@ -117,9 +117,9 @@ class Arma:
 def criar_arma(tipo: str, nome: str, raridade: str, usuario, durabilidade: int, experiência_máxima_inicial: int, crescimento_de_experiência: float, porcentagem_de_reparo: float, porcentagem_de_evolução: float ):
     tabela_armas = {
         "espada": {"comum": (6,3), "rara": (11,3), "épica": (18,2), "lendaria": (23,2)},
-        "espada Curta": {"comum": (6,2), "rara": (8,2), "épica": (12,1), "lendaria": (18,1)},
-        "espada Longa": {"comum": (9,4), "rara": (12,4), "épica": (16,3), "lendaria": (24,3)},
-        "espada Dupla": {"comum": (10,5), "rara": (14,5), "épica": (18,3), "lendaria": (21,3)},
+        "espada curta": {"comum": (6,2), "rara": (8,2), "épica": (12,1), "lendaria": (18,1)},
+        "espada longa": {"comum": (9,4), "rara": (12,4), "épica": (16,3), "lendaria": (24,3)},
+        "espada dupla": {"comum": (10,5), "rara": (14,5), "épica": (18,3), "lendaria": (21,3)},
         "adaga": {"comum": (5,3), "rara": (8,3), "épica": (10,2), "lendaria": (13,2)},
         "adaga dupla": {"comum": (7,5), "rara": (16,5), "épica": (20,4), "lendaria": (26,4)},
         "zarabatana": {"comum": (4,3), "rara": (6,3), "épica": (8,2), "lendaria": (13,2)},

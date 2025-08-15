@@ -2,13 +2,14 @@ import pygame
 import sys
 import os
 from random import choice
-from tela_criacao_personagem import desenhar_botao, TEXTO_S, COR_TEXTO, COR_INATIVA, COR_ATIVA
-from lobby import input_boxes, salvar, fonte_input, font_title
+from ui.menus import desenhar_botao, TEXTO_S, COR_TEXTO, COR_INATIVA, COR_ATIVA
+from ui.lobby import input_boxes, salvar, fonte_input, font_title
+from recursos.imagens.missao.missao1.slime import slime_parado, slime_direita
 import sqlite3
 import pyautogui
 from subprocess import Popen
 import json
-from Imagens.personagem_principal import personagem_parado, personagem_andando_D
+from recursos.imagens.personagem_principal import personagem_parado, personagem_andando_D, personagem_soco_d
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 #from backend.app.models.sistema.habilidades_ativa_combatentes import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
 #from backend.app.models.sistema.habilidades_passivas_combatentes import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
@@ -16,8 +17,9 @@ LARGURA, ALTURA = pyautogui.size()
 endereço = os.path.dirname(os.path.abspath(__file__))
 
 
+font_vida = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", 30)
 
-with open(rf"{endereço}\usuario.json", "r") as arquivo:
+with open(rf"{endereço}\ui\usuario.json", "r") as arquivo:
     dados = json.load(arquivo)
 
 teclas = dados["keys"]
@@ -37,18 +39,39 @@ qnt_de_pulo = 0
 posição_personagem_X = 500 * LARGURA // 1920
 posição_personagem_Y = 520 * LARGURA // 1920
 frame_personagem = 0
+frame_personagem_soco = 0
 estado_personagem = personagem_parado
 diresao = "parado"
+cooldown_dano = 30
+contador_cooldown = 0
+cooldown_jogador = 20
+contador_cooldown_jogador = 0
+diresao_adiversario = "parado"
+frame_inimigo_parado = 0
+frame_inimigo_direita = 0
+dados_obtidos = False
+
 
 if __name__ == "__main__":
-    if not os.path.exists(rf"{endereço}\usuario.json"):
-        Popen([sys.executable, rf'{endereço}\tela_criacao_personagem.py'])
+    if not os.path.exists(rf"{endereço}\ui\usuario.json"):
+        Popen([sys.executable, rf'{endereço}\ui\menus.py'])
         sys.exit()
 
-endereco_banco_de_dados = rf"{endereço}\banco_de_dados.db"
+endereco_banco_de_dados = rf"{endereço}\ui\banco_de_dados.db"
 
-cenario_combate = pygame.image.load(rf"{endereço}\imagens\cenario\cenario_combate.png")
+cenario_combate = pygame.image.load(rf"{endereço}\recursos\imagens\cenario\cenario_combate.png")
 cenario_combate = pygame.transform.scale(cenario_combate, (LARGURA * 5, ALTURA))
+
+game_over = pygame.image.load(rf"{endereço}\recursos\imagens\finais\game over.png")
+
+
+# cores
+cor_normal = (200, 200, 200)
+cor_dano = (190, 80, 80)
+cor_normal_adiversario = (200, 200, 200)
+cor_dano_adiversario = (190, 80, 80)
+cor_usada_adiversario = cor_normal_adiversario
+cor_usada = cor_normal
 
 
 
@@ -118,6 +141,8 @@ sombra = pygame.Surface((100 * LARGURA // 1920, 20 * LARGURA // 1920), pygame.SR
 quadrado = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
 quadrado_2 = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
 quadrado_3 = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
+quadrado_4 = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
+quadrado_5 = pygame.Surface((100, 15), pygame.SRCALPHA)
 contador = 0
 rect_opcoes = pygame.Rect(LARGURA // 2.5, LARGURA // 1.5, ALTURA // 1.6, ALTURA // 2)
 click = False
@@ -126,611 +151,11 @@ click_e = False
 
 
 
-def colisao_chao_batalha():
-    global posição_chao, posição_personagem_X, posição, parede
-    if posição_personagem_X <= 200 * LARGURA // 1920:
-        posição_chao = 684 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 220 * LARGURA // 1920:
-        posição_chao = 680 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 240 * LARGURA // 1920:
-        posição_chao = 676 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 260:
-        posição_chao = 672 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 280 * LARGURA // 1920:
-        posição_chao = 668 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 300 * LARGURA // 1920:
-        posição_chao = 666 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 320 * LARGURA // 1920:
-        posição_chao = 664 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 340 * LARGURA // 1920:
-        posição_chao = 662 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 360 * LARGURA // 1920:
-        posição_chao = 660 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 380 * LARGURA // 1920:
-        posição_chao = 658 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 400 * LARGURA // 1920:
-        posição_chao = 656 + 5 * LARGURA // 1920
-    elif posição_personagem_X < 500 * LARGURA // 1920:
-        posição_chao = 653 + 5 * LARGURA // 1920
-    elif posição >= -10 * LARGURA // 1920:
-        posição_chao = 659 + 5 * LARGURA // 1920
-    elif posição >= -20 * LARGURA // 1920:
-        posição_chao = 663 + 5 * LARGURA // 1920
-    elif posição >= -30 * LARGURA // 1920:
-        posição_chao = 667 + 5 * LARGURA // 1920
-    elif posição >= -40 * LARGURA // 1920:
-        posição_chao = 669 + 5 * LARGURA // 1920
-    elif posição >= -50 * LARGURA // 1920:
-        posição_chao = 672 + 5 * LARGURA // 1920
-    elif posição >= -60 * LARGURA // 1920:
-        posição_chao = 677 + 5 * LARGURA // 1920
-    elif posição >= -70 * LARGURA // 1920:
-        posição_chao = 681 + 5 * LARGURA // 1920
-    elif posição >= -80 * LARGURA // 1920:
-        posição_chao = 685 + 5 * LARGURA // 1920
-    elif posição >= -90 * LARGURA // 1920:
-        posição_chao = 693 + 5 * LARGURA // 1920
-    elif posição >= -100 * LARGURA // 1920:
-        posição_chao = 705 + 5 * LARGURA // 1920
-    elif posição >= -110 * LARGURA // 1920:
-        posição_chao = 715 + 5 * LARGURA // 1920
-    elif posição >= -180 * LARGURA // 1920:
-        posição_chao = 723 + 5 * LARGURA // 1920
-    elif posição >= -200 * LARGURA // 1920:
-        posição_chao = 730 + 5 * LARGURA // 1920
-    elif posição >= -220 * LARGURA // 1920:
-        posição_chao = 734 + 5 * LARGURA // 1920
-    elif posição >= -240 * LARGURA // 1920:
-        posição_chao = 738 + 5 * LARGURA // 1920
-    elif posição >= -250 * LARGURA // 1920:
-        posição_chao = 742 + 5 * LARGURA // 1920
-    elif posição >= -260 * LARGURA // 1920:
-        posição_chao = 748 + 5 * LARGURA // 1920
-    elif posição >= -270 * LARGURA // 1920:
-        posição_chao = 752 + 5 * LARGURA // 1920
-    elif posição >= -290 * LARGURA // 1920:
-        posição_chao = 748 + 5 * LARGURA // 1920
-    elif posição >= -400 * LARGURA // 1920:
-        posição_chao = 752 + 5 * LARGURA // 1920
-        if posição <= -400 * LARGURA // 1920:
-            parede = True
-        else:
-            parede = False
-    elif posição >= -540 * LARGURA // 1920:
-        posição_chao = 690 + 5 * LARGURA // 1920
-    elif posição >= -600 * LARGURA // 1920:
-        posição_chao = 685 + 5 * LARGURA // 1920
-    elif posição >= -630 * LARGURA // 1920:
-        posição_chao = 690 + 5 * LARGURA // 1920
-    elif posição >= -650 * LARGURA // 1920:
-        posição_chao = 685 + 5 * LARGURA // 1920
-    elif posição >= -680 * LARGURA // 1920:
-        posição_chao = 680 + 5 * LARGURA // 1920
-    elif posição >= -700 * LARGURA // 1920:
-        posição_chao = 675 + 5 * LARGURA // 1920
-    elif posição >= -720 * LARGURA // 1920:
-        posição_chao = 672 + 5 * LARGURA // 1920
-    elif posição >= -830 * LARGURA // 1920:
-        posição_chao = 670 + 5 * LARGURA // 1920
-    elif posição >= -840 * LARGURA // 1920:
-        posição_chao = 673 + 5 * LARGURA // 1920
-    elif posição >= -850 * LARGURA // 1920:
-        posição_chao = 676 + 5 * LARGURA // 1920
-    elif posição >= -860 * LARGURA // 1920:
-        posição_chao = 680 + 5 * LARGURA // 1920
-    elif posição >= -870 * LARGURA // 1920:
-        posição_chao = 683 + 5 * LARGURA // 1920
-    elif posição >= -880 * LARGURA // 1920:
-        posição_chao = 686 + 5 * LARGURA // 1920
-    elif posição >= -890 * LARGURA // 1920:
-        posição_chao = 689 + 5 * LARGURA // 1920
-    elif posição >= -900 * LARGURA // 1920:
-        posição_chao = 694 + 5 * LARGURA // 1920
-    elif posição >= -910 * LARGURA // 1920:
-        posição_chao = 700 + 5 * LARGURA // 1920
-    elif posição >= -920 * LARGURA // 1920:
-        posição_chao = 705 + 5 * LARGURA // 1920
-    elif posição >= -930 * LARGURA // 1920:
-        posição_chao = 710 + 5 * LARGURA // 1920
-    elif posição >= -940 * LARGURA // 1920:
-        posição_chao = 720 + 5 * LARGURA // 1920
-    elif posição >= -950 * LARGURA // 1920:
-        posição_chao = 730 + 5 * LARGURA // 1920
-    elif posição >= -960 * LARGURA // 1920:
-        posição_chao = 735 + 5 * LARGURA // 1920
-    elif posição >= -970 * LARGURA // 1920:
-        posição_chao = 738 + 5 * LARGURA // 1920
-    elif posição >= -980 * LARGURA // 1920:
-        posição_chao = 735 + 5 * LARGURA // 1920
-    elif posição >= -1120 * LARGURA // 1920:
-        posição_chao = 730 + 5 * LARGURA // 1920
-    elif posição >= -1130 * LARGURA // 1920:
-        posição_chao = 725 + 5 * LARGURA // 1920
-    elif posição >= -1140 * LARGURA // 1920:
-        posição_chao = 720 + 5 * LARGURA // 1920
-    elif posição >= -1150 * LARGURA // 1920:
-        posição_chao = 715 + 5 * LARGURA // 1920
-    elif posição >= -1160 * LARGURA // 1920:
-        posição_chao = 710 + 5 * LARGURA // 1920
-    elif posição >= -1310 * LARGURA // 1920:
-        posição_chao = 705 + 5 * LARGURA // 1920
-    elif posição >= -1320 * LARGURA // 1920:
-        posição_chao = 700 + 5 * LARGURA // 1920
-    elif posição >= -1330 * LARGURA // 1920:
-        posição_chao = 695 + 5 * LARGURA // 1920
-    elif posição >= -1340 * LARGURA // 1920:
-        posição_chao = 690 + 5 * LARGURA // 1920
-    elif posição >= -1350 * LARGURA // 1920:
-        posição_chao = 684 + 5 * LARGURA // 1920
-    elif posição >= -1600 * LARGURA // 1920:
-        posição_chao = 680 + 5 * LARGURA // 1920
-    elif posição >= -1620 * LARGURA // 1920:
-        posição_chao = 676 + 5 * LARGURA // 1920
-    elif posição >= -1640 * LARGURA // 1920:
-        posição_chao = 672 + 5 * LARGURA // 1920
-    elif posição >= -1660 * LARGURA // 1920:
-        posição_chao = 668 + 5 * LARGURA // 1920
-    elif posição >= -1680 * LARGURA // 1920:
-        posição_chao = 666 + 5 * LARGURA // 1920
-    elif posição >= -1700 * LARGURA // 1920:
-        posição_chao = 664 + 5 * LARGURA // 1920
-    elif posição >= -1720 * LARGURA // 1920:
-        posição_chao = 662 + 5 * LARGURA // 1920
-    elif posição >= -1740 * LARGURA // 1920:
-        posição_chao = 660 + 5 * LARGURA // 1920
-    elif posição >= -1760 * LARGURA // 1920:
-        posição_chao = 658 + 5 * LARGURA // 1920
-    elif posição >= -1780 * LARGURA // 1920:
-        posição_chao = 656 + 5 * LARGURA // 1920
-    elif posição >= -1920 * LARGURA // 1920:
-        posição_chao = 653 + 5 * LARGURA // 1920
-    elif posição >= -1930 * LARGURA // 1920:
-        posição_chao = 659 + 5 * LARGURA // 1920
-    elif posição >= -1940 * LARGURA // 1920:
-        posição_chao = 663 + 5 * LARGURA // 1920
-    elif posição >= -1950 * LARGURA // 1920:
-        posição_chao = 667 + 5 * LARGURA // 1920
-    elif posição >= -1960 * LARGURA // 1920:
-        posição_chao = 669 + 5 * LARGURA // 1920
-    elif posição >= -1970 * LARGURA // 1920:
-        posição_chao = 672 + 5 * LARGURA // 1920
-    elif posição >= -1980 * LARGURA // 1920:
-        posição_chao = 677 + 5 * LARGURA // 1920
-    elif posição >= -1990 * LARGURA // 1920:
-        posição_chao = 681 + 5 * LARGURA // 1920
-    elif posição >= -2000 * LARGURA // 1920:
-        posição_chao = 685 + 5 * LARGURA // 1920
-    elif posição >= -2010 * LARGURA // 1920:
-        posição_chao = 693 + 5 * LARGURA // 1920
-    elif posição >= -2020 * LARGURA // 1920:
-        posição_chao = 705 + 5 * LARGURA // 1920
-    elif posição >= -2030 * LARGURA // 1920:
-        posição_chao = 715 + 5 * LARGURA // 1920
-    elif posição >= -2100 * LARGURA // 1920:
-        posição_chao = 723 + 5 * LARGURA // 1920
-    elif posição >= -2120 * LARGURA // 1920:
-        posição_chao = 730 + 5 * LARGURA // 1920
-    elif posição >= -2140 * LARGURA // 1920:
-        posição_chao = 734 + 5 * LARGURA // 1920
-    elif posição >= -2160 * LARGURA // 1920:
-        posição_chao = 738 + 5 * LARGURA // 1920
-    elif posição >= -2170 * LARGURA // 1920:
-        posição_chao = 742 + 5 * LARGURA // 1920
-    elif posição >= -2180 * LARGURA // 1920:
-        posição_chao = 748 + 5 * LARGURA // 1920
-    elif posição >= -2190 * LARGURA // 1920:
-        posição_chao = 752 + 5 * LARGURA // 1920
-    elif posição >= -2210 * LARGURA // 1920:
-        posição_chao = 748 + 5 * LARGURA // 1920
-    elif posição >= -2320 * LARGURA // 1920:
-        posição_chao = 752 + 5 * LARGURA // 1920
-        if posição <= -2320 * LARGURA // 1920:
-            parede = True
-        else:
-            parede = False
-    elif posição >= -2460 * LARGURA // 1920:
-        posição_chao = 690 + 5 * LARGURA // 1920
-    elif posição >= -2520 * LARGURA // 1920:
-        posição_chao = 685 + 5 * LARGURA // 1920
-    elif posição >= -2550 * LARGURA // 1920:
-        posição_chao = 690 + 5 * LARGURA // 1920
-    elif posição >= -2570 * LARGURA // 1920:
-        posição_chao = 685 + 5 * LARGURA // 1920
-    elif posição >= -2600 * LARGURA // 1920:
-        posição_chao = 680 + 5 * LARGURA // 1920
-    elif posição >= -2620 * LARGURA // 1920:
-        posição_chao = 675 + 5 * LARGURA // 1920
-    elif posição >= -2640 * LARGURA // 1920:
-        posição_chao = 672 + 5 * LARGURA // 1920
-    elif posição >= -2750 * LARGURA // 1920:
-        posição_chao = 670 + 5 * LARGURA // 1920
-    elif posição >= -2760 * LARGURA // 1920:
-        posição_chao = 673 + 5 * LARGURA // 1920
-    elif posição >= -2770 * LARGURA // 1920:
-        posição_chao = 676 + 5 * LARGURA // 1920
-    elif posição >= -2780 * LARGURA // 1920:
-        posição_chao = 680 + 5 * LARGURA // 1920
-    elif posição >= -2790 * LARGURA // 1920:
-        posição_chao = 683 + 5 * LARGURA // 1920
-    elif posição >= -2800 * LARGURA // 1920:
-        posição_chao = 686 + 5 * LARGURA // 1920
-    elif posição >= -2810 * LARGURA // 1920:
-        posição_chao = 689 + 5 * LARGURA // 1920
-    elif posição >= -2820 * LARGURA // 1920:
-        posição_chao = 694 + 5 * LARGURA // 1920
-    elif posição >= -2830 * LARGURA // 1920:
-        posição_chao = 700 + 5 * LARGURA // 1920
-    elif posição >= -2840 * LARGURA // 1920:
-        posição_chao = 705 + 5 * LARGURA // 1920
-    elif posição >= -2850 * LARGURA // 1920:
-        posição_chao = 710 + 5 * LARGURA // 1920
-    elif posição >= -2860 * LARGURA // 1920:
-        posição_chao = 720 + 5 * LARGURA // 1920
-    elif posição >= -2870 * LARGURA // 1920:
-        posição_chao = 730 + 5 * LARGURA // 1920
-    elif posição >= -2880 * LARGURA // 1920:
-        posição_chao = 735 + 5 * LARGURA // 1920
-    elif posição >= -2890 * LARGURA // 1920:
-        posição_chao = 738 + 5 * LARGURA // 1920
-    elif posição >= -2900 * LARGURA // 1920:
-        posição_chao = 735 + 5 * LARGURA // 1920
-    elif posição >= -3040 * LARGURA // 1920:
-        posição_chao = 730 + 5 * LARGURA // 1920
-    elif posição >= -3050 * LARGURA // 1920:
-        posição_chao = 725 + 5 * LARGURA // 1920
-    elif posição >= -3060 * LARGURA // 1920:
-        posição_chao = 720 + 5 * LARGURA // 1920
-    elif posição >= -3070 * LARGURA // 1920:
-        posição_chao = 715 + 5 * LARGURA // 1920
-    elif posição >= -3080 * LARGURA // 1920:
-        posição_chao = 710 + 5 * LARGURA // 1920
-    elif posição >= -3230 * LARGURA // 1920:
-        posição_chao = 705 + 5 * LARGURA // 1920
-    elif posição >= -3240 * LARGURA // 1920:
-        posição_chao = 700 + 5 * LARGURA // 1920
-    elif posição >= -3250 * LARGURA // 1920:
-        posição_chao = 695 + 5 * LARGURA // 1920
-    elif posição >= -3260 * LARGURA // 1920:
-        posição_chao = 690 + 5 * LARGURA // 1920
-    elif posição >= -3270 * LARGURA // 1920:
-        posição_chao = 684 + 5 * LARGURA // 1920
-    elif posição >= -3520 * LARGURA // 1920:
-        posição_chao = 680 + 5 * LARGURA // 1920
-    elif posição >= -5460 * LARGURA // 1920:
-        posição_chao = 676 + 5 * LARGURA // 1920
-    elif posição >= -5480 * LARGURA // 1920:
-        posição_chao = 672 + 5 * LARGURA // 1920
-    elif posição >= -5500 * LARGURA // 1920:
-        posição_chao = 668 + 5 * LARGURA // 1920
-    elif posição >= -5520 * LARGURA // 1920:
-        posição_chao = 666 + 5 * LARGURA // 1920
-    elif posição >= -5540 * LARGURA // 1920:
-        posição_chao = 664 + 5 * LARGURA // 1920
-    elif posição >= -5560 * LARGURA // 1920:
-        posição_chao = 662 + 5 * LARGURA // 1920
-    elif posição >= -5580 * LARGURA // 1920:
-        posição_chao = 660 + 5 * LARGURA // 1920
-    elif posição >= -5600 * LARGURA // 1920:
-        posição_chao = 658 + 5 * LARGURA // 1920
-    elif posição >= -5620 * LARGURA // 1920:
-        posição_chao = 656 + 5 * LARGURA // 1920
-    elif posição >= -5760 * LARGURA // 1920:
-        posição_chao = 653 + 5 * LARGURA // 1920
-    elif posição >= -5770 * LARGURA // 1920:
-        posição_chao = 659 + 5 * LARGURA // 1920
-    elif posição >= -5780 * LARGURA // 1920:
-        posição_chao = 663 + 5 * LARGURA // 1920
-    elif posição >= -5790 * LARGURA // 1920:
-        posição_chao = 667 + 5 * LARGURA // 1920
-    elif posição >= -5800 * LARGURA // 1920:
-        posição_chao = 669 + 5 * LARGURA // 1920
-    elif posição >= -5810 * LARGURA // 1920:
-        posição_chao = 672 + 5 * LARGURA // 1920
-    elif posição >= -5820 * LARGURA // 1920:
-        posição_chao = 677 + 5 * LARGURA // 1920
-    elif posição >= -5830 * LARGURA // 1920:
-        posição_chao = 681 + 5 * LARGURA // 1920
-    elif posição >= -5840 * LARGURA // 1920:
-        posição_chao = 685 + 5 * LARGURA // 1920
-    elif posição >= -5850 * LARGURA // 1920:
-        posição_chao = 693 + 5 * LARGURA // 1920
-    elif posição >= -5860 * LARGURA // 1920:
-        posição_chao = 705 + 5 * LARGURA // 1920
-    elif posição >= -5870 * LARGURA // 1920:
-        posição_chao = 715 + 5 * LARGURA // 1920
-    elif posição >= -5940 * LARGURA // 1920:
-        posição_chao = 723 + 5 * LARGURA // 1920
-    elif posição >= -5960 * LARGURA // 1920:
-        posição_chao = 730 + 5 * LARGURA // 1920
-    elif posição >= -5980 * LARGURA // 1920:
-        posição_chao = 734 + 5 * LARGURA // 1920
-    elif posição >= -6000 * LARGURA // 1920:
-        posição_chao = 738 + 5 * LARGURA // 1920
-    elif posição >= -6010 * LARGURA // 1920:
-        posição_chao = 742 + 5 * LARGURA // 1920
-    elif posição >= -6020 * LARGURA // 1920:
-        posição_chao = 748 + 5 * LARGURA // 1920
-    elif posição >= -6030 * LARGURA // 1920:
-        posição_chao = 752 + 5 * LARGURA // 1920
-    elif posição >= -6050 * LARGURA // 1920:
-        posição_chao = 748 + 5 * LARGURA // 1920
-    elif posição >= -6160 * LARGURA // 1920:
-        posição_chao = 752 + 5 * LARGURA // 1920
-        if posição <= -6160 * LARGURA // 1920:
-            parede = True
-        else:
-            parede = False
-    elif posição >= -6300 * LARGURA // 1920:
-        posição_chao = 690 + 5 * LARGURA // 1920
-    elif posição >= -6360 * LARGURA // 1920:
-        posição_chao = 685 + 5 * LARGURA // 1920
-    elif posição >= -6390 * LARGURA // 1920:
-        posição_chao = 690 + 5 * LARGURA // 1920
-    elif posição >= -6410 * LARGURA // 1920:
-        posição_chao = 685 + 5 * LARGURA // 1920
-    elif posição >= -6440 * LARGURA // 1920:
-        posição_chao = 680 + 5 * LARGURA // 1920
-    elif posição >= -6460 * LARGURA // 1920:
-        posição_chao = 675 + 5 * LARGURA // 1920
-    elif posição >= -6480 * LARGURA // 1920:
-        posição_chao = 672 + 5 * LARGURA // 1920
-    elif posição >= -6590 * LARGURA // 1920:
-        posição_chao = 670 + 5 * LARGURA // 1920
-    elif posição >= -6600 * LARGURA // 1920:
-        posição_chao = 673 + 5 * LARGURA // 1920
-    elif posição >= -6610 * LARGURA // 1920:
-        posição_chao = 676 + 5 * LARGURA // 1920
-    elif posição >= -6620 * LARGURA // 1920:
-        posição_chao = 680 + 5 * LARGURA // 1920
-    elif posição >= -6630 * LARGURA // 1920:
-        posição_chao = 683 + 5 * LARGURA // 1920
-    elif posição >= -6640 * LARGURA // 1920:
-        posição_chao = 686 + 5 * LARGURA // 1920
-    elif posição >= -6650 * LARGURA // 1920:
-        posição_chao = 689 + 5 * LARGURA // 1920
-    elif posição >= -6660 * LARGURA // 1920:
-        posição_chao = 694 + 5 * LARGURA // 1920
-    elif posição >= -6670 * LARGURA // 1920:
-        posição_chao = 700 + 5 * LARGURA // 1920
-    elif posição >= -6680 * LARGURA // 1920:
-        posição_chao = 705 + 5 * LARGURA // 1920
-    elif posição >= -6690 * LARGURA // 1920:
-        posição_chao = 710 + 5 * LARGURA // 1920
-    elif posição >= -6700 * LARGURA // 1920:
-        posição_chao = 720 + 5 * LARGURA // 1920
-    elif posição >= -6710 * LARGURA // 1920:
-        posição_chao = 730 + 5 * LARGURA // 1920
-    elif posição >= -6720 * LARGURA // 1920:
-        posição_chao = 735 + 5 * LARGURA // 1920
-    elif posição >= -6730 * LARGURA // 1920:
-        posição_chao = 738 + 5 * LARGURA // 1920
-    elif posição >= -6740 * LARGURA // 1920:
-        posição_chao = 735 + 5 * LARGURA // 1920
-    elif posição >= -6880 * LARGURA // 1920:
-        posição_chao = 730 + 5 * LARGURA // 1920
-    elif posição >= -6890 * LARGURA // 1920:
-        posição_chao = 725 + 5 * LARGURA // 1920
-    elif posição >= -6900 * LARGURA // 1920:
-        posição_chao = 720 + 5 * LARGURA // 1920
-    elif posição >= -6910 * LARGURA // 1920:
-        posição_chao = 715 + 5 * LARGURA // 1920
-    elif posição >= -6920 * LARGURA // 1920:
-        posição_chao = 710 + 5 * LARGURA // 1920
-    elif posição >= -7070 * LARGURA // 1920:
-        posição_chao = 705 + 5 * LARGURA // 1920
-    elif posição >= -7080 * LARGURA // 1920:
-        posição_chao = 700 + 5 * LARGURA // 1920
-    elif posição >= -7090 * LARGURA // 1920:
-        posição_chao = 695 + 5 * LARGURA // 1920
-    elif posição >= -7100 * LARGURA // 1920:
-        posição_chao = 690 + 5 * LARGURA // 1920
-    elif posição >= -7110 * LARGURA // 1920:
-        posição_chao = 684 + 5 * LARGURA // 1920
-    elif posição >= -7360 * LARGURA // 1920:
-        posição_chao = 680 + 5 * LARGURA // 1920
-    elif posição >= -7380 * LARGURA // 1920:
-        posição_chao = 676 + 5 * LARGURA // 1920
-    elif posição >= -7400 * LARGURA // 1920:
-        posição_chao = 672 + 5 * LARGURA // 1920
-    elif posição >= -7420 * LARGURA // 1920:
-        posição_chao = 668 + 5 * LARGURA // 1920
-    elif posição >= -7440 * LARGURA // 1920:
-        posição_chao = 666 + 5 * LARGURA // 1920
-    elif posição >= -7460 * LARGURA // 1920:
-        posição_chao = 664 + 5 * LARGURA // 1920
-    elif posição >= -7480 * LARGURA // 1920:
-        posição_chao = 662 + 5 * LARGURA // 1920
-    elif posição >= -7500 * LARGURA // 1920:
-        posição_chao = 660 + 5 * LARGURA // 1920
-    elif posição >= -7520 * LARGURA // 1920:
-        posição_chao = 658 + 5 * LARGURA // 1920
-    elif posição >= -7540 * LARGURA // 1920:
-        posição_chao = 656 + 5 * LARGURA // 1920
-    elif posição >= -7680 * LARGURA // 1920:
-        posição_chao = 653 + 5 * LARGURA // 1920
-    elif posição >= -7690 * LARGURA // 1920:
-        posição_chao = 659 + 5 * LARGURA // 1920
-    elif posição >= -7700 * LARGURA // 1920:
-        posição_chao = 663 + 5 * LARGURA // 1920
-    elif posição >= -7710 * LARGURA // 1920:
-        posição_chao = 667 + 5 * LARGURA // 1920
-    elif posição >= -7720 * LARGURA // 1920:
-        posição_chao = 669 + 5 * LARGURA // 1920
-    elif posição >= -7730 * LARGURA // 1920:
-        posição_chao = 672 + 5 * LARGURA // 1920
-    elif posição >= -7740 * LARGURA // 1920:
-        posição_chao = 677 + 5 * LARGURA // 1920
-    elif posição >= -7750 * LARGURA // 1920:
-        posição_chao = 681 + 5 * LARGURA // 1920
-    elif posição >= -7760 * LARGURA // 1920:
-        posição_chao = 685 + 5 * LARGURA // 1920
-    elif posição >= -7770 * LARGURA // 1920:
-        posição_chao = 693 + 5 * LARGURA // 1920
-    elif posição >= -7780 * LARGURA // 1920:
-        posição_chao = 705 + 5 * LARGURA // 1920
-    elif posição >= -7790 * LARGURA // 1920:
-        posição_chao = 715 + 5 * LARGURA // 1920
-    elif posição >= -7860 * LARGURA // 1920:
-        posição_chao = 723 + 5 * LARGURA // 1920
-    elif posição >= -7880 * LARGURA // 1920:
-        posição_chao = 730 + 5 * LARGURA // 1920
-    elif posição >= -7900 * LARGURA // 1920:
-        posição_chao = 734 + 5 * LARGURA // 1920
-    elif posição >= -7920 * LARGURA // 1920:
-        posição_chao = 738 + 5 * LARGURA // 1920
-    elif posição >= -7930 * LARGURA // 1920:
-        posição_chao = 742 + 5 * LARGURA // 1920
-    elif posição >= -7940 * LARGURA // 1920:
-        posição_chao = 748 + 5 * LARGURA // 1920
-    elif posição >= -7950 * LARGURA // 1920:
-        posição_chao = 752 + 5 * LARGURA // 1920
-    elif posição >= -7970 * LARGURA // 1920:
-        posição_chao = 748 + 5 * LARGURA // 1920
-    elif posição >= -8080 * LARGURA // 1920:
-        posição_chao = 752 + 5 * LARGURA // 1920
-        if posição <= -8080 * LARGURA // 1920:
-            parede = True
-        else:
-            parede = False
-    elif posição >= -8220 * LARGURA // 1920:
-        posição_chao = 690 + 5 * LARGURA // 1920
-    elif posição >= -8280 * LARGURA // 1920:
-        posição_chao = 685 + 5 * LARGURA // 1920
-    elif posição >= -8310 * LARGURA // 1920:
-        posição_chao = 690 + 5 * LARGURA // 1920
-    elif posição >= -8330 * LARGURA // 1920:
-        posição_chao = 685 + 5 * LARGURA // 1920
-    elif posição >= -8360 * LARGURA // 1920:
-        posição_chao = 680 + 5 * LARGURA // 1920
-    elif posição >= -8380 * LARGURA // 1920:
-        posição_chao = 675 + 5 * LARGURA // 1920
-    elif posição >= -8400 * LARGURA // 1920:
-        posição_chao = 672 + 5 * LARGURA // 1920
-    elif posição >= -8510 * LARGURA // 1920:
-        posição_chao = 670 + 5 * LARGURA // 1920
-    elif posição >= -8520 * LARGURA // 1920:
-        posição_chao = 673 + 5 * LARGURA // 1920
-    elif posição >= -8530 * LARGURA // 1920:
-        posição_chao = 676 + 5 * LARGURA // 1920
-    elif posição >= -8540 * LARGURA // 1920:
-        posição_chao = 680 + 5 * LARGURA // 1920
-    elif posição >= -8550 * LARGURA // 1920:
-        posição_chao = 683 + 5 * LARGURA // 1920
-    elif posição >= -8560 * LARGURA // 1920:
-        posição_chao = 686 + 5 * LARGURA // 1920
-    elif posição >= -8570 * LARGURA // 1920:
-        posição_chao = 689 + 5 * LARGURA // 1920
-    elif posição >= -8580 * LARGURA // 1920:
-        posição_chao = 694 + 5 * LARGURA // 1920
-    elif posição >= -8590 * LARGURA // 1920:
-        posição_chao = 700 + 5 * LARGURA // 1920
-    elif posição >= -8600 * LARGURA // 1920:
-        posição_chao = 705 + 5 * LARGURA // 1920
-    elif posição >= -8610 * LARGURA // 1920:
-        posição_chao = 710 + 5 * LARGURA // 1920
-    elif posição >= -8620 * LARGURA // 1920:
-        posição_chao = 720 + 5 * LARGURA // 1920
-    elif posição >= -8630 * LARGURA // 1920:
-        posição_chao = 730 + 5 * LARGURA // 1920
-    elif posição >= -8640 * LARGURA // 1920:
-        posição_chao = 735 + 5 * LARGURA // 1920
-    elif posição >= -8650 * LARGURA // 1920:
-        posição_chao = 738 + 5 * LARGURA // 1920
-    elif posição >= -8660 * LARGURA // 1920:
-        posição_chao = 735 + 5 * LARGURA // 1920
-    elif posição >= -8800 * LARGURA // 1920:
-        posição_chao = 730 + 5 * LARGURA // 1920
-    elif posição >= -8810 * LARGURA // 1920:
-        posição_chao = 725 + 5 * LARGURA // 1920
-    elif posição >= -8820 * LARGURA // 1920:
-        posição_chao = 720 + 5 * LARGURA // 1920
-    elif posição >= -8830 * LARGURA // 1920:
-        posição_chao = 715 + 5 * LARGURA // 1920
-    elif posição >= -8840 * LARGURA // 1920:
-        posição_chao = 710 + 5 * LARGURA // 1920
-    elif posição >= -8990 * LARGURA // 1920:
-        posição_chao = 705 + 5 * LARGURA // 1920
-    elif posição >= -9000 * LARGURA // 1920:
-        posição_chao = 700 + 5 * LARGURA // 1920
-    elif posição >= -9010 * LARGURA // 1920:
-        posição_chao = 695 + 5 * LARGURA // 1920
-    elif posição >= -9020 * LARGURA // 1920:
-        posição_chao = 690 + 5 * LARGURA // 1920
-    elif posição >= -9030 * LARGURA // 1920:
-        posição_chao = 684 + 5 * LARGURA // 1920
-    elif posição >= -9280 * LARGURA // 1920:
-        posição_chao = 680 + 5 * LARGURA // 1920
-    elif posição >= -9300 * LARGURA // 1920:
-        posição_chao = 676 + 5 * LARGURA // 1920
-    elif posição >= -9320 * LARGURA // 1920:
-        posição_chao = 672 + 5 * LARGURA // 1920
-    elif posição >= -9340 * LARGURA // 1920:
-        posição_chao = 668 + 5 * LARGURA // 1920
-    elif posição >= -9360 * LARGURA // 1920:
-        posição_chao = 666 + 5 * LARGURA // 1920
-    elif posição >= -9380 * LARGURA // 1920:
-        posição_chao = 664 + 5 * LARGURA // 1920
-    elif posição >= -9400 * LARGURA // 1920:
-        posição_chao = 662 + 5 * LARGURA // 1920
-    elif posição >= -9420 * LARGURA // 1920:
-        posição_chao = 660 + 5 * LARGURA // 1920
-    elif posição >= -9440 * LARGURA // 1920:
-        posição_chao = 658 + 5 * LARGURA // 1920
-    elif posição >= -9460 * LARGURA // 1920:
-        posição_chao = 656 + 5 * LARGURA // 1920
-    elif posição >= -9500 * LARGURA // 1920:
-        posição_chao = 653 + 5 * LARGURA // 1920
-    elif posição >= -9510 * LARGURA // 1920:
-        posição_chao = 659 + 5 * LARGURA // 1920
-    elif posição >= -9520 * LARGURA // 1920:
-        posição_chao = 663 + 5 * LARGURA // 1920
-    elif posição >= -9530 * LARGURA // 1920:
-        posição_chao = 667 + 5 * LARGURA // 1920
-    elif posição >= -9540 * LARGURA // 1920:
-        posição_chao = 669 + 5 * LARGURA // 1920
-    elif posição >= -9550 * LARGURA // 1920:
-        posição_chao = 672 + 5 * LARGURA // 1920
-    elif posição >= -9560 * LARGURA // 1920:
-        posição_chao = 677 + 5 * LARGURA // 1920
-    elif posição >= -9570 * LARGURA // 1920:
-        posição_chao = 681 + 5 * LARGURA // 1920
-    elif posição >= -9580 * LARGURA // 1920:
-        posição_chao = 685 + 5 * LARGURA // 1920
-    elif posição >= -9590 * LARGURA // 1920:
-        posição_chao = 693 + 5 * LARGURA // 1920
-    elif posição >= -9600 * LARGURA // 1920:
-        posição_chao = 705 + 5 * LARGURA // 1920
 
-    elif posição_personagem_X <= 510 * LARGURA // 1920:
-        posição_chao = 684 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 520 * LARGURA // 1920:
-        posição_chao = 680 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 530 * LARGURA // 1920:
-        posição_chao = 676 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 540:
-        posição_chao = 672 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 550 * LARGURA // 1920:
-        posição_chao = 668 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 560 * LARGURA // 1920:
-        posição_chao = 666 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 570 * LARGURA // 1920:
-        posição_chao = 664 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 580 * LARGURA // 1920:
-        posição_chao = 662 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 590 * LARGURA // 1920:
-        posição_chao = 660 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 600 * LARGURA // 1920:
-        posição_chao = 658 + 5 * LARGURA // 1920
-    elif posição_personagem_X <= 610 * LARGURA // 1920:
-        posição_chao = 656 + 5 * LARGURA // 1920
-    elif posição_personagem_X < 680 * LARGURA // 1920:
-        posição_chao = 653 + 5 * LARGURA // 1920
+dano_ficticio = 13
+vida_ficticia = 120
+vida_ficticia_atual = vida_ficticia
 
-
-    return posição_chao
-
-posições_chao = list(range(0, -LARGURA * 5, -10 * LARGURA // 1920))
-print(len(posições_chao) // 5)
 
 
 if __name__ == "__main__":
@@ -771,9 +196,9 @@ if __name__ == "__main__":
                                 box["text"] = "Tab"
 
         key = pygame.key.get_pressed()
+        botoes = pygame.mouse.get_pressed()
 
         pygame.draw.ellipse(sombra, (0, 0, 0, tranparencia), sombra.get_rect())
-
         
         tecla = [teclas["inventario"].lower(), teclas["correr"].lower(), teclas["habilidade"].lower(), teclas["habilidade_1"].lower(), teclas["habilidade_2"].lower(), teclas["mapa"].lower()]
         for nome_tecla in tecla:
@@ -782,7 +207,16 @@ if __name__ == "__main__":
             if nome_tecla == "lctrl" or nome_tecla == "lalt" or nome_tecla == "lshift" or nome_tecla == "tab":
                 tecla[tecla.index(nome_tecla)] = nome_tecla.upper()
                 
-                    
+        usuario = {"nivel": dados["status"]["nivel"],
+           "estamina": dados["status"]["dano"] * 10,
+           "defesa": dados["status"]["defesa"],
+           "vida": dados["status"]["vida"] * 10,
+           "velocidade": dados["status"]["velocidade"],
+           "dano": dados["status"]["dano"],
+           "experiencia": dados["status"]["experiencia"]}
+
+
+        game_over = pygame.transform.scale(game_over, (LARGURA - 400, ALTURA - 350))
 
         inventario = getattr(pygame, f"K_{tecla[0]}")
         correr = getattr(pygame, f"K_{tecla[1]}")
@@ -791,15 +225,12 @@ if __name__ == "__main__":
         habilidade_2 = getattr(pygame, f"K_{tecla[4]}")
         mapa = getattr(pygame, f"K_{tecla[5]}")
 
-        posição_chao = colisao_chao_batalha()
-
+        posição_chao = 735
 
         if  parede and colisao_chao:
             travar = True
         elif not colisao_chao or posição > -400 * LARGURA // 1920 or key[pygame.K_SPACE]:
             parede = False
-
-
         
         if not parede:
             travar = False
@@ -826,94 +257,202 @@ if __name__ == "__main__":
         if estado == COMBATE:
             anterior = COMBATE
             screen.blit(cenario_combate, (posição, 0))
-
-            if posição - 1 >= -LARGURA * 2  and posição_personagem_X >= 500 * LARGURA // 1920 and not travar:
-                if key[pygame.K_d]:
-                    posição -= 8 * LARGURA // 1920
-                    diresao = "direita"
+            if dados["progresso"]["missao"] == 1 and not dados_obtidos:
+                inimigo_local = [("parado", 1200), ("parado", 2400), ("parado", 3600)]
+                status_inimigo = [[4, 1, 3, 14], [4, 1, 3, 14], [4, 1, 3, 14]]
+                status_inimigo_inicial = [[4, 1, 3, 14], [4, 1, 3, 14], [4, 1, 3, 14]]
+                inimigos_pachs_parado = slime_parado
+                inimigos_pachs_direita = slime_direita
+                dados_obtidos = True
+            if contador <= 0:
+                vida_inicial = usuario["vida"]
+                vida_atual = vida_inicial
+                contador += 1
+            if vida_atual <= 0:
+                quadrado_4.fill((*(0, 0, 0), 150))
+                screen.blit(quadrado_4, (0, 0))
+                screen.blit(game_over, (LARGURA // 2 - 800, ALTURA // 2 - 300))
             else:
-                if -posição_personagem_X >= -LARGURA + 150 and not travar:
+                porcentagem_vida = font_vida.render(str(vida_atual * 100 // vida_inicial) + "%", True, cor_usada)
+                screen.blit(porcentagem_vida, (posição_personagem_X + 45, posição_personagem_Y - 20))
+
+                alpha = int(min(255, max(0, contador_cooldown_jogador * 4)))
+                quadrado_5.fill((220, 220, 220, alpha))
+                screen.blit(quadrado_5, (posição_personagem_X + 45, posição_personagem_Y - 40))
+
+                
+
+                if posição - 1 >= -LARGURA * 2  and posição_personagem_X >= 500 * LARGURA // 1920 and not travar:
                     if key[pygame.K_d]:
-                        posição_personagem_X += 8 * LARGURA // 1920
-                        diresao = "direita"
+                        posição -= 8 * LARGURA // 1920
+                        inimigo_local = [(est, pos - 8 * LARGURA // 1920) for est, pos in inimigo_local]
+                        if diresao != "soco":
+                            diresao = "direita"
                 else:
-                    diresao = "parado"
+                    if -posição_personagem_X >= -LARGURA + 150 and not travar:
+                        if key[pygame.K_d]:
+                            posição_personagem_X += 8 * LARGURA // 1920
+                            if diresao != "soco":
+                                diresao = "direita"
+                    else:
+                        if diresao != "soco":
+                            diresao = "parado"
 
 
-                
-            if posição <= -20 * LARGURA // 1920 and posição_personagem_X <= 500 * LARGURA // 1920:
-                if key[pygame.K_a]:
-                    posição += 8 * LARGURA // 1920
-                    diresao = "esquerda"
-
-            else:
-                if posição_personagem_X >= -21 * LARGURA // 1920:
+                    
+                if posição <= -20 * LARGURA // 1920 and posição_personagem_X <= 500 * LARGURA // 1920:
                     if key[pygame.K_a]:
-                        posição_personagem_X -= 8 * LARGURA // 1920
-                        diresao = "esquerda"
+                        posição += 8 * LARGURA // 1920
+                        inimigo_local = [(est, pos + 8 * LARGURA // 1920) for est, pos in inimigo_local]
+                        if diresao != "soco":
+                            diresao = "esquerda"
+
                 else:
-                    diresao = "parado"
+                    if posição_personagem_X >= -21 * LARGURA // 1920:
+                        if key[pygame.K_a]:
+                            posição_personagem_X -= 8 * LARGURA // 1920
+                            if diresao != "soco":
+                                diresao = "esquerda"
+                    else:
+                        if diresao != "soco":
+                            diresao = "parado"
 
-            if key[pygame.K_SPACE] and colisao_chao and limite_de_pulo > qnt_de_pulo:
-                qnt_de_pulo += 1
-                pulo_detectado = True
-                vel_y = forca_pulo
-                sombra.set_alpha(tranparencia - (qnt_de_pulo * 25))
+                if botoes[0] and contador_cooldown_jogador <= 0:
+                    contador_cooldown_jogador = cooldown_jogador
+                    diresao = "soco"
+                    for i, (est, distancia) in enumerate(inimigo_local):
+                        if distancia - posição_personagem_X - 20 <= 0 and distancia - posição_personagem_X + 40 >= 0:
+                            status_inimigo[i][3] -= usuario["dano"]
+                            print(status_inimigo[0])
+                            cor_usada_adiversario = cor_dano_adiversario
+                else:
+                    cor_usada_adiversario = cor_normal_adiversario
+                    contador_cooldown_jogador -= 1
+
+
+                if key[pygame.K_SPACE] and colisao_chao and limite_de_pulo > qnt_de_pulo:
+                    qnt_de_pulo += 1
+                    pulo_detectado = True
+                    vel_y = forca_pulo
+                    sombra.set_alpha(tranparencia - (qnt_de_pulo * 25))
+                    
+                    if qnt_de_pulo == limite_de_pulo:
+                        colisao_chao = False
+
+
                 
-                if qnt_de_pulo == limite_de_pulo:
-                    colisao_chao = False
+                
+                vel_y += gravidade
+                posição_personagem_Y += vel_y
+                if posição_personagem_Y + 200 * LARGURA // 1920 >= posição_chao - 10 * LARGURA // 1920:
+                    sombra.set_alpha(tranparencia - (qnt_de_pulo * 10))
+
+                if posição_personagem_Y + 200 * LARGURA // 1920 >= posição_chao - 20 * LARGURA // 1920:
+                    sombra.set_alpha(tranparencia - (qnt_de_pulo * 5))
+
+                if posição_personagem_Y + 200 * LARGURA // 1920 >= posição_chao:
+                    sombra.set_alpha(tranparencia)
+                    pulo_detectado = False
+                    posição_personagem_Y = posição_chao - 200 * LARGURA // 1920
+                    vel_y = 0
+                    colisao_chao = True
+                    qnt_de_pulo = 0
+                
+                if not key[pygame.K_a] and not key[pygame.K_d]:
+                    if diresao != "soco":
+                        diresao = "parado"
+
+                if diresao == "parado":
+                    screen.blit(sombra, (posição_personagem_X + 40 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
+                    screen.blit(personagem_parado, (posição_personagem_X, posição_personagem_Y))
+
+                elif diresao == "soco":
+                    screen.blit(sombra, (posição_personagem_X + 40 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
+                    screen.blit(personagem_soco_d[frame_personagem_soco], (posição_personagem_X, posição_personagem_Y))
+                    frame_personagem_soco += 1
+                    if frame_personagem_soco >= len(personagem_soco_d):
+                        frame_personagem_soco = 0
+                        diresao = "parado"
+
+                else:
+                    screen.blit(sombra, (posição_personagem_X + 40 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
+                    screen.blit(personagem_andando_D[frame_personagem], (posição_personagem_X, posição_personagem_Y))
+                    frame_personagem += 1
+                    if frame_personagem >= len(personagem_andando_D):
+                        frame_personagem = 0
+
+                derrotados = 0
+                for i, (diresao_adiversario, posicao_x) in enumerate(inimigo_local):
+                    if status_inimigo[i][3] > 0:
+                        if posicao_x - 500 >= posição_personagem_X:
+                            diresao_adiversario = "parado"
+
+                        if posicao_x - 20 <= posição_personagem_X and posicao_x + 20 >= posição_personagem_X:
+                            diresao_adiversario = "soco"
+
+                        elif posicao_x - 500 <= posição_personagem_X and posicao_x >= posição_personagem_X:
+                            diresao_adiversario = "esquerda"
+
+                        elif posicao_x - 500 <= posição_personagem_X -300:
+                            diresao_adiversario = "direita"
+
+                        if diresao_adiversario == "parado":
+                            screen.blit(inimigos_pachs_parado[int(frame_inimigo_parado)], (posicao_x, 735 - 200))
+                            frame_inimigo_parado += 0.3
+                            if frame_inimigo_parado >= len(inimigos_pachs_parado):
+                                frame_inimigo_parado = 0
+                        
+                        elif diresao_adiversario == "direita":
+                            screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 200))
+                            frame_inimigo_direita += 0.5
+                            posicao_x = posicao_x + 6 * LARGURA // 1980
+                            if frame_inimigo_direita >= len(inimigos_pachs_direita):
+                                frame_inimigo_direita = 0
+
+                        elif diresao_adiversario == "esquerda":
+                            screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 200))
+                            frame_inimigo_direita += 0.5
+                            posicao_x = posicao_x - 6 * LARGURA // 1980
+                            if frame_inimigo_direita >= len(inimigos_pachs_direita):
+                                frame_inimigo_direita = 0
+
+                        elif diresao_adiversario == "soco":
+                            screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 200))
+                            frame_inimigo_direita += 0.5
+                            if cooldown_dano <= contador_cooldown:
+                                vida_atual -= status_inimigo[i][0]
+                                cor_usada = cor_dano
+                                contador_cooldown = 0
+                            else:
+                                cor_usada = cor_normal
+                                contador_cooldown += 1
+                            if frame_inimigo_direita >= len(inimigos_pachs_direita):
+                                frame_inimigo_direita = 0
 
 
+                        porcentagem_vida_adiversario = font_vida.render(str(status_inimigo[i][3] * 100 // status_inimigo_inicial[i][3]) + "%", True, cor_usada_adiversario)
+                        screen.blit(porcentagem_vida_adiversario, (posicao_x + 45, 735 - 250))
 
-               
-            vel_y += gravidade
-            posição_personagem_Y += vel_y
-            if posição_personagem_Y + 200 * LARGURA // 1920 >= posição_chao - 10 * LARGURA // 1920:
-                sombra.set_alpha(tranparencia - (qnt_de_pulo * 10))
+                        inimigo_local[i] = (diresao_adiversario, posicao_x)
 
-            if posição_personagem_Y + 200 * LARGURA // 1920 >= posição_chao - 20 * LARGURA // 1920:
-                sombra.set_alpha(tranparencia - (qnt_de_pulo * 5))
+                    else:
+                        derrotados += 1
 
-            if posição_personagem_Y + 200 * LARGURA // 1920 >= posição_chao:
-                sombra.set_alpha(tranparencia)
-                pulo_detectado = False
-                posição_personagem_Y = posição_chao - 200 * LARGURA // 1920
-                vel_y = 0
-                colisao_chao = True
-                qnt_de_pulo = 0
-
-
-            
-            if not key[pygame.K_a] and not key[pygame.K_d]:
-                diresao = "parado"
-
-            if diresao == "parado":
-                screen.blit(sombra, (posição_personagem_X + 40 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
-                screen.blit(personagem_parado, (posição_personagem_X, posição_personagem_Y))
-            else:
-                screen.blit(sombra, (posição_personagem_X + 40 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
-                screen.blit(personagem_andando_D[frame_personagem], (posição_personagem_X, posição_personagem_Y))
-                frame_personagem += 1
-                if frame_personagem >= len(personagem_andando_D):
-                    frame_personagem = 0
-            
-            
-            
-            
-
-            
-            if key[pygame.K_ESCAPE] and not click:
-                click = True
-                contador = 0
-                estado = OPCOES
-            if not key[pygame.K_ESCAPE]:
-                click = False
-            if key[habilidade_1]:
-                None
-                #habilidade_1_usavel(usuario, alvo)
-            if key[habilidade_2]:
-                None
-                #habilidade_2_usavel(usuario, alvo)
+                if derrotados >= len(inimigo_local):
+                    print("vitoria")
+                
+                if key[pygame.K_ESCAPE] and not click:
+                    click = True
+                    contador = 0
+                    estado = OPCOES
+                if not key[pygame.K_ESCAPE]:
+                    click = False
+                if key[habilidade_1]:
+                    None
+                    #habilidade_1_usavel(usuario, alvo)
+                if key[habilidade_2]:
+                    None
+                    #habilidade_2_usavel(usuario, alvo)
 
             
 
@@ -944,7 +483,7 @@ if __name__ == "__main__":
                 estado = MENU
 
             if desenhar_botao("Sair", LARGURA // 2.86, ALTURA // 1.4, LARGURA // 3.3, ALTURA // 8, ALTURA // 18, (150, 150, 150), (120, 120, 120), ALTURA // 30, fonte= ALTURA // 18):
-                Popen([sys.executable, rf'{endereço}\lobby.py'])
+                Popen([sys.executable, rf'{endereço}\ui\lobby.py'])
                 sys.exit()
 
         if estado == MENU:

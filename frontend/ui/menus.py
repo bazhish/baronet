@@ -9,8 +9,9 @@ import json
 
 # Endereço do arquivo
 endereço = os.path.dirname(os.path.abspath(__file__))
+endereco_frontend = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 # Endereço do banco de dados
-endereco_banco_de_dados = rf"{endereço}\banco_de_dados.db"
+endereco_banco_de_dados = rf"{endereco_frontend}\ui\banco_de_dados.db"
 
 # Iniciar o pygame e seus audios
 pygame.init()
@@ -19,13 +20,13 @@ pygame.mixer.init()
 
 # Efeito sonoro de fundo
 if __name__ == "__main__":
-    pygame.mixer.music.load(rf"{endereço}\efeito_sonoro\Menu.mp3")
+    pygame.mixer.music.load(rf"{endereco_frontend}\recursos\sons\Menu.mp3")
     pygame.mixer.music.set_volume(0.05)
     pygame.mixer.music.play(-1)
 
 # Som do botão e se caso ocorra algum erro
-botao = pygame.mixer.Sound(rf"{endereço}\efeito_sonoro\botao.ogg")
-erro = pygame.mixer.Sound(rf"{endereço}\efeito_sonoro\error.ogg")
+botao = pygame.mixer.Sound(rf"{endereco_frontend}\recursos\sons\botao.ogg")
+erro = pygame.mixer.Sound(rf"{endereco_frontend}\recursos\sons\error.ogg")
 
 
 # Tela
@@ -40,19 +41,19 @@ GRAY = (150, 150, 150)
 GREEN = (0, 255, 0)
 
 # Fontes
-font_title = pygame.font.Font(rf"{endereço}\fonte\Minha fonte.ttf", 30)
+font_title = pygame.font.Font(rf"{endereco_frontend}\recursos\fontes\Minha fonte.ttf", 30)
 
-font_button = pygame.font.Font(rf"{endereço}\fonte\Minha fonte.ttf", 18)
+font_button = pygame.font.Font(rf"{endereco_frontend}\recursos\fontes\Minha fonte.ttf", 18)
 
-font_sub = pygame.font.Font(rf"{endereço}\fonte\Minha fonte.ttf", 20)
+font_sub = pygame.font.Font(rf"{endereco_frontend}\recursos\fontes\Minha fonte.ttf", 20)
 
-fonte_input = pygame.font.Font(rf"{endereço}\fonte\Minha fonte.ttf", 17)
+fonte_input = pygame.font.Font(rf"{endereco_frontend}\recursos\fontes\Minha fonte.ttf", 17)
 
-fonte = pygame.font.Font(rf"{endereço}\fonte\Minha fonte.ttf", 9)
+fonte = pygame.font.Font(rf"{endereco_frontend}\recursos\fontes\Minha fonte.ttf", 9)
 
-fonte_alternativa = pygame.font.Font(rf"{endereço}\fonte\Minha fonte.ttf", 12)
+fonte_alternativa = pygame.font.Font(rf"{endereco_frontend}\recursos\fontes\Minha fonte.ttf", 12)
 
-fonte_box = pygame.font.Font(rf"{endereço}\fonte\Minha fonte.ttf", 25)
+fonte_box = pygame.font.Font(rf"{endereco_frontend}\recursos\fontes\Minha fonte.ttf", 25)
 
 
 # Telas do jogo
@@ -106,12 +107,12 @@ COR_BG = (255, 255, 255)
 clock = pygame.time.Clock()
 
 # Imagem do fundo principal e secundario
-imagem_fundo = pygame.image.load(rf"{endereço}\Imagens\classes\fundo.png")
+imagem_fundo = pygame.image.load(rf"{endereco_frontend}\recursos\Imagens\classes\fundo.png")
 imagem_fundo = pygame.transform.scale(imagem_fundo, (1300, 650))
 fundo_x = 0
 fundo_y = 0
 
-imagem_fundo_secundario = pygame.image.load(rf"{endereço}\Imagens\classes\fundo_secundario.png")
+imagem_fundo_secundario = pygame.image.load(rf"{endereco_frontend}\recursos\Imagens\classes\fundo_secundario.png")
 imagem_fundo_secundario = pygame.transform.scale(imagem_fundo_secundario, (1300, 650))
 
 
@@ -121,7 +122,7 @@ def desenhar_botao(texto, posicao_x, posicao_y, largura, altura, posicao_da_letr
     global clicou
 
     # Fonte usada nos botãos
-    font_button = pygame.font.Font(rf"{endereço}\fonte\Minha fonte.ttf", fonte)
+    font_button = pygame.font.Font(rf"{endereco_frontend}\recursos\fontes\Minha fonte.ttf", fonte)
     
     # Detecta a posição do clique do usuario
     mouse = pygame.mouse.get_pos()
@@ -136,7 +137,7 @@ def desenhar_botao(texto, posicao_x, posicao_y, largura, altura, posicao_da_letr
         altura += 10
         posicao_y -= 5
         arredondamento_da_borda += 2
-        font_button = pygame.font.Font(rf"{endereço}\fonte\Minha fonte.ttf", fonte + 2)
+        font_button = pygame.font.Font(rf"{endereco_frontend}\recursos\fontes\Minha fonte.ttf", fonte + 2)
         pygame.time.delay(10)
         pygame.draw.rect(screen, cor_ativado, (posicao_x, posicao_y, largura, altura), border_radius=arredondamento_da_borda)
         texto_surface = font_button.render(texto, True, BLACK)
@@ -150,7 +151,7 @@ def desenhar_botao(texto, posicao_x, posicao_y, largura, altura, posicao_da_letr
             altura -= 20
             posicao_x += 10
             posicao_y += 10
-            font_button = pygame.font.Font(rf"{endereço}\fonte\Minha fonte.ttf", fonte - 2)
+            font_button = pygame.font.Font(rf"{endereco_frontend}\recursos\fontes\Minha fonte.ttf", fonte - 2)
             pygame.draw.rect(screen, cor, (posicao_x, posicao_y, largura, altura), border_radius=arredondamento_da_borda)
             texto_surface = font_button.render(texto, True, BLACK)
             texto_rect = texto_surface.get_rect(center=(posicao_x + largura // 2, posicao_y + altura - posicao_da_letra - 10))
@@ -570,7 +571,7 @@ contador = 1
 # Loop principal
 if __name__ == "__main__":
     # Vê se o usuario ja está conectado
-    if not os.path.exists(rf"{endereço}\usuario.json"):
+    if not os.path.exists(rf"{endereco_frontend}\ui\usuario.json"):
         while True:
             # Eventos que tem no jogo
             for evento in pygame.event.get():
@@ -632,7 +633,7 @@ if __name__ == "__main__":
                 for i, msg in enumerate(mensagens):
 
                     
-                    teclado = pygame.mixer.Sound(rf"{endereço}\efeito_sonoro\teclado\keypress-{contador}.wav")
+                    teclado = pygame.mixer.Sound(rf"{endereco_frontend}\recursos\sons\teclado\keypress-{contador}.wav")
                     teclado.set_volume(0.5)
 
                     
@@ -669,9 +670,9 @@ if __name__ == "__main__":
             # Ve se quer entrar ou se cadastrar
             elif estado == LOGIN:
                 screen.blit(imagem_fundo_secundario, (0, 0))
-                if desenhar_botao("LOGIN", 200, 100, 350, 500, 30, (90, 150, 90), (60, 120, 60), 20, rf"{endereço}\Imagens\classes\entrar.png", 290, 290, fonte=27):
+                if desenhar_botao("LOGIN", 200, 100, 350, 500, 30, (90, 150, 90), (60, 120, 60), 20, rf"{endereco_frontend}\recursos\Imagens\classes\entrar.png", 290, 290, fonte=27):
                     estado = ENTRAR
-                if desenhar_botao("Registrar-se", 750, 100, 350, 500, 30, (150, 90, 90), (110, 50, 50), 20, rf"{endereço}\Imagens\classes\registrar-se.png", 290, 290, fonte=27):
+                if desenhar_botao("Registrar-se", 750, 100, 350, 500, 30, (150, 90, 90), (110, 50, 50), 20, rf"{endereco_frontend}\recursos\Imagens\classes\registrar-se.png", 290, 290, fonte=27):
                     estado = COMO_SERA_ESCOLHIDO_A_CLASSE
             
             # Logar na conta
@@ -695,7 +696,7 @@ if __name__ == "__main__":
                     if ver_se_o_usuario_nao_existe(usuario):
                         Mensagem_de_aviso("Nome não encontrado")
                     else:
-                        with open(rf"{endereço}\usuario2.json", "w") as arquivo:
+                        with open(rf"{endereco_frontend}\ui\usuario2.json", "w") as arquivo:
                             json.dump({"usuario": usuario,
                                        "dados_pessoais": obter_dados_usuario_por_nome(usuario),
                                        "inventario": obter_inventario_do_usuario(obter_id_usuario_por_nome(usuario)),
@@ -703,9 +704,9 @@ if __name__ == "__main__":
                                        "progresso": obter_progresso_do_usuario(obter_id_usuario_por_nome(usuario)),
                                        "keys": obter_keys_do_usuario(obter_id_usuario_por_nome(usuario))}, arquivo)
                                        
-                        with open(rf"{endereço}\usuario2.json", "r") as arquivo:
+                        with open(rf"{endereco_frontend}\ui\usuario2.json", "r") as arquivo:
                             dados = json.load(arquivo)
-                        with open(rf"{endereço}\usuario.json", "w") as arquivo:
+                        with open(rf"{endereco_frontend}\ui\usuario.json", "w") as arquivo:
                             json.dump({"usuario": usuario,
                                        
                                        "dados_pessoais": {"Nome": dados["dados_pessoais"][0],
@@ -730,8 +731,8 @@ if __name__ == "__main__":
                                                  "habilidade_2": dados["keys"][0][4],
                                                  "mapa": dados["keys"][0][5]
                                                  }}, arquivo, indent=4)
-                        if os.path.exists(rf"{endereço}\usuario2.json"):
-                            os.remove(rf"{endereço}\usuario2.json")
+                        if os.path.exists(rf"{endereco_frontend}\ui\usuario2.json"):
+                            os.remove(rf"{endereco_frontend}\ui\usuario2.json")
                         pygame.mixer.music.play(0)
                         break
                         
@@ -746,12 +747,12 @@ if __name__ == "__main__":
                     estado = LOGIN
                 texto = font_title.render("Como deseja escolher sua classe", True, WHITE)
                 screen.blit(texto, (200, 40))
-                if desenhar_botao("Escolher Classe", 100, 125, 300, 400, 30, (130, 90, 180), (100, 60, 150), 20, rf"{endereço}\Imagens\classes\escolha.png", 260, 260):
+                if desenhar_botao("Escolher Classe", 100, 125, 300, 400, 30, (130, 90, 180), (100, 60, 150), 20, rf"{endereco_frontend}\recursos\Imagens\classes\escolha.png", 260, 260):
                     estado = ESCOLHA_DE_CLASSES
-                if desenhar_botao("Classe aleatória", 500, 125, 300, 400, 30, (140, 110, 110), (110, 80, 80), 20, rf"{endereço}\Imagens\classes\aleatorio.png", 260, 260):
+                if desenhar_botao("Classe aleatória", 500, 125, 300, 400, 30, (140, 110, 110), (110, 80, 80), 20, rf"{endereco_frontend}\recursos\Imagens\classes\aleatorio.png", 260, 260):
                     if botao_de_confirmação("Você quer escolher sua classe aleaóriamente"):
                         estado = ALEATÓRIO
-                if desenhar_botao("personalidade", 900, 125, 300, 400, 30, (120, 180, 120), (50, 150, 50), 20, rf"{endereço}\Imagens\classes\personalidade.png", 260, 260):
+                if desenhar_botao("personalidade", 900, 125, 300, 400, 30, (120, 180, 120), (50, 150, 50), 20, rf"{endereco_frontend}\recursos\Imagens\classes\personalidade.png", 260, 260):
                     estado = PERSONALIDADE
 
 
@@ -767,19 +768,19 @@ if __name__ == "__main__":
                 if desenhar_botao("Próximo ->", 1050, 580, 200, 40, 13, (160, 160, 160), (100, 100, 100), 25):
                     estado = ESCOLHA_DE_CLASSES_JANELA_2
 
-                if desenhar_botao("Arqueiro", 60, 140, 270, 400, 20, (93, 166, 170), (63, 136, 140), 25, rf"{endereço}\Imagens\classes\arco e flecha.png", 250, 250):
+                if desenhar_botao("Arqueiro", 60, 140, 270, 400, 20, (93, 166, 170), (63, 136, 140), 25, rf"{endereco_frontend}\recursos\Imagens\classes\arco e flecha.png", 250, 250):
                     if botao_de_confirmação("Você realmente deseja a classe Arqueiro?"):
                         estado = ARQUEIRO
 
-                if desenhar_botao("Espadachin", 370, 140, 270, 400, 20, (168, 168, 168), (138, 138, 138), 25, rf"{endereço}\Imagens\classes\espada.png", 250, 250):
+                if desenhar_botao("Espadachin", 370, 140, 270, 400, 20, (168, 168, 168), (138, 138, 138), 25, rf"{endereco_frontend}\recursos\Imagens\classes\espada.png", 250, 250):
                     if botao_de_confirmação("Você realmente deseja a classe Espadachin?"):
                         estado = ESPADACHIN
 
-                if desenhar_botao("Assassino", 680, 140, 270, 400, 20, (170, 93, 94), (140, 63, 64), 25, rf"{endereço}\Imagens\classes\faca.png", 250, 250):
+                if desenhar_botao("Assassino", 680, 140, 270, 400, 20, (170, 93, 94), (140, 63, 64), 25, rf"{endereco_frontend}\recursos\Imagens\classes\faca.png", 250, 250):
                     if botao_de_confirmação("Você realmente deseja a classe Assassino?"):
                         estado = ASSASSINO
 
-                if desenhar_botao("Escudeiro", 990, 140, 270, 400, 20, (170, 149, 93), (140, 119, 63), 25, rf"{endereço}\Imagens\classes\escudo.png", 250, 250):
+                if desenhar_botao("Escudeiro", 990, 140, 270, 400, 20, (170, 149, 93), (140, 119, 63), 25, rf"{endereco_frontend}\recursos\Imagens\classes\escudo.png", 250, 250):
                     if botao_de_confirmação("Você realmente deseja a classe Escudeiro?"):
                         estado = ESCUDEIRO
 
@@ -795,11 +796,11 @@ if __name__ == "__main__":
 
                 desenhar_botao("Próximo ->", 1050, 580, 200, 40, 13, (120, 120, 120), (120, 120, 120), 25)
 
-                if desenhar_botao("Lanceiro", 60, 140, 270, 400, 20, (136, 93, 170), (106, 63, 140), 25, rf"{endereço}\Imagens\classes\lanca.png", 250, 250):
+                if desenhar_botao("Lanceiro", 60, 140, 270, 400, 20, (136, 93, 170), (106, 63, 140), 25, rf"{endereco_frontend}\recursos\Imagens\classes\lanca.png", 250, 250):
                     if botao_de_confirmação("Você realmente que a classe Lanceiro?"):
                         estado = LANCEIRO
 
-                if desenhar_botao("Batedor", 370, 140, 270, 400, 20, (99, 170, 93), (69, 140, 63), 25, rf"{endereço}\Imagens\classes\besta.png", 250, 250):
+                if desenhar_botao("Batedor", 370, 140, 270, 400, 20, (99, 170, 93), (69, 140, 63), 25, rf"{endereco_frontend}\recursos\Imagens\classes\besta.png", 250, 250):
                     if botao_de_confirmação("Você realmente que a classe Batedor?"):
                         estado = BATEDOR
                 
@@ -1130,7 +1131,7 @@ if __name__ == "__main__":
                 
                 # Label
                 label_surface = fonte_input.render(input_boxes["label"] + ":", True, COR_TEXTO)
-                screen.blit(label_surface, (input_boxes["rect"].x - 120, input_boxes["rect"].y + 10))
+                screen.blit(label_surface, (input_boxes["rect"].x - 140, input_boxes["rect"].y + 10))
 
                 # Texto
                 texto_surface = fonte_input.render(input_boxes["text"], True, COR_TEXTO)
@@ -1474,7 +1475,7 @@ if __name__ == "__main__":
                 
                 usuario = dados_pessoais["Nome"]
                 
-                with open(rf"{endereço}\usuario.json", "w") as arquivo:
+                with open(rf"{endereco_frontend}\ui\usuario.json", "w") as arquivo:
                     json.dump({"usuario": usuario,
                                
                                "dados_pessoais": dados_pessoais,
@@ -1509,90 +1510,7 @@ if __name__ == "__main__":
             clock.tick(16)
 
         
-        Popen([sys.executable, rf'{endereço}\lobby.py'])
+        Popen([sys.executable, rf'{endereco_frontend}\ui\lobby.py'])
 
     else:
-        Popen([sys.executable, rf'{endereço}\lobby.py'])
-import pygame
-import sys
-from backend.cenas import menu_principal as backend  # importa dados e funções
-from tela_criacao_personagem import desenhar_botao, TEXTO_S
-
-pygame.init()
-LARGURA, ALTURA = pygame.display.Info().current_w, pygame.display.Info().current_h
-screen = pygame.display.set_mode((LARGURA, ALTURA), pygame.FULLSCREEN)
-clock = pygame.time.Clock()
-
-# Carregar imagens e fontes
-endereco = backend.endereco
-imagem_personagem = pygame.image.load(rf"{endereco}\Imagens\classes\personagem_representacao.png")
-imagem_personagem = pygame.transform.scale(imagem_personagem, (LARGURA // 4, ALTURA // 3))
-
-imagem_fundo_secundario = pygame.image.load(rf"{endereco}\Imagens\classes\fundo_secundario.png")
-imagem_fundo_secundario = pygame.transform.scale(imagem_fundo_secundario, (LARGURA, ALTURA))
-
-font_title = pygame.font.Font(rf"{endereco}\fonte\Minha fonte.ttf", 100)
-font_nome = pygame.font.Font(rf"{endereco}\fonte\Minha fonte.ttf", 30)
-fonte_input = pygame.font.SysFont("arial", LARGURA // 40)
-
-# Nome do jogador
-nome = font_nome.render(f"{backend.primeiro_nome}", True, (190, 190, 230))
-nome_rect = nome.get_rect(center=(LARGURA - LARGURA // 8, ALTURA // 2.1))
-
-# Retângulo atrás do nome
-padding_x, padding_y = 10, 5
-rect = pygame.Rect(nome_rect.x - padding_x, nome_rect.y - padding_y,
-                   nome_rect.width + 2 * padding_x, nome_rect.height + 2 * padding_y)
-
-# Input boxes
-input_boxes = [
-    {"label": "Inventario", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4, LARGURA // 18, ALTURA // 16),
-     "text": f"{backend.teclas['inventario']}", "active": False, "peritido": TEXTO_S},
-    {"label": "Correr", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10, LARGURA // 18, ALTURA // 16),
-     "text": f"{backend.teclas['correr']}", "active": False, "peritido": TEXTO_S},
-    # Demais caixas...
-]
-
-# Loop principal do menu
-def run_menu():
-    estado = backend.estado
-    while True:
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-            # Detectar clique em caixas de texto
-            elif evento.type == pygame.MOUSEBUTTONDOWN:
-                for box in input_boxes:
-                    box["active"] = box["rect"].collidepoint(evento.pos)
-
-            # Digitação
-            elif evento.type == pygame.KEYDOWN:
-                for box in input_boxes:
-                    if box["active"]:
-                        if evento.key == pygame.K_BACKSPACE:
-                            box["text"] = box["text"][:-1]
-                        elif evento.key == pygame.K_RETURN:
-                            box["active"] = False
-                        else:
-                            if evento.unicode in box["peritido"]:
-                                box["text"] += evento.unicode
-
-        # Desenhar elementos
-        screen.blit(imagem_fundo_secundario, (0, 0))
-        screen.blit(imagem_personagem, (LARGURA - LARGURA // 4, ALTURA // 2))
-        pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
-        screen.blit(nome, nome_rect)
-
-        # Desenhar caixas de texto e botões chamando desenhar_botao()
-        for box in input_boxes:
-            cor_borda = (0, 120, 215) if box["active"] else (150, 150, 150)
-            pygame.draw.rect(screen, cor_borda, box["rect"], 2, border_radius=15)
-            label_surface = fonte_input.render(box["label"] + ":", True, (0, 0, 0))
-            screen.blit(label_surface, (box["rect"].x - LARGURA // 6, box["rect"].y + 5))
-            texto_surface = fonte_input.render(box["text"], True, (0, 0, 0))
-            screen.blit(texto_surface, (box["rect"].x + 5, box["rect"].y + 5))
-
-        pygame.display.flip()
-        clock.tick(16)
+        Popen([sys.executable, rf'{endereco_frontend}\ui\lobby.py'])

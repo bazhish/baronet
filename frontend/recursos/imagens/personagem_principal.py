@@ -47,3 +47,40 @@ personagem_andando_D = [
     personagem_andando6,
     personagem_andando7,
     personagem_andando8]
+
+personagem_soco_d2 =pygame.image.load(f"{endereço}/personagem_principal/soco_2.png")
+personagem_soco_d2 = pygame.transform.scale(personagem_soco_d2, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_soco_d3 =pygame.image.load(f"{endereço}/personagem_principal/soco_3.png")
+personagem_soco_d3 = pygame.transform.scale(personagem_soco_d3, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_soco_d4 =pygame.image.load(f"{endereço}/personagem_principal/soco_4.png")
+personagem_soco_d4 = pygame.transform.scale(personagem_soco_d4, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_soco_d5 =pygame.image.load(f"{endereço}/personagem_principal/soco_5.png")
+personagem_soco_d5 = pygame.transform.scale(personagem_soco_d5, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_soco_d6 =pygame.image.load(f"{endereço}/personagem_principal/soco_6.png")
+personagem_soco_d6 = pygame.transform.scale(personagem_soco_d6, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_soco_d7 =pygame.image.load(f"{endereço}/personagem_principal/soco_7.png")
+personagem_soco_d7 = pygame.transform.scale(personagem_soco_d7, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_soco_d8 =pygame.image.load(f"{endereço}/personagem_principal/soco_8.png")
+personagem_soco_d8 = pygame.transform.scale(personagem_soco_d8, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_soco_d = [
+    personagem_soco_d2,
+    personagem_soco_d3,
+    personagem_soco_d4,
+    personagem_soco_d5,
+    personagem_soco_d6,
+    personagem_soco_d7,
+    personagem_soco_d8,
+    personagem_soco_d7,
+    personagem_soco_d6,
+    personagem_soco_d5,
+    personagem_soco_d4,
+    personagem_soco_d3,
+    personagem_soco_d2]
+

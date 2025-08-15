@@ -1,6 +1,4 @@
-# backend\app\models\personagens\personagem_principal.py
-from dataclasses import field, dataclass
-from typing import Any
+# backend\sistemas\modelos\personagem_principal.py
 
 class Usuario:
     def __init__(self, nome):
@@ -36,11 +34,16 @@ class Usuario:
         self.vida_máxima = 0
         self.estamina_atual = 0
         self.estamina_máxima = 0
-        # ARMADURA
-        self.elmo = "nenhum"
-        self.peitoral= "nenhum"
-        self.calça = "nenhuma"
-        self.botas = "nenhuma"
+         # ARMADURA
+        self.elmo = None
+        self.peitoral = None
+        self.calça = None
+        self.botas = None
+        # ---------------------------------
+        self.nome_do_elmo = "nenhum"
+        self.nome_do_peitoral = "nenhum"
+        self.nome_da_calça = "nenhuma"
+        self.nome_das_botas = "nenhuma"
         # DESCRIÇÃO
         self.descrição = "nenhuma"
         # HABLIDIDADES
@@ -55,9 +58,12 @@ class Usuario:
         self.nome_da_terceira_habilidade_passiva = str
         self.nome_da_habilidade_ativa = str
         self.nome_da_habilidade_especial = str
-        # ITENS
-        self.arma = "nenhuma"
-        self.escudo = "nenhum"
+        # ARMA
+        self.nome_da_arma = "nenhuma"
+        self.arma = None
+        # ESCUDO
+        self.nome_do_escudo = "nenhum"
+        self.escudo = None
         # BONUS DE ATRIBUTOS
         self.dano_bonus = 0
         self.velocidade_bonus = 0

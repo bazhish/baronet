@@ -84,3 +84,31 @@ personagem_soco_d = [
     personagem_soco_d3,
     personagem_soco_d2]
 
+personagem_morto1 = pygame.image.load(f"{endereço}/personagem_principal/morte_1.png")
+personagem_morto1 = pygame.transform.scale(personagem_morto1, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_morto2 = pygame.image.load(f"{endereço}/personagem_principal/morte_2.png")
+personagem_morto2 = pygame.transform.scale(personagem_morto2, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_morto3 = pygame.image.load(f"{endereço}/personagem_principal/morte_3.png")
+personagem_morto3 = pygame.transform.scale(personagem_morto3, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_morto4 = pygame.image.load(f"{endereço}/personagem_principal/morte_4.png")
+personagem_morto4 = pygame.transform.scale(personagem_morto4, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_morto5 = pygame.image.load(f"{endereço}/personagem_principal/morte_5.png")
+personagem_morto5 = pygame.transform.scale(personagem_morto5, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_morto6 = pygame.image.load(f"{endereço}/personagem_principal/morte_6.png")
+personagem_morto6 = pygame.transform.scale(personagem_morto6, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_morto7 = pygame.image.load(f"{endereço}/personagem_principal/morte_7.png")
+personagem_morto7 = pygame.transform.scale(personagem_morto7, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_morto = [personagem_morto1,
+                    personagem_morto2,
+                    personagem_morto3,
+                    personagem_morto4,
+                    personagem_morto5,
+                    personagem_morto6,
+                    personagem_morto7   ]

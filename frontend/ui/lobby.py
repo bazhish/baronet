@@ -16,7 +16,7 @@ endereco_frontend = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."
 
 if __name__ == "__main__":
     if not os.path.exists(rf"{endereco_frontend}\ui\usuario.json"):
-        Popen([sys.executable, rf'{endereco_frontend}\ui\menu.py'])
+        Popen([sys.executable, rf'{endereco_frontend}\ui\menus.py'])
         sys.exit()
 
 endereco_banco_de_dados = rf"{endereco_frontend}\ui\banco_de_dados.db"
@@ -208,7 +208,7 @@ if __name__ == "__main__":
                 pygame.quit()
                 if os.path.exists(rf"{endereço}\usuario.json"):
                     os.remove(rf"{endereço}\usuario.json")
-                Popen([sys.executable, rf'{endereço}\tela_criacao_personagem.py'])
+                Popen([sys.executable, rf'{endereço}\menus.py'])
                 sys.exit()
             
             if desenhar_botao("Opções",

@@ -9,7 +9,7 @@ import sqlite3
 import pyautogui
 from subprocess import Popen
 import json
-from recursos.imagens.personagem_principal import personagem_parado, personagem_andando_D, personagem_soco_d, personagem_morto
+from recursos.imagens.personagem_principal import personagem_parado, personagem_andando_D, personagem_soco_d, personagem_morto, personagem_dano
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from backend.entidades.inimigo import inimigo
 from backend.entidades.jogador import jogador
@@ -43,6 +43,8 @@ posição_personagem_X = 500 * LARGURA // 1920
 posição_personagem_Y = 520 * LARGURA // 1920
 frame_personagem = 0
 frame_personagem_soco = 0
+frame_personagem_parado = 0
+frame_personagem_dano = 0
 estado_personagem = personagem_parado
 diresao = "parado"
 cooldown_dano = 5
@@ -52,7 +54,9 @@ contador_cooldown_jogador = 0
 diresao_adiversario = "parado"
 frame_inimigo_parado = 0
 frame_inimigo_direita = 0
+frame_inimigo_esquerda = 0
 dados_obtidos = False
+andar_inimigo = True
 morto = False
 frame_morto = 0
 time_morrer = 0
@@ -260,6 +264,7 @@ if __name__ == "__main__":
                 inimigos_pachs_parado = slime_parado
                 inimigos_pachs_direita = slime_direita
                 dados_obtidos = True
+                inimigo_contato = [False, False, False]
             if contador <= 0:
                 vida_inicial = jogador.vida_máxima
                 vida_atual = jogador.vida_atual
@@ -288,16 +293,16 @@ if __name__ == "__main__":
                     if key[pygame.K_d]:
                         posição -= 8 * LARGURA // 1920
                         inimigo_local = [(est, pos - 8 * LARGURA // 1920) for est, pos in inimigo_local]
-                        if diresao != "soco":
+                        if diresao != "soco" and diresao != "dano":
                             diresao = "direita"
                 else:
                     if -posição_personagem_X >= -LARGURA + 150 and not travar and not morto:
                         if key[pygame.K_d]:
                             posição_personagem_X += 8 * LARGURA // 1920
-                            if diresao != "soco":
+                            if diresao != "soco" and diresao != "dano":
                                 diresao = "direita"
                     else:
-                        if diresao != "soco" and not morto:
+                        if diresao != "soco" and not morto and diresao != "dano":
                             diresao = "parado"
 
 
@@ -306,17 +311,17 @@ if __name__ == "__main__":
                     if key[pygame.K_a]:
                         posição += 8 * LARGURA // 1920
                         inimigo_local = [(est, pos + 8 * LARGURA // 1920) for est, pos in inimigo_local]
-                        if diresao != "soco":
+                        if diresao != "soco" and diresao != "dano":
                             diresao = "esquerda"
 
                 else:
                     if posição_personagem_X >= -21 * LARGURA // 1920 and not morto:
                         if key[pygame.K_a]:
                             posição_personagem_X -= 8 * LARGURA // 1920
-                            if diresao != "soco":
+                            if diresao != "soco" and diresao != "dano":
                                 diresao = "esquerda"
                     else:
-                        if diresao != "soco" and not morto:
+                        if diresao != "soco" and not morto and diresao != "dano":
                             diresao = "parado"
 
                 if botoes[0] and contador_cooldown_jogador <= 0 and not morto:
@@ -325,6 +330,7 @@ if __name__ == "__main__":
                     for i, (est, distancia) in enumerate(inimigo_local):
                         if distancia - posição_personagem_X - 20 <= 0 and distancia - posição_personagem_X + 40 >= 0:
                             status_inimigo[i][3] -= usuario.dano_base
+                            inimigo_contato[i] = True
                             cor_usada_adiversario = cor_dano_adiversario
                 else:
                     if not morto:
@@ -332,7 +338,7 @@ if __name__ == "__main__":
                         contador_cooldown_jogador -= 1
 
 
-                if key[pygame.K_SPACE] and colisao_chao and limite_de_pulo > qnt_de_pulo and not morto:
+                if key[pygame.K_SPACE] and colisao_chao and limite_de_pulo > qnt_de_pulo and not morto and diresao != "dano":
                     qnt_de_pulo += 1
                     pulo_detectado = True
                     vel_y = forca_pulo
@@ -361,7 +367,7 @@ if __name__ == "__main__":
                     qnt_de_pulo = 0
                 
                 if not key[pygame.K_a] and not key[pygame.K_d] and not morto:
-                    if diresao != "soco":
+                    if diresao != "soco" and diresao != "dano":
                         diresao = "parado"
 
                 if vida_atual <= 0:
@@ -370,15 +376,27 @@ if __name__ == "__main__":
                         morto = True
 
                 if diresao == "parado":
-                    screen.blit(sombra, (posição_personagem_X + 40 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
-                    screen.blit(personagem_parado, (posição_personagem_X, posição_personagem_Y))
+                    screen.blit(sombra, (posição_personagem_X + 45 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
+                    screen.blit(personagem_parado[int(frame_personagem_parado)], (posição_personagem_X, posição_personagem_Y + 15))
+                    frame_personagem_parado += 0.4
+                    if frame_personagem_parado >= len(personagem_parado):
+                        frame_personagem_parado = 0
 
                 elif diresao == "soco":
                     screen.blit(sombra, (posição_personagem_X + 40 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
-                    screen.blit(personagem_soco_d[frame_personagem_soco], (posição_personagem_X, posição_personagem_Y))
-                    frame_personagem_soco += 1
+                    screen.blit(personagem_soco_d[int(frame_personagem_soco)], (posição_personagem_X, posição_personagem_Y + 12))
+                    frame_personagem_soco += 0.8
                     if frame_personagem_soco >= len(personagem_soco_d):
                         frame_personagem_soco = 0
+                        diresao = "parado"
+
+                elif diresao == "dano":
+                    screen.blit(sombra, (posição_personagem_X + 40 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
+                    screen.blit(personagem_dano[int(frame_personagem_dano)], (posição_personagem_X, posição_personagem_Y))
+                    cor_usada = cor_dano
+                    frame_personagem_dano += 0.3
+                    if frame_personagem_dano >= len(personagem_dano):
+                        frame_personagem_dano = 0
                         diresao = "parado"
 
                 elif diresao == "morte":
@@ -400,6 +418,11 @@ if __name__ == "__main__":
                     if frame_personagem >= len(personagem_andando_D):
                         frame_personagem = 0
 
+
+
+
+
+
                 derrotados = 0
                 for i, (diresao_adiversario, posicao_x) in enumerate(inimigo_local):
                     if status_inimigo[i][3] > 0:
@@ -417,37 +440,48 @@ if __name__ == "__main__":
 
                         if diresao_adiversario == "parado":
                             screen.blit(inimigos_pachs_parado[int(frame_inimigo_parado)], (posicao_x, 735 - 200))
-                            frame_inimigo_parado += 0.3
+                            if andar_inimigo:
+                                frame_inimigo_parado += 0.7
+                                andar_inimigo = False
                             if frame_inimigo_parado >= len(inimigos_pachs_parado):
                                 frame_inimigo_parado = 0
                         
+
                         elif diresao_adiversario == "direita":
                             screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 180))
-                            frame_inimigo_direita += 0.2
+                            if andar_inimigo:
+                                frame_inimigo_direita += 0.2
+                                andar_inimigo = False
                             posicao_x = posicao_x + 6 * LARGURA // 1980
                             if frame_inimigo_direita >= len(inimigos_pachs_direita):
                                 frame_inimigo_direita = 0
 
                         elif diresao_adiversario == "esquerda":
                             screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 180))
-                            frame_inimigo_direita += 0.2
+                            if andar_inimigo:
+                                frame_inimigo_direita += 0.2
+                                andar_inimigo = False
                             posicao_x = posicao_x - 6 * LARGURA // 1980
                             if frame_inimigo_direita >= len(inimigos_pachs_direita):
                                 frame_inimigo_direita = 0
 
                         elif diresao_adiversario == "soco":
                             screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 180))
-                            frame_inimigo_direita += 0.2
+                            if andar_inimigo:
+                                frame_inimigo_direita += 0.2
+                                andar_inimigo = False
                             if cooldown_dano <= contador_cooldown:
                                 vida_atual -= status_inimigo[i][0]
-                                cor_usada = cor_dano
+                                diresao = "dano"
                                 contador_cooldown = 0
                             else:
-                                cor_usada = cor_normal
                                 contador_cooldown += 0.2
                             if frame_inimigo_direita >= len(inimigos_pachs_direita):
                                 frame_inimigo_direita = 0
 
+
+                        if i == len(inimigo_local) - 1:
+                            andar_inimigo = True
 
                         porcentagem_vida_adiversario = font_vida.render(str(status_inimigo[i][3] * 100 // status_inimigo_inicial[i][3]) + "%", True, cor_usada_adiversario)
                         screen.blit(porcentagem_vida_adiversario, (posicao_x + 60, 735 - 170))
@@ -457,6 +491,9 @@ if __name__ == "__main__":
                     else:
                         derrotados += 1
 
+                if diresao != "dano":
+                    cor_usada = cor_normal
+                    
                 if derrotados >= len(inimigo_local):
                     print("vitoria")
                 
@@ -522,11 +559,10 @@ if __name__ == "__main__":
                                 {"label": "Habilidades", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade"]}", "active": False, "peritido": TEXTO_S},
                                 {"label": "Habilidade 1", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade_1"]}", "active": False, "peritido": TEXTO_S},
                                 {"label": "Habilidade 2", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade_2"]}", "active": False, "peritido": TEXTO_S},
-                                {"label": "Mapa", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["mapa"]}", "active": False, "peritido": TEXTO_S},
-                            ]
-                estado = MENU
+                                {"label": "Mapa", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["mapa"]}", "active": False, "peritido": TEXTO_S}]
+                estado = anterior
             
-            rect_box = pygame.Rect(LARGURA // 2.7, ALTURA // 4.5, LARGURA // 3.9, ALTURA // 1.4)
+            rect_box = pygame.Rect(LARGURA // 2.7, ALTURA // 4.5, LARGURA // 3.9, ALTURA // 1.6)
             pygame.draw.rect(screen, (210, 210, 210), rect_box, border_radius=15)
             
             # Verifica se todos os campos estão preenchidos

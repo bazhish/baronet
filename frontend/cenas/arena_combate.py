@@ -1,18 +1,9 @@
-import sys, os
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = current_dir
-while not os.path.isdir(os.path.join(project_root, ".git")) and os.path.dirname(project_root) != project_root:
-    project_root = os.path.dirname(project_root)
-sys.path.append(project_root)
-
-
 import pygame
-from backend.configuracoes import (
-    LARGURA, ALTURA, FPS, BRANCO, AZUL, VERMELHO,
-    ALCANCE_ATAQUE, ALCANCE_ATAQUE_ADVERSARIO
-)
-from backend.entidades.jogador import Jogador
-from backend.entidades.inimigo import Inimigo
+from backend.configuracoes import *
+from backend.system.personagem_principal import Usuario
+from backend.system.adversarios import AdversarioDemiHumano
+from backend.system.habilidades_ativa_combatentes import golpe_mortal, impacto_cruzado
+from backend.sistemas.colisao import dentro_do_range
 from frontend.renderizacao.desenhar_entidades import desenhar_personagem, desenhar_range_ataque
 
 def executar():
@@ -21,11 +12,13 @@ def executar():
     pygame.display.set_caption("Arena de Combate - Baronet")
     clock = pygame.time.Clock()
 
-    jogador = Jogador("Jogador")
-    jogador.posicao_x, jogador.posicao_y = 100, ALTURA - 100
+    jogador = Usuario("Jogador")
+    jogador.posição_x, jogador.posição_y = 100, ALTURA - 100
+    jogador.habilidade_ativa = golpe_mortal
+    jogador.habilidade_especial = impacto_cruzado
 
-    adversario = Inimigo("Inimigo", 20, 80, "masculino", 1.8, 1, 0, 2, 3, 2, 80)
-    adversario.posicao_x, adversario.posicao_y = 900, ALTURA - 100
+    adversario = AdversarioDemiHumano("Inimigo", 20, 80, "masculino", 1.8, 1, 0, 2, 3, 2, 80)
+    adversario.posição_x, adversario.posição_y = 900, ALTURA - 100
 
     rodando = True
     while rodando:

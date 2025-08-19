@@ -826,7 +826,7 @@ if __name__ == "__main__":
             elif estado == ARQUEIRO2:
                 screen.blit(imagem_fundo_secundario, (0, 0))
                 pygame.draw.rect(screen, (93, 166, 170), (70, 70, 1160, 510), border_radius=27)
-                texto = font_title.render("Batedor", True, (0, 0, 80))
+                texto = font_title.render("Arqueiro", True, (0, 0, 80))
                 screen.blit(texto, (texto.get_rect(center=(650, 110))))
                 if desenhar_botao("Próximo ->", 970, 500, 200, 40, 13, (143, 216, 220), (73, 146, 150), 25):
                     estado = DADOS_PESSOAIS
@@ -960,7 +960,7 @@ if __name__ == "__main__":
             elif estado == ESPADACHIN2:
                 screen.blit(imagem_fundo_secundario, (0, 0))
                 pygame.draw.rect(screen, (168, 168, 168), (70, 70, 1160, 510), border_radius=27)
-                texto = font_title.render("Assassino", True, (50, 50, 50))
+                texto = font_title.render("Espadachin", True, (50, 50, 50))
                 screen.blit(texto, (texto.get_rect(center=(650, 110))))
                 if desenhar_botao("Próximo ->", 970, 500, 200, 40, 13, (218, 218, 218), (148, 148, 148), 25):
                     estado = DADOS_PESSOAIS
@@ -1111,7 +1111,7 @@ if __name__ == "__main__":
                 pygame.draw.aaline(screen, (0, 80, 0), (650, 140), (650, 580), 2)
                 desenhar_sub_texto(["HABILIDADE: Exploração furtiva", "PASSIVA", "Nivel: 15+   custo: 0", "Coodowncooldown: 0.0",
                                     "_______________________________",
-                                    "HABILIDADE: Ataque surpresa", "ATIVA", "Nivel: 3040+   custo: 2025", "Coodowncooldown: 15.0"], (0, 90, 0), 80, 170)
+                                    "HABILIDADE: Ataque surpresa", "ATIVA", "Nivel: 30+   custo: 20", "Coodowncooldown: 15.0"], (0, 90, 0), 80, 170)
                 desenhar_sub_texto(["HABILIDADE: Fuga rápida", "ATIVA", "Nivel: 35+   custo: 25", "Coodowncooldown: 20.0",
                                     "_______________________________",
                                     ], (0, 90, 0), 660, 170)

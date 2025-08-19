@@ -2,10 +2,13 @@
 from random import random
 
 class AdversarioDemiHumano:
-    def __init__(self, nome, gênero, nível, experiência, dano_base, velocidade_base, defesa_base, vida_base, estamina_base, queda, taxa_de_queda):
+    def __init__(self, nome, idade, peso, gênero, altura, nível, experiência, dano_base, velocidade_base, defesa_base, vida_base, estamina_base, queda, taxa_de_queda):
         # DADOS PESSOAIS
         self.nome = nome
+        self.idade = idade
+        self.peso = peso
         self.gênero = gênero
+        self.altura = altura
         # NÍVEL
         self.nível = nível
         # EXPERIÊNCIA quedaADA
@@ -160,7 +163,10 @@ class AdversarioDemiHumano:
     def atualizar_descrição(self) -> None:
         self.descrição = (
             f"nome: {self.nome}\n"
+            f"idade: {self.idade}\n"
+            f"peso: {self.peso}Kg\n"
             f"genero: {self.gênero}\n"
+            f"altura: {self.altura}m\n"
             f"nível: {self.nível}\n"
             f"experiência: {self.experiência}\n"
             f"dano: {self.dano_final}\n"

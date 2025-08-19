@@ -1,3 +1,4 @@
 from frontend.cenas.arena_combate import executar
 
-print('hello world')
+if __name__ == "__main__":
+    executar()

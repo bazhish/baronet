@@ -1,28 +1,32 @@
 # backend\sistemas\modelos\personagem_principal.py
+from os import path
+from json import load
+endereço = path.abspath(path.join(path.abspath(__file__), "..", "..", "..", "..", "frontend", "ui"))
+with open(rf"{endereço}\usuario.json", "r") as arquivo:
+    dados = load(arquivo)
+
+
+
 
 class Usuario:
-    def __init__(self, nome):
+    def __init__(self):
         # DADOS PESSOAIS
-        self.nome = nome
-        self.idade = 17
-        self.peso = 80
-        self.genero = "feminino"
-        self.altura = 1.76
+        self.nome = dados["dados_pessoais"]["Nome"]
         # TENTATIVAS
         self.tentativas_restantes = 3
         self.tentativas = 3
         # NÍVEL
-        self.nível_atual = 1
+        self.nível_atual = dados["status"]["nivel"]
         self.nível_máximo = 100
         #  EXPERIÊNCIA
-        self.experiência_atual = 0
+        self.experiência_atual = dados["status"]["experiencia"]
         self.experiência_máxima = 100
         # ATRIBUTOS
-        self.dano_base = 0
-        self.velocidade_base = 0
-        self.defesa_base = 0
-        self.vida_base = 0
-        self.estamina_base = 0
+        self.dano_base = dados["status"]["dano"]
+        self.velocidade_base = dados["status"]["velocidade"]
+        self.defesa_base = dados["status"]["defesa"]
+        self.vida_base = dados["status"]["vida"]
+        self.estamina_base = self.dano_base * 2
         self.multiplicador_de_experiência = 1.0
         # ESTADO
         self.estado = "normal"
@@ -30,10 +34,10 @@ class Usuario:
         self.nome_da_classe_do_usuário = "nenhuma"
         self.classe_do_usuário = None
         # ATRIBUTOS
-        self.vida_atual = 0
-        self.vida_máxima = 0
-        self.estamina_atual = 0
-        self.estamina_máxima = 0
+        self.vida_atual = dados["status"]["vida"]
+        self.vida_máxima = dados["status"]["vida"]
+        self.estamina_atual = dados["status"]["dano"] * 2
+        self.estamina_máxima = dados["status"]["dano"] * 2
          # ARMADURA
         self.elmo = None
         self.peitoral = None
@@ -220,10 +224,6 @@ class Usuario:
 
     def atualizar_descrição(self) -> None:
         self.descrição = (f"nome: {self.nome}\n"
-                          f"idade: {self.idade}\n"
-                          f"peso: {self.peso}Kg\n"
-                          f"genero: {self.genero}\n"
-                          f"altura: {self.altura}m\n"
                           f"experiência: {self.experiência_atual}/{self.experiência_máxima}\n"
                           f"multiplicador de experiência: {self.multiplicador_de_experiência:.2f}\n"
                           f"nível: {self.nível_atual}/{self.nível_máximo}\n"

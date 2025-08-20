@@ -6,8 +6,8 @@ while not os.path.isdir(os.path.join(project_root, ".git")) and os.path.dirname(
     project_root = os.path.dirname(project_root)
 sys.path.append(project_root)
 
-from backend.sistemas.modelos.habilidades_ativas_de_suporte import (ataque_com_escudo, defesa_reforcada)
-from backend.sistemas.modelos.habilidades_passivas_de_suporte import (bloqueio_de_ataque, repelir, peso_pena)
+from backend.sistemas.modelos.habilidades_ativa_de_suporte import (ataque_com_escudo, defesa_reforcada)
+from backend.sistemas.modelos.habilidades_passiva_de_suporte import (bloqueio_de_ataque, repelir, peso_pena)
 
 @dataclass
 class Classe:

@@ -203,6 +203,10 @@ if __name__ == "__main__":
         botoes = pygame.mouse.get_pressed()
 
         pygame.draw.ellipse(sombra, (0, 0, 0, tranparencia), sombra.get_rect())
+
+        
+
+        teclas = dados["keys"]
         
         tecla = [teclas["inventario"].lower(), teclas["correr"].lower(), teclas["habilidade"].lower(), teclas["habilidade_1"].lower(), teclas["habilidade_2"].lower(), teclas["mapa"].lower()]
         for nome_tecla in tecla:
@@ -378,14 +382,14 @@ if __name__ == "__main__":
                 if diresao == "parado":
                     screen.blit(sombra, (posição_personagem_X + 45 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
                     screen.blit(personagem_parado[int(frame_personagem_parado)], (posição_personagem_X, posição_personagem_Y + 15))
-                    frame_personagem_parado += 0.4
+                    frame_personagem_parado += len(personagem_parado) * 0.08
                     if frame_personagem_parado >= len(personagem_parado):
                         frame_personagem_parado = 0
 
                 elif diresao == "soco":
                     screen.blit(sombra, (posição_personagem_X + 40 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
                     screen.blit(personagem_soco_d[int(frame_personagem_soco)], (posição_personagem_X, posição_personagem_Y + 12))
-                    frame_personagem_soco += 0.8
+                    frame_personagem_soco += len(personagem_soco_d) * 0.08
                     if frame_personagem_soco >= len(personagem_soco_d):
                         frame_personagem_soco = 0
                         diresao = "parado"
@@ -394,7 +398,7 @@ if __name__ == "__main__":
                     screen.blit(sombra, (posição_personagem_X + 40 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
                     screen.blit(personagem_dano[int(frame_personagem_dano)], (posição_personagem_X, posição_personagem_Y))
                     cor_usada = cor_dano
-                    frame_personagem_dano += 0.3
+                    frame_personagem_dano += len(personagem_dano) * 0.08
                     if frame_personagem_dano >= len(personagem_dano):
                         frame_personagem_dano = 0
                         diresao = "parado"
@@ -402,8 +406,8 @@ if __name__ == "__main__":
                 elif diresao == "morte":
                     screen.blit(sombra, (posição_personagem_X + 40 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
                     screen.blit((personagem_morto[int(frame_morto)]), (posição_personagem_X, posição_personagem_Y))
-                    if frame_morto <= len(personagem_morto) - 0.2:
-                        frame_morto += 0.2
+                    if frame_morto <= len(personagem_morto) - len(personagem_morto) * 0.08:
+                        frame_morto += len(personagem_morto) * 0.08
                     if time_morrer <= 10:
                         time_morrer += 1
                     else:
@@ -439,9 +443,9 @@ if __name__ == "__main__":
                             diresao_adiversario = "direita"
 
                         if diresao_adiversario == "parado":
-                            screen.blit(inimigos_pachs_parado[int(frame_inimigo_parado)], (posicao_x, 735 - 200))
+                            screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 200))
                             if andar_inimigo:
-                                frame_inimigo_parado += 0.7
+                                frame_inimigo_parado += len(inimigos_pachs_parado) * 0.08
                                 andar_inimigo = False
                             if frame_inimigo_parado >= len(inimigos_pachs_parado):
                                 frame_inimigo_parado = 0
@@ -450,7 +454,7 @@ if __name__ == "__main__":
                         elif diresao_adiversario == "direita":
                             screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 180))
                             if andar_inimigo:
-                                frame_inimigo_direita += 0.2
+                                frame_inimigo_direita += len(inimigos_pachs_direita) * 0.08
                                 andar_inimigo = False
                             posicao_x = posicao_x + 6 * LARGURA // 1980
                             if frame_inimigo_direita >= len(inimigos_pachs_direita):
@@ -459,7 +463,7 @@ if __name__ == "__main__":
                         elif diresao_adiversario == "esquerda":
                             screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 180))
                             if andar_inimigo:
-                                frame_inimigo_direita += 0.2
+                                frame_inimigo_direita += len(inimigos_pachs_direita) * 0.08
                                 andar_inimigo = False
                             posicao_x = posicao_x - 6 * LARGURA // 1980
                             if frame_inimigo_direita >= len(inimigos_pachs_direita):
@@ -468,7 +472,7 @@ if __name__ == "__main__":
                         elif diresao_adiversario == "soco":
                             screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 180))
                             if andar_inimigo:
-                                frame_inimigo_direita += 0.2
+                                frame_inimigo_direita += len(inimigos_pachs_direita) * 0.08
                                 andar_inimigo = False
                             if cooldown_dano <= contador_cooldown:
                                 vida_atual -= status_inimigo[i][0]

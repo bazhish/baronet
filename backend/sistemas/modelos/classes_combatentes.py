@@ -8,13 +8,13 @@ sys.path.append(project_root)
 
 from backend.sistemas.modelos.habilidades_ativa_combatentes import (
     golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada,
-    ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca,
+    giro_de_lanca, arremesso_de_lanca,
     disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida,
     passo_fantasma, areia, combo_relampago, postura_de_ferro 
 )
 from backend.sistemas.modelos.habilidades_passiva_combatentes import (
     furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada,
-    ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca,
+    ataque_rapido, danca_da_lanca,
     controle_passivo, controle_total, disparo_preciso, passos_silenciosos,
     flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva, 
     foco_interno, tecnica_perfeita, golpe_fatal, mira_aprimorada,
@@ -95,26 +95,6 @@ class Espadachim(Classe):
             habilidade_especial = bloqueio_de_espada
         )
         self.atualizar_descrição()
-
-class Escudeiro(Classe):
-    def __init__(self):
-        super().__init__(
-            nome = "Escudeiro",
-            dano_base = 2,
-            velocidade_base = 3,
-            defesa_base = 5,
-            vida_base = 150,
-            estamina_base = 100,
-            multiplicador_de_experiência = 1.0,
-            arma = "Escudo",
-            primeira_habilidade_passiva = bloqueio_de_ataque,
-            segunda_habilidade_passiva = repelir,
-            terceira_habilidade_passiva = peso_pena,
-            habilidade_ativa = ataque_com_escudo,
-            habilidade_especial = defesa_reforcada
-        )
-        self.atualizar_descrição()
-
 
 class Lanceiro(Classe):
     def __init__(self):
@@ -213,7 +193,6 @@ class ArtistaMarcial(Classe):
 
 assassino = Assassino()
 espadachim = Espadachim()
-escudeiro = Escudeiro()
 lanceiro = Lanceiro()
 arqueiro = Arqueiro()
 batedor = Batedor()

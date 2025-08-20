@@ -6,59 +6,62 @@ while not os.path.isdir(os.path.join(project_root, ".git")) and os.path.dirname(
 sys.path.append(project_root)
 
 
-from backend.sistemas.modelos.adversarios import AdversarioMonstro
+from backend.sistemas.modelos.adversarios import AdversarioMonstro, AdversarioDemiHumano
 
+#MONSTROS#
 # nome, nível, experiência, dano_base, defesa_base, vida_base, estamina_base, velocidade_base, queda, taxa_de_queda
+#DEMIHUMANOS#
+# nome, idade, peso, gênero, altura, nível, experiência, dano_base, velocidade_base, defesa_base, vida_base, estamina_base, queda, taxa_de_queda
 
 #MONSTROS COMUNS MAPA 1
-slime = AdversarioMonstro("slime", 1, 25, 8, 5, 50, 8, 1, "Gosma Azul", 80)
+slime = AdversarioMonstro("slime", 1, 20, 8, 6, 50, 8, 2, "Gosma Azul", 80)
 slime.posição_x = 1200
 slime.atualizar_atributos()
 slime.atualizar_descrição()
 
-slime_especiais = AdversarioMonstro("Slime Especial", 3, 46, 13, 6, 17, 10, 2, "Gosma Verde", 80)
+slime_especiais = AdversarioMonstro("Slime Especial", 5, 40, 16, 10, 100, 10, 4, "Gosma Verde", 80)
 slime.posição_x = 1200
 slime_especiais.atualizar_atributos()
 slime_especiais.atualizar_descrição()
 
-esqueleto = AdversarioMonstro("esqueleto", 1, 1, 1, 1, 1, 1, 1, "Osso", 80)
+esqueleto = AdversarioMonstro("esqueleto", 2, 30, 12, 4, 40, 10, 5, "Osso", 80)
 esqueleto.posição_x = 1200
 esqueleto.atualizar_atributos()
 esqueleto.atualizar_descrição()
 
-goblin = AdversarioMonstro("goblin", 1, 1, 1, 1, 1, 1, 1, None, None)
+goblin = AdversarioMonstro("goblin", 3, 30, 15, 12, 80, 9, 3, None, None)
 goblin.posição_x = 1200
 goblin.atualizar_atributos()
 goblin.atualizar_descrição()
 
-zumbi = AdversarioMonstro("zumbi", 1, 1, 1, 1, 1, 1, 1, None, None)
+zumbi = AdversarioMonstro("zumbi", 4, 25, 18, 8, 60, 6, 2, None, None)
 zumbi.posição_x = 1200
 zumbi.atualizar_atributos()
 zumbi.atualizar_descrição()
 
 #MONSTROS RAROS MAPA 1
-ogro = AdversarioMonstro("ogro", 1, 1, 1, 1, 1, 1, 1, "Dente", 80)
+ogro = AdversarioMonstro("ogro", 8, 120, 35, 20, 110, 9, 5, "Dente", 80)
 ogro.posição_x = 1200
 ogro.atualizar_atributos()
 ogro.atualizar_descrição()
 
-gárgula = AdversarioMonstro("gárgula", 1, 1, 1, 1, 1, 1, 1, "pedra", 80)
+gárgula = AdversarioMonstro("gárgula", 8, 100, 25, 10, 80, 8, 12, "pedra", 80)
 gárgula.posição_x = 1200
 gárgula.atualizar_atributos()
 gárgula.atualizar_descrição()
 
-lobisomem = AdversarioMonstro("lobisomem", 1, 1, 1, 1, 1, 1, 1, "Garras", 80)
+lobisomem = AdversarioMonstro("lobisomem", 9, 120, 30, 12, 100, 10, 13, "Garras", 80)
 lobisomem.posição_x = 1200
 lobisomem.atualizar_atributos()
 lobisomem.atualizar_descrição()
 
-vampiro = AdversarioMonstro("vampiro", 1, 1, 1, 1, 1, 1, 1, "Sangue", 80)
+vampiro = AdversarioDemiHumano("vampiro", 250, 60.0, "masculino", 2.10, 9, 135, 45, 20, 18, 110, 17, "Sangue", 80)
 vampiro.posição_x = 1200
 vampiro.atualizar_atributos()
 vampiro.atualizar_descrição()
 
 #MONSTRO EPÍCOS MAPA 1
-quimera = AdversarioMonstro("quimera", 1, 1, 1, 1, 1, 1, 1, None, None)
+quimera = AdversarioMonstro("quimera", 12, 150, 50, 25, 120, 11, 8, None, None)
 quimera.posição_x = 1200
 quimera.atualizar_atributos()
 quimera.atualizar_descrição()
@@ -78,12 +81,12 @@ ghoul.posição_x = 1200
 ghoul.atualizar_atributos()
 ghoul.atualizar_descrição()
 
-oni = AdversarioMonstro("oni", 1, 1, 1, 1, 1, 1, 1, "Chifres", 80)
+oni = AdversarioDemiHumano("oni", 1, 1, 1, 1, 1, 1, 1, "Chifres", 80)
 oni.posição_x = 1200
 oni.atualizar_atributos()
 oni.atualizar_descrição()
 
-medusa = AdversarioMonstro("medusa", 1, 1, 1, 1, 1, 1, 1, "Cabeça", 80)
+medusa = AdversarioDemiHumano("medusa", 1, 1, 1, 1, 1, 1, 1, "Cabeça", 80)
 medusa.posição_x = 1200
 medusa.atualizar_atributos()
 medusa.atualizar_descrição()
@@ -103,7 +106,7 @@ zumbi_elite.posição_x = 1200
 zumbi_elite.atualizar_atributos()
 zumbi_elite.atualizar_descrição()
 
-kappa = AdversarioMonstro("kappa", 1, 1, 1, 1, 1, 1, 1, "bico", 60)
+kappa = AdversarioDemiHumano("kappa", 1, 1, 1, 1, 1, 1, 1, "bico", 60)
 kappa.posição_x = 1200
 kappa.atualizar_atributos()
 kappa.atualizar_descrição()
@@ -113,13 +116,13 @@ fomori.posição_x = 1200
 fomori.atualizar_atributos()
 fomori.atualizar_descrição()
 
-minotauro = AdversarioMonstro("minotauro", 1, 1, 1, 1, 1, 1, 1, "Chifre", 60)
+minotauro = AdversarioDemiHumano("minotauro", 1, 1, 1, 1, 1, 1, 1, "Chifre", 60)
 minotauro.posição_x = 1200
 minotauro.atualizar_atributos()
 minotauro.atualizar_descrição()
 
 #MONSTROS RAROS MAPA 2
-equidna = AdversarioMonstro("equidna", 2, 70, 15, 10, 80, 12, 3, ("Couro", "Espinhos"), 60)
+equidna = AdversarioDemiHumano("equidna", 2, 70, 15, 10, 80, 12, 3, ("Couro", "Espinhos"), 60)
 equidna.posição_x = 1200
 equidna.atualizar_atributos()
 equidna.atualizar_descrição()
@@ -140,12 +143,12 @@ jubokko.atualizar_atributos()
 jubokko.atualizar_descrição()
 
 #MONSTROS ÉPICOS MAPA 2
-yukki_Onna = AdversarioMonstro("yukki Onna", 2, 90, 20, 15, 100, 16, 5, ("Roupa", "Cabelo"), 60)
+yukki_Onna = AdversarioDemiHumano("yukki Onna", 2, 90, 20, 15, 100, 16, 5, ("Roupa", "Cabelo"), 60)
 yukki_Onna.posição_x = 1200
 yukki_Onna.atualizar_atributos()
 yukki_Onna.atualizar_descrição()
 
-ciclopes = AdversarioMonstro("ciclopes", 2, 85, 19, 14, 95, 15, 5, "Olho", 60)
+ciclopes = AdversarioDemiHumano("ciclopes", 2, 85, 19, 14, 95, 15, 5, "Olho", 60)
 ciclopes.posição_x = 1200
 ciclopes.atualizar_atributos()
 ciclopes.atualizar_descrição()
@@ -160,12 +163,12 @@ tifão.posição_x = 1200
 tifão.atualizar_atributos()
 tifão.atualizar_descrição()
 
-balor = AdversarioMonstro("balor", 2, 110, 28, 20, 130, 20, 8, "Chifre", 60)
+balor = AdversarioDemiHumano("balor", 2, 110, 28, 20, 130, 20, 8, "Chifre", 60)
 balor.posição_x = 1200
 balor.atualizar_atributos()
 balor.atualizar_descrição()
 
-kobolds = AdversarioMonstro("kobolds", 2, 70, 15, 10, 80, 12, 3, "Calda", 60)
+kobolds = AdversarioDemiHumano("kobolds", 2, 70, 15, 10, 80, 12, 3, "Calda", 60)
 kobolds.posição_x = 1200
 kobolds.atualizar_atributos()
 kobolds.atualizar_descrição()
@@ -201,7 +204,7 @@ zumbi_bombadeiro.atualizar_atributos()
 zumbi_bombadeiro.atualizar_descrição()
 
 #MONSTROS RAROS MAPA 3
-orc_vermelho = AdversarioMonstro("orc vermelho", 3, 60, 14, 10, 70, 12, 3, None, None)
+orc_vermelho = AdversarioDemiHumano("orc vermelho", 3, 60, 14, 10, 70, 12, 3, None, None)
 orc_vermelho.posição_x = 1200
 orc_vermelho.atualizar_atributos()
 orc_vermelho.atualizar_descrição()
@@ -216,7 +219,7 @@ esqueleto_anão.posição_x = 1200
 esqueleto_anão.atualizar_atributos()
 esqueleto_anão.atualizar_descrição()
 
-demonio_de_sangue = AdversarioMonstro("demônio de sangue", 3, 65, 18, 14, 75, 14, 5, None, None)
+demonio_de_sangue = AdversarioDemiHumano("demônio de sangue", 3, 65, 18, 14, 75, 14, 5, None, None)
 demonio_de_sangue.posição_x = 1200
 demonio_de_sangue.atualizar_atributos()
 demonio_de_sangue.atualizar_descrição()
@@ -253,7 +256,8 @@ hipogrifo.atualizar_atributos()
 hipogrifo.atualizar_descrição()
 
 #CHEFÃO MAPA 3
-rei_tirano = AdversarioMonstro("rei tirano", 3, 120, 40, 30, 150, 30, 12, None, None)
+rei_tirano = AdversarioDemiHumano("rei tirano", 3, 120, 40, 30, 150, 30, 12, None, None)
 rei_tirano.posição_x = 1200
 rei_tirano.atualizar_atributos()
 rei_tirano.atualizar_descrição()
+

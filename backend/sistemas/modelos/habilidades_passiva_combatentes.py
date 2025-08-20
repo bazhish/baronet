@@ -60,22 +60,6 @@ def efeito_ataque_rapido(usuario):
     usuario.defesa_bonus += usuario.defesa_base * 0.7
     usuario.estamina_bonus += usuario.estamina_base * 0.9
 
-# ESCUDEIRO
-def efeito_bloqueio_de_ataque(usuario):
-    usuario.defesa_bonus += usuario.defesa_base * 2
-    usuario.estamina_bonus += usuario.estamina_base * 0.75
-    usuario.vida_bonus += usuario.vida_base * 0.1
-
-def efeito_repelir(adversario):
-    dano = adversario.dano_final * 0.75
-    adversario.defesa_final *= 0.5
-    adversario.vida_atual -= dano
-
-def efeito_peso_pena(usuario):
-    usuario.velocidade_bonus += usuario.velocidade_base * 0.5
-    usuario.estamina_bonus += usuario.estamina_base * 0.5
-    usuario.vida_bonus += usuario.vida_base * 0.5
-
 # LANCEIRO
 def efeito_danca_da_lanca(usuario):
     usuario.estamina_bonus += usuario.estamina_base * 0.3
@@ -171,9 +155,6 @@ sangramento = HabilidadePassiva("sangramento", efeito_sangramento, 70)
 vontade_da_espada = HabilidadePassiva("vontade da espada", efeito_vontade_da_espada, 12)
 heranca_da_espada = HabilidadePassiva("herança da espada", efeito_heranca_da_espada, 45)
 ataque_rapido = HabilidadePassiva("ataque rápido", efeito_ataque_rapido, 70)
-bloqueio_de_ataque = HabilidadePassiva("bloqueio de ataque", efeito_bloqueio_de_ataque, 12)
-repelir = HabilidadePassiva("repelir", efeito_repelir, 45)
-peso_pena = HabilidadePassiva("peso pena", efeito_peso_pena, 70)
 danca_da_lanca = HabilidadePassiva("dança da lança", efeito_danca_da_lanca, 12)
 controle_passivo = HabilidadePassiva("controle passivo", efeito_controle_passivo, 45)
 controle_total = HabilidadePassiva("controle total", efeito_controle_total, 70)

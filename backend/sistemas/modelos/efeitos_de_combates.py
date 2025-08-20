@@ -1,9 +1,14 @@
-# backend\app\models\sistema\efeitos_de_combates.py
+# backend\sistemas\modelos\efeitos_de_combates.py
 import sys, os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = current_dir
+while not os.path.isdir(os.path.join(project_root, ".git")) and os.path.dirname(project_root) != project_root:
+    project_root = os.path.dirname(project_root)
+sys.path.append(project_root)
+
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..')))
-from backend.system import AdversarioDemiHumano
+from backend.sistemas.modelos.adversarios import AdversarioDemiHumano
 
 @dataclass
 class EnfraquecimentoBase(ABC):

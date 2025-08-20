@@ -9,6 +9,10 @@ sys.path.append(project_root)
 from backend.sistemas.modelos.adversarios import AdversarioMonstro
 
 slime = AdversarioMonstro("slime", 2, 30, 4, 3, 12, 8, 1, "Gosma Azul", 80)
+<<<<<<< HEAD
+=======
+slime.posição_x = 1200
+>>>>>>> 62bcdd9a599cd57efdea37a723fa1e2eb8c5c87a
 slime.atualizar_atributos()
 slime.atualizar_descrição()
 

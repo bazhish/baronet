@@ -1,16 +1,27 @@
 from random import randint, choice
-from typing import Any, Dict
 from dataclasses import dataclass, field
-import sys, os
-import time
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..')))
-from backend.app.models.personagens.jogador_ficticio import jogador 
+import sys, os, time
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = current_dir
+while not os.path.isdir(os.path.join(project_root, ".git")) and os.path.dirname(project_root) != project_root:
+    project_root = os.path.dirname(project_root)
+sys.path.append(project_root)
 
 @dataclass
 class Escudo:
     nome: str
-    defesa: int
-    peso: int
+    defesa_base: int
+    peso_base: int
+    raridade: str = field(default="")
+    nivel: int = field(default=1)
+    defesa_final: float = field(default=0)
+    peso: float = field(default=0)
+    atributo_adicional: str = field(default="")
+    dano_acumulado: int = field(default=0)
+    em_cooldown: bool = field(default=False)
+    cooldown_fim: float = field(default=0)
+    descrição: str = field(default="", init=False)
 
     raridades = {
         "comum": 1.0,
@@ -18,37 +29,18 @@ class Escudo:
         "epico": 2.3,
         "lendario": 2.8
     }
-
     cooldowns_por_raridade = {
-        "comum": 10,      
+        "comum": 10,
         "raro": 7,
         "epico": 5,
         "lendario": 3
     }
     dano_para_cooldown = 50
+    atributos_possiveis = ["defesa", "vida", "velocidade"]
 
-    descrição: str = field(default="", init=False)
-
-    def __post_init__(self):
-        self.nivel = int
-        self.raridade = str
-        self.atributo_adicional = Any
-        self.defesa_final = Any
-        self.dano_acumulado = 0
-        self.em_cooldown = False
-        self.cooldown_fim = 0
-
-    def atualizar_descrição(self):
-        self.descrição = (
-            f"Nome: {self.nome}\n"
-            f"Nível: {self.nivel:.0f}\n"
-            f"Raridade: {self.raridade}\n"
-            f"Defesa: {self.defesa_final:.0f}\n"
-            f"Peso: {self.peso:.0f}\n"
-            f"Atributo adicional: {self.atributo_adicional}\n"
-            f"Cooldown ativo: {self.em_cooldown}, "
-            f"Tempo restante cooldown: {max(0, int(self.cooldown_fim - time.time())) if self.em_cooldown else 0:.0f}"
-        )
+    def pode_usar(self, usuario) -> bool:
+        # Exemplo: pode adicionar lógica de classe ou nível aqui
+        return True
 
     def definir_nivel_com_base_no_usuario(self, usuario):
         nivel_usuario = usuario.nível_atual
@@ -62,34 +54,26 @@ class Escudo:
 
     def calcular_defesa(self):
         fator = self.raridades.get(self.raridade, 1.0)
-        self.defesa_final = self.defesa * self.nivel * fator
-        self.peso = self.peso * self.nivel * fator
-        
+        self.defesa_final = self.defesa_base * self.nivel * fator
+        self.peso = self.peso_base * self.nivel * fator
+
     def escolher_atributo_adicional_aleatorio(self):
-        atributos = ["defesa", "vida", "velocidade"]
-        self.atributo_adicional = choice(atributos)
+        self.atributo_adicional = choice(self.atributos_possiveis)
 
     def aplicar_bonus_no_usuario(self, usuario):
-        defesa_bonus = 2
-        vida_bonus = 10
-        velocidade_bonus = 3
-
+        valores_base = {"defesa": 2, "vida": 10, "velocidade": 3}
         fator = self.raridades.get(self.raridade, 1.0)
-        defesa_bonus *= self.nivel * fator
-        vida_bonus *= self.nivel * fator
-        velocidade_bonus *= self.nivel * fator
-
-        if self.atributo_adicional == "defesa":
-            usuario.defesa_bonus += defesa_bonus
-        elif self.atributo_adicional == "vida":
-            usuario.vida_bonus += vida_bonus
-        elif self.atributo_adicional == "velocidade":
-            usuario.velocidade_bonus += velocidade_bonus
+        valor = valores_base[self.atributo_adicional] * self.nivel * fator
+        chave = f"{self.atributo_adicional}_bonus"
+        if hasattr(usuario, chave):
+            atual = getattr(usuario, chave)
+            setattr(usuario, chave, atual + valor)
+        else:
+            setattr(usuario, chave, valor)
 
     def receber_dano(self, dano: int):
         if self.em_cooldown:
             return False
-
         self.dano_acumulado += dano
         if self.dano_acumulado >= self.dano_para_cooldown:
             self.ativar_cooldown()
@@ -105,20 +89,31 @@ class Escudo:
         if self.em_cooldown and time.time() >= self.cooldown_fim:
             self.em_cooldown = False
 
-def criar_escudo(nome: str, raridade, usuario):
-    raridades = {
-        "comum": (5,3),
-        "raro": (7,3),
-        "epico": (10,2),
-        "lendario": (15,2)
-    }
+    def atualizar_descrição(self):
+        self.descrição = (
+            f"Escudo: {self.nome}\n"
+            f"Raridade: {self.raridade}\n"
+            f"Nível: {self.nivel}\n"
+            f"Defesa: {round(self.defesa_final, 1)}\n"
+            f"Peso: {round(self.peso, 1)}\n"
+            f"Atributo adicional: {self.atributo_adicional}\n"
+            f"Cooldown ativo: {self.em_cooldown}, "
+            f"Tempo restante cooldown: {max(0, int(self.cooldown_fim - time.time())) if self.em_cooldown else 0}"
+        )
 
-    defesa, peso = raridades[raridade]
+def criar_escudo(nome: str, raridade: str, usuario):
+    tabela_escudos = {
+        "comum": (5, 3),
+        "raro": (7, 3),
+        "epico": (10, 2),
+        "lendario": (15, 2)
+    }
+    defesa, peso = tabela_escudos[raridade]
     escudo = Escudo(nome, defesa, peso)
-    escudo.definir_nivel_com_base_no_usuario(usuario)
     escudo.escolher_raridade(raridade)
+    escudo.definir_nivel_com_base_no_usuario(usuario)
     escudo.calcular_defesa()
     escudo.escolher_atributo_adicional_aleatorio()
     escudo.aplicar_bonus_no_usuario(usuario)
-    escudo.atualizar_descrição() 
-    return escudo  
+    escudo.atualizar_descrição()
+    return escudo

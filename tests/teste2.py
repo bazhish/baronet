@@ -11,7 +11,7 @@ from backend.sistemas.modelos.classes_combatentes import artista_marcial
 from backend.sistemas.modelos.armas import criar_arma
 
 
-agnes = Usuario("agnes")
+agnes = Usuario()
 agnes.definir_classe(artista_marcial)
 agnes.definir_habilidades()
 agnes.atualizar_descrição()

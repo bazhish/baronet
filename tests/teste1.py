@@ -14,8 +14,14 @@ from backend.sistemas.modelos.adversarios import AdversarioMonstro
 slime = AdversarioMonstro("slime", 1, 25, 8, 5, 50, 8, 1, "Gosma Azul", 80)
 =======
 slime = AdversarioMonstro("slime", 2, 30, 4, 3, 12, 8, 1, "Gosma Azul", 80)
+<<<<<<< HEAD
 >>>>>>> 62bcdd9a599cd57efdea37a723fa1e2eb8c5c87a
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 1f4f19779f24f74b7ce999ed51e908b648549a33
 slime.posição_x = 1200
+>>>>>>> 62bcdd9a599cd57efdea37a723fa1e2eb8c5c87a
 slime.atualizar_atributos()
 slime.atualizar_descrição()
 

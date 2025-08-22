@@ -8,10 +8,7 @@ sys.path.append(project_root)
 
 from backend.sistemas.modelos.adversarios import AdversarioMonstro, AdversarioDemiHumano
 
-#MONSTROS#
-# nome, nível, experiência, dano_base, defesa_base, vida_base, estamina_base, velocidade_base, queda, taxa_de_queda
-#DEMIHUMANOS#
-# nome, idade, peso, gênero, altura, nível, experiência, dano_base, velocidade_base, defesa_base, vida_base, estamina_base, queda, taxa_de_queda
+
 
 #MONSTROS COMUNS MAPA 1
 slime = AdversarioMonstro("slime", 1, 20, 8, 6, 50, 8, 2, "Gosma Azul", 80)
@@ -55,7 +52,7 @@ lobisomem.posição_x = 1200
 lobisomem.atualizar_atributos()
 lobisomem.atualizar_descrição()
 
-vampiro = AdversarioDemiHumano("vampiro", 250, 60.0, "masculino", 2.10, 9, 135, 45, 20, 18, 110, 17, "Sangue", 80)
+vampiro = AdversarioDemiHumano("vampiro", 250, 60.0, "masculino", 2.10, 9, 135, 45, 20, 18, 110, 20, "Sangue", 80)
 vampiro.posição_x = 1200
 vampiro.atualizar_atributos()
 vampiro.atualizar_descrição()
@@ -66,33 +63,36 @@ quimera.posição_x = 1200
 quimera.atualizar_atributos()
 quimera.atualizar_descrição()
 
-banshee = AdversarioMonstro("banshee", 1, 1, 1, 1, 1, 1, 1, None, None)
+banshee = AdversarioMonstro("banshee", 12, 200, 60, 20, 145, 16, 13, None, None)
 banshee.posição_x = 1200
 banshee.atualizar_atributos()
 banshee.atualizar_descrição()
-
-fenrir = AdversarioMonstro("fenrir", 1, 1, 1, 1, 1, 1, 1, "Pelo", 80)
+#MONSTROS#
+# nome, nível, experiência, dano_base, defesa_base, vida_base, estamina_base, velocidade_base, queda, taxa_de_queda
+#DEMIHUMANOS#
+# nome, idade, peso, gênero, altura, nível, experiência, dano_base, velocidade_base, defesa_base, vida_base, estamina_base, queda, taxa_de_queda
+fenrir = AdversarioMonstro("fenrir", 12, 220, 70, 35, 150, 18, 18, "Pelo", 80)
 fenrir.posição_x = 1200
 fenrir.atualizar_atributos()
 fenrir.atualizar_descrição()
 
-ghoul = AdversarioMonstro("ghoul", 1, 1, 1, 1, 1, 1, 1, "Língua", 80)
+ghoul = AdversarioMonstro("ghoul", 15, 310, 100, 50, 190, 23, 20, "Língua", 80)
 ghoul.posição_x = 1200
 ghoul.atualizar_atributos()
 ghoul.atualizar_descrição()
 
-oni = AdversarioDemiHumano("oni", 1, 1, 1, 1, 1, 1, 1, "Chifres", 80)
+oni = AdversarioDemiHumano("oni", 450, 100.0, None, 2.30, 15, 350, 125, 35, 75, 210, 30, "Chifres", 80)
 oni.posição_x = 1200
 oni.atualizar_atributos()
 oni.atualizar_descrição()
 
-medusa = AdversarioDemiHumano("medusa", 1, 1, 1, 1, 1, 1, 1, "Cabeça", 80)
+medusa = AdversarioDemiHumano("medusa", None, 145.0, "Feminino", 2.20, 15, 390, 135, 40, 80, 230, 45, "Cabeça", 80)
 medusa.posição_x = 1200
 medusa.atualizar_atributos()
 medusa.atualizar_descrição()
 
 #CHEFÃO MAPA 1
-troll = AdversarioMonstro("troll", 1, 1, 1, 1, 1, 1, 1, "Olhos", 100)
+troll = AdversarioMonstro("troll", 20, 500, 260, 110, 320, 50, 30, "Olhos", 100)
 troll.posição_x = 1200
 troll.atualizar_atributos()
 troll.atualizar_descrição()
@@ -101,28 +101,28 @@ troll.atualizar_descrição()
 ###MONSTROS MAPA 2###
 
 #MONSTROS COMUNS MAPA 2
-zumbi_elite = AdversarioMonstro("zumbi elite", 2, 50, 12, 8, 60, 10, 2, "Carne Morta", 60)
+zumbi_elite = AdversarioMonstro("zumbi elite", 20, 360, 110, 50, 220, 35, 25, "Carne Morta", 60)
 zumbi_elite.posição_x = 1200
 zumbi_elite.atualizar_atributos()
 zumbi_elite.atualizar_descrição()
 
-kappa = AdversarioDemiHumano("kappa", 1, 1, 1, 1, 1, 1, 1, "bico", 60)
+kappa = AdversarioDemiHumano("kappa", 158, 340.0, None, 3.40, 20, 410, 135, 40, 80, 240, 65, "bico", 60)
 kappa.posição_x = 1200
 kappa.atualizar_atributos()
 kappa.atualizar_descrição()
 
-fomori = AdversarioMonstro("fomori", 1, 1, 1, 1, 1, 1, 1, None, None)
+fomori = AdversarioMonstro("fomori", 22, 420, 135, 75, 280, 45, 35, None, None)
 fomori.posição_x = 1200
 fomori.atualizar_atributos()
 fomori.atualizar_descrição()
 
-minotauro = AdversarioDemiHumano("minotauro", 1, 1, 1, 1, 1, 1, 1, "Chifre", 60)
+minotauro = AdversarioDemiHumano("minotauro", 500, 450.0, "Masculino", 3.50, 23, 460, 160, 38, 100, 310, 80, "Chifre", 60)
 minotauro.posição_x = 1200
 minotauro.atualizar_atributos()
 minotauro.atualizar_descrição()
 
 #MONSTROS RAROS MAPA 2
-equidna = AdversarioDemiHumano("equidna", 2, 70, 15, 10, 80, 12, 3, ("Couro", "Espinhos"), 60)
+equidna = AdversarioDemiHumano("equidna", 456, 230.0, "Feminino", 3.79, 26,  ("Couro", "Espinhos"), 60)
 equidna.posição_x = 1200
 equidna.atualizar_atributos()
 equidna.atualizar_descrição()

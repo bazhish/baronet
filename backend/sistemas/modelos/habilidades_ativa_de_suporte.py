@@ -1,17 +1,15 @@
-from dataclasses import dataclass, field
-from random import uniform, randint
 from typing import Callable, Optional, Any
 import math, time, threading
 
-@dataclass
 class HabilidadeAtiva:
-    nome: str
-    efeito: Callable[[Any, Optional[Any]], None]
-    tempo_de_recarga: int
-    nivel_minimo: int
-    duração: int
-    descrição_do_efeito: str = field(default = "", init = False)
-    descrição: str = field(default = "", init = False)
+    def __init__(self, nome: str, efeito: Callable[[Any, Optional[Any]], None], tempo_de_recarga: int, nível_minimo: int, duração: int):
+        self.nome = nome
+        self.efeito = efeito
+        self.tempo_de_recarga = tempo_de_recarga
+        self.nível_minimo = nível_minimo
+        self.duração = duração
+        self.descrição_do_efeito = "nenhuma"
+        self.descrição = "nenhuma"
     def __post_init__(self):
         self.tempo_de_recarga_restante = 0
         self.duração_restante = 0
@@ -21,13 +19,13 @@ class HabilidadeAtiva:
         self.descrição = (
             f"nome: {self.nome}\n"
             f"Tempo de recarga: {self.tempo_de_recarga}\n"
-            f"Nível mínimo para uso: {self.nivel_minimo}\n"
+            f"Nível mínimo para uso: {self.nível_minimo}\n"
             f"Duração: {self.duração}\n"
             f"Efeito: {self.efeito}\n"
         )
 
-    def verificar_nivel(self, usuario):
-        self.uso = usuario.nível_atual >= self.nivel_minimo
+    def verificar_nível(self, usuario):
+        self.uso = usuario.nível_atual >= self.nível_minimo
 
     def aplicar_habilidade(self, usuario, alvo):
         if self.uso == True and self.tempo_de_recarga_restante == 0:
@@ -45,7 +43,7 @@ class AtaqueComEscudo(HabilidadeAtiva):
             nome="Ataque com Escudo",
             efeito=self.efeito_ataque_com_escudo,
             tempo_de_recarga=1,
-            nivel_minimo=1,
+            nível_minimo=1,
             duração=1
         )
         self.descrição_do_efeito = (
@@ -84,7 +82,7 @@ class DefesaReforçada(HabilidadeAtiva):
             nome="Defesa Reforçada",
             efeito=self.efeito_defesa_reforcada,
             tempo_de_recarga=1,
-            nivel_minimo=1,
+            nível_minimo=1,
             duração=duração
         )
         self.descrição_do_efeito = (
@@ -146,7 +144,7 @@ class BencaoVital(HabilidadeAtiva):
             nome="Bênção Vital",
             efeito=self.efeito_bencao,
             tempo_de_recarga=10,
-            nivel_minimo=1,
+            nível_minimo=1,
             duração=6  # tempo total do efeito
         )
         self.thread = None
@@ -177,7 +175,7 @@ class MilagreDaVida(HabilidadeAtiva):
             nome="Milagre da Vida",
             efeito=self.efeito_milagre,
             tempo_de_recarga=20,  # maior cooldown porque é muito forte
-            nivel_minimo=1,
+            nível_minimo=1,
             duração=0  # efeito imediato
         )
 
@@ -193,7 +191,7 @@ class MelodiaDaFraqueza(HabilidadeAtiva):
             nome="Melodia da Fraqueza",
             efeito=self.efeito_melodia,
             tempo_de_recarga=12,
-            nivel_minimo=1,
+            nível_minimo=1,
             duração=duracao
         )
         self.usuario = usuario
@@ -233,7 +231,7 @@ class SinfoniaEstatica(HabilidadeAtiva):
             nome="Sinfonia Estática",
             efeito=self.efeito_sinfonia,
             tempo_de_recarga=15,
-            nivel_minimo=1,
+            nível_minimo=1,
             duração=duracao
         )
         self.usuario = usuario
@@ -267,7 +265,7 @@ class MiragemSombria(HabilidadeAtiva):
             nome="Miragem Sombria",
             efeito=self.efeito_miragem,
             tempo_de_recarga=14,
-            nivel_minimo=1,
+            nível_minimo=1,
             duração=duracao
         )
         self.usuario = usuario
@@ -301,7 +299,7 @@ class LabirintoMental(HabilidadeAtiva):
             nome="Labirinto Mental",
             efeito=self.efeito_labirinto,
             tempo_de_recarga=18,
-            nivel_minimo=1,
+            nível_minimo=1,
             duração=duracao
         )
         self.usuario = usuario

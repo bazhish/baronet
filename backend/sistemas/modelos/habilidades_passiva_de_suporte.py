@@ -39,6 +39,8 @@ def efeito_peso_pena(usuario):
     usuario.estamina_bonus += usuario.estamina_base * 0.5
     usuario.vida_bonus += usuario.vida_base * 0.5
 
+
+
 bloqueio_de_ataque = HabilidadePassiva("bloqueio de ataque", efeito_bloqueio_de_ataque, 12)
 repelir = HabilidadePassiva("repelir", efeito_repelir, 45)
 peso_pena = HabilidadePassiva("peso pena", efeito_peso_pena, 70)

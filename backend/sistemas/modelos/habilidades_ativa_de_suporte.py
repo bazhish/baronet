@@ -1,16 +1,14 @@
-from typing import Callable, Optional, Any
+# backend\sistemas\modelos\habilidades_ativa_de_suporte.py
 import math, time, threading
 
 class HabilidadeAtiva:
-    def __init__(self, nome: str, efeito: Callable[[Any, Optional[Any]], None], tempo_de_recarga: int, nível_minimo: int, duração: int):
+    def __init__(self, nome, efeito, tempo_de_recarga, tempo_de_duração, nível_minimo, duração):
         self.nome = nome
         self.efeito = efeito
         self.tempo_de_recarga = tempo_de_recarga
-        self.nível_minimo = nível_minimo
-        self.duração = duração
+        self.tempo_de_duração = tempo_de_duração
         self.descrição_do_efeito = "nenhuma"
         self.descrição = "nenhuma"
-    def __post_init__(self):
         self.tempo_de_recarga_restante = 0
         self.duração_restante = 0
         self.uso = None
@@ -19,22 +17,27 @@ class HabilidadeAtiva:
         self.descrição = (
             f"nome: {self.nome}\n"
             f"Tempo de recarga: {self.tempo_de_recarga}\n"
-            f"Nível mínimo para uso: {self.nível_minimo}\n"
-            f"Duração: {self.duração}\n"
-            f"Efeito: {self.efeito}\n"
+            f"Duração: {self.tempo_de_duração}\n"
+            f"Efeito: {self.descrição_do_efeito}\n"
         )
-
-    def verificar_nível(self, usuario):
-        self.uso = usuario.nível_atual >= self.nível_minimo
-
     def aplicar_habilidade(self, usuario, alvo):
         if self.uso == True and self.tempo_de_recarga_restante == 0:
             self.efeito(usuario, alvo)
-            self.duração_restante = self.duração
-            self.tempo_de_recarga_restante = self.tempo_de_recarga
+        self.iniciar_contagem()
+        if 
+        
 
-    def iniciar_cooldown(self):
+    def iniciar_contagem(self):
+        self.tempo_de_duração_restante = self.tempo_de_duração
+        for segundo in range(self.tempo_de_duração):
+            self.tempo_de_duração_restante -= 1
+            time.sleep(1)
+    
+    def iniciar_tempo_de_recarga(self):
         self.tempo_de_recarga_restante = self.tempo_de_recarga
+        for segundo in range(self.tempo_de_recarga):
+            self.tempo_de_recarga_restante -= 1
+            time.sleep(1)
 
 # ESCUDEIRO
 class AtaqueComEscudo(HabilidadeAtiva):

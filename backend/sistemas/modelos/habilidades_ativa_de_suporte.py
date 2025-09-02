@@ -24,7 +24,7 @@ class HabilidadeAtiva:
         if self.uso == True and self.tempo_de_recarga_restante == 0:
             self.efeito(usuario, alvo)
         self.iniciar_contagem()
-        if 
+        
         
 
     def iniciar_contagem(self):

@@ -10,11 +10,13 @@ import pyautogui
 from subprocess import Popen
 import json
 from recursos.imagens.personagem_principal import personagem_parado, personagem_andando_D, personagem_soco_d, personagem_morto, personagem_dano
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = current_dir
+while not os.path.isdir(os.path.join(project_root, ".git")) and os.path.dirname(project_root) != project_root:
+    project_root = os.path.dirname(project_root)
+sys.path.append(project_root)
 from backend.entidades.inimigos import inimigo
 from backend.entidades.jogador import jogador
-#from backend.app.models.sistema.habilidades_ativa_combatentes import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
-#from backend.app.models.sistema.habilidades_passivas_combatentes import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
 LARGURA, ALTURA = pyautogui.size()
 endereço = os.path.dirname(os.path.abspath(__file__))
 
@@ -382,22 +384,14 @@ if __name__ == "__main__":
                 if diresao == "parado":
                     screen.blit(sombra, (posição_personagem_X + 45 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
                     screen.blit(personagem_parado[int(frame_personagem_parado)], (posição_personagem_X, posição_personagem_Y + 15))
-<<<<<<< HEAD
-                    frame_personagem_parado += 0.4
-=======
                     frame_personagem_parado += len(personagem_parado) * 0.08
->>>>>>> 62bcdd9a599cd57efdea37a723fa1e2eb8c5c87a
                     if frame_personagem_parado >= len(personagem_parado):
                         frame_personagem_parado = 0
 
                 elif diresao == "soco":
                     screen.blit(sombra, (posição_personagem_X + 40 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
                     screen.blit(personagem_soco_d[int(frame_personagem_soco)], (posição_personagem_X, posição_personagem_Y + 12))
-<<<<<<< HEAD
-                    frame_personagem_soco += 0.8
-=======
                     frame_personagem_soco += len(personagem_soco_d) * 0.08
->>>>>>> 62bcdd9a599cd57efdea37a723fa1e2eb8c5c87a
                     if frame_personagem_soco >= len(personagem_soco_d):
                         frame_personagem_soco = 0
                         diresao = "parado"
@@ -406,11 +400,7 @@ if __name__ == "__main__":
                     screen.blit(sombra, (posição_personagem_X + 40 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
                     screen.blit(personagem_dano[int(frame_personagem_dano)], (posição_personagem_X, posição_personagem_Y))
                     cor_usada = cor_dano
-<<<<<<< HEAD
-                    frame_personagem_dano += 0.3
-=======
                     frame_personagem_dano += len(personagem_dano) * 0.08
->>>>>>> 62bcdd9a599cd57efdea37a723fa1e2eb8c5c87a
                     if frame_personagem_dano >= len(personagem_dano):
                         frame_personagem_dano = 0
                         diresao = "parado"
@@ -455,15 +445,9 @@ if __name__ == "__main__":
                             diresao_adiversario = "direita"
 
                         if diresao_adiversario == "parado":
-<<<<<<< HEAD
-                            screen.blit(inimigos_pachs_parado[int(frame_inimigo_parado)], (posicao_x, 735 - 200))
-                            if andar_inimigo:
-                                frame_inimigo_parado += 0.7
-=======
                             screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 200))
                             if andar_inimigo:
                                 frame_inimigo_parado += len(inimigos_pachs_parado) * 0.08
->>>>>>> 62bcdd9a599cd57efdea37a723fa1e2eb8c5c87a
                                 andar_inimigo = False
                             if frame_inimigo_parado >= len(inimigos_pachs_parado):
                                 frame_inimigo_parado = 0
@@ -472,11 +456,7 @@ if __name__ == "__main__":
                         elif diresao_adiversario == "direita":
                             screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 180))
                             if andar_inimigo:
-<<<<<<< HEAD
-                                frame_inimigo_direita += 0.2
-=======
                                 frame_inimigo_direita += len(inimigos_pachs_direita) * 0.08
->>>>>>> 62bcdd9a599cd57efdea37a723fa1e2eb8c5c87a
                                 andar_inimigo = False
                             posicao_x = posicao_x + 6 * LARGURA // 1980
                             if frame_inimigo_direita >= len(inimigos_pachs_direita):
@@ -485,11 +465,7 @@ if __name__ == "__main__":
                         elif diresao_adiversario == "esquerda":
                             screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 180))
                             if andar_inimigo:
-<<<<<<< HEAD
-                                frame_inimigo_direita += 0.2
-=======
                                 frame_inimigo_direita += len(inimigos_pachs_direita) * 0.08
->>>>>>> 62bcdd9a599cd57efdea37a723fa1e2eb8c5c87a
                                 andar_inimigo = False
                             posicao_x = posicao_x - 6 * LARGURA // 1980
                             if frame_inimigo_direita >= len(inimigos_pachs_direita):
@@ -498,11 +474,7 @@ if __name__ == "__main__":
                         elif diresao_adiversario == "soco":
                             screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 180))
                             if andar_inimigo:
-<<<<<<< HEAD
-                                frame_inimigo_direita += 0.2
-=======
                                 frame_inimigo_direita += len(inimigos_pachs_direita) * 0.08
->>>>>>> 62bcdd9a599cd57efdea37a723fa1e2eb8c5c87a
                                 andar_inimigo = False
                             if cooldown_dano <= contador_cooldown:
                                 vida_atual -= status_inimigo[i][0]

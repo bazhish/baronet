@@ -104,12 +104,20 @@ class AdversarioDemiHumano:
 
     @property
     def vida_máxima(self):
-        return self.vida_máxima
+        return self._vida_máxima
+
+    @vida_máxima.setter
+    def vida_máxima(self, value):
+        self._vida_máxima = value
 
     @property
     def estamina_máxima(self):
-        return self.estamina_máxima
-    
+        return self._estamina_máxima
+
+    @estamina_máxima.setter
+    def estamina_máxima(self, value):
+        self._estamina_máxima = value
+
     def definir_classe(self, classe):
         self.nome_da_classe = classe.nome
         self.classe = classe
@@ -149,6 +157,13 @@ class AdversarioDemiHumano:
         self.estamina_máxima = self.estamina_base * self.nível + self.estamina_bonus
         self.vida_atual = self.vida_máxima
         self.estamina_atual = self.estamina_máxima
+ 
+    def atualizar_atributos(self):
+            self.vida_máxima = self.vida_base * self.nível + self.vida_bonus
+            self.estamina_máxima = self.estamina_base * self.nível + self.estamina_bonus
+            self.dano_final = self.dano_base * self.nível + self.dano_bonus
+            self.defesa_final = self.defesa_base * self.nível + self.defesa_bonus
+            self.velocidade_final = self.velocidade_base * self.nível + self.velocidade_bonus
 
     def atacar(self, alvo):
         if alvo.defesa_final >= self.dano_final:
@@ -190,86 +205,87 @@ class AdversarioDemiHumano:
         )
 
 class AdversarioMonstro:
-    def __init__(self, nome, nível, experiência, dano_base, defesa_base, vida_base, estamina_base, velocidade_base, queda, taxa_de_queda):
-        # DADOS PESSOAIS
-        self.nome = nome
-        # NÍVEL
-        self.nível = nível
-        # EXPERIÊNCIA quedaADA
-        self.experiência = experiência
-        # ATRIBUTOS BASE
-        self.dano_base = dano_base
-        self.velocidade_base = velocidade_base
-        self.defesa_base = defesa_base
-        self.vida_base = vida_base
-        self.estamina_base = estamina_base
-        # ATRIBUTOS DE POSICIONAMENTO E COMBATE
-        self.posição_x = 0
-        self.posição_y = 0
-        self.estado = "normal"
-        self.pode_atacar = True
-        self.pode_mover = True
-        self.bloqueio_ativo = False
-        self.precisao_bonus = 0
-        self.critico_bonus = 0
-        self.resistencia_empurrao = False
-        # DESCRÇÃO
-        self.descrição = "nenhuma"
-        # ATRIBUTOS FINAIS
-        self.vida_final = 0
-        self.estamina_final = 0
-        self.dano_final = 0
-        self.defesa_final = 0
-        self.velocidade_final = 0
-        # BONUS DE ATRIBUTOS
-        self.vida_atual = 0
-        self.vida_máxima = 0
-        self.estamina_atual = 0
-        self.estamina_máxima = 0
-        # QUEDA
-        self.queda = queda
-        self.taxa_de_queda = taxa_de_queda
+        def __init__(self, nome, nível, experiência, dano_base, defesa_base, vida_base, estamina_base, velocidade_base, queda, taxa_de_queda):
+            # DADOS PESSOAIS
+            self.nome = nome
+            # NÍVEL
+            self.nível = nível
+            # EXPERIÊNCIA QUEDADA
+            self.experiência = experiência
+            # ATRIBUTOS BASE
+            self.dano_base = dano_base
+            self.velocidade_base = velocidade_base
+            self.defesa_base = defesa_base
+            self.vida_base = vida_base
+            self.estamina_base = estamina_base
+            # ATRIBUTOS DE POSICIONAMENTO E COMBATE
+            self.posição_x = 0
+            self.posição_y = 0
+            self.estado = "normal"
+            self.pode_atacar = True
+            self.pode_mover = True
+            self.bloqueio_ativo = False
+            self.precisao_bonus = 0
+            self.critico_bonus = 0
+            self.resistencia_empurrao = False
+            # DESCRÇÃO
+            self.descrição = "nenhuma"
+            # ATRIBUTOS FINAIS
+            self.vida_final = 0
+            self.estamina_final = 0
+            self.dano_final = 0
+            self.defesa_final = 0
+            self.velocidade_final = 0
+            # BONUS DE ATRIBUTOS
+            self.vida_atual = 0
+            self.vida_máxima = 0
+            self.estamina_atual = 0
+            self.estamina_máxima = 0
+            self.vida_bonus = 0
+            self.defesa_bonus = 0
+            self.dano_bonus = 0
+            self.velocidade_bonus = 0
+            self.estamina_bonus = 0
+            # QUEDA
+            self.queda = queda
+            self.taxa_de_queda = taxa_de_queda
 
-    def __post_init__(self):
-        self.atributos()
-        self.atualizar_descrição()
+        def __post_init__(self):
+            self.atributos()
+            self.atualizar_descrição()
 
-    def tentar_queda_de_itens(self):
-        tentativa = random(0, 100)
-        if tentativa >= self.taxa_de_queda:
-            return self.queda
-        else:
-            return None
+        def tentar_queda_de_itens(self):
+            tentativa = random(0, 100)
+            if tentativa >= self.taxa_de_queda:
+                return self.queda
+            else:
+                return None
 
-    def atualizar_atributos(self):
-        self.dano_final = self.dano_base * self.nível
-        self.velocidade_final = self.velocidade_base * self.nível
-        self.defesa_final = self.defesa_base * self.nível
-        self.vida_final = self.vida_base * self.nível
-        self.estamina_final = self.estamina_base * self.nível
-        self.vida_máxima = self.vida_final
-        self.vida_atual = self.vida_máxima
-        self.estamina_máxima = self.estamina_final
-        self.estamina_atual = self.estamina_máxima
+        def atualizar_atributos(self):
+            self.vida_máxima = self.vida_base * self.nível + self.vida_bonus
+            self.estamina_máxima = self.estamina_base * self.nível + self.estamina_bonus
+            self.dano_final = self.dano_base * self.nível + self.dano_bonus
+            self.defesa_final = self.defesa_base * self.nível + self.defesa_bonus
+            self.velocidade_final = self.velocidade_base * self.nível + self.velocidade_bonus
 
-    def atacar(self, alvo):
-        if alvo.defesa_final >= self.dano_final:
-            dano = 0
-        else:
-            dano = int(self.dano_final - alvo.defesa_final)
-            alvo.vida_atual -= dano
+        def atacar(self, alvo):
+            if alvo.defesa_final >= self.dano_final:
+                dano = 0
+            else:
+                dano = int(self.dano_final - alvo.defesa_final)
+                alvo.vida_atual -= dano
 
-    def estar_vivo(self):
-        return self.vida_atual > 0
+        def estar_vivo(self):
+            return self.vida_atual > 0
 
-    def atualizar_descrição(self) -> None:
-        self.descrição = (
-            f"nome: {self.nome}\n"
-            f"nível: {self.nível}\n"
-            f"dano: {self.dano_final}\n"
-            f"velocidade: {self.velocidade_final}\n"
-            f"defesa: {self.defesa_final}\n"
-            f"vida: {self.vida_atual}/{self.vida_máxima}\n"
-            f"estamina: {self.estamina_atual}/{self.estamina_máxima}\n"
-            f"estado: {self.estado}\n"
-        )
+        def atualizar_descrição(self) -> None:
+            self.descrição = (
+                f"nome: {self.nome}\n"
+                f"nível: {self.nível}\n"
+                f"dano: {self.dano_final}\n"
+                f"velocidade: {self.velocidade_final}\n"
+                f"defesa: {self.defesa_final}\n"
+                f"vida: {self.vida_atual}/{self.vida_máxima}\n"
+                f"estamina: {self.estamina_atual}/{self.estamina_máxima}\n"
+                f"estado: {self.estado}\n"
+            )

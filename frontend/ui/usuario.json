@@ -12,7 +12,7 @@
     ],
     "status": {
         "nivel": 1,
-        "dano": 12,
+        "dano": 100,
         "velocidade": 4,
         "defesa": 3,
         "vida": 12,

@@ -4,19 +4,17 @@ import os
 from random import choice
 from ui.menus import desenhar_botao, TEXTO_S, COR_TEXTO, COR_INATIVA, COR_ATIVA
 from ui.lobby import input_boxes, salvar, fonte_input, font_title
-from recursos.imagens.missao.missao1.slime import slime_parado, slime_direita
+from recursos.imagens.missao.missao1.slime import slime_parado, slime_direita, slime_morto
 import sqlite3
 import pyautogui
 from subprocess import Popen
 import json
 from recursos.imagens.personagem_principal import personagem_parado, personagem_andando_D, personagem_soco_d, personagem_morto, personagem_dano
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = current_dir
-while not os.path.isdir(os.path.join(project_root, ".git")) and os.path.dirname(project_root) != project_root:
-    project_root = os.path.dirname(project_root)
-sys.path.append(project_root)
-from backend.entidades.inimigos import inimigo
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from backend.entidades.inimigos import slime
 from backend.entidades.jogador import jogador
+#from backend.app.models.sistema.habilidades_ativa_combatentes import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
+#from backend.app.models.sistema.habilidades_passivas_combatentes import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
 LARGURA, ALTURA = pyautogui.size()
 endereço = os.path.dirname(os.path.abspath(__file__))
 
@@ -54,9 +52,6 @@ contador_cooldown = 0
 cooldown_jogador = 20
 contador_cooldown_jogador = 0
 diresao_adiversario = "parado"
-frame_inimigo_parado = 0
-frame_inimigo_direita = 0
-frame_inimigo_esquerda = 0
 dados_obtidos = False
 andar_inimigo = True
 morto = False
@@ -137,7 +132,7 @@ OPCOES = "opcoes"
 MENU = "menu"
 INVENTARIO = "inventario"
 COMBATE = "combate"
-estado = COMBATE
+estado = JOGO
 
 tranparencia = 150
 sombra = pygame.Surface((100 * LARGURA // 1920, 20 * LARGURA // 1920), pygame.SRCALPHA)
@@ -242,7 +237,7 @@ if __name__ == "__main__":
         if estado == JOGO:
             anterior = JOGO
             dados_do_alvo_recebidos = False
-            screen.fill((210, 210, 210))
+            screen.fill((180, 180, 180))
             if key[pygame.K_ESCAPE] and not click:
                 click = True
                 contador = 0
@@ -260,17 +255,23 @@ if __name__ == "__main__":
             anterior = COMBATE
             screen.blit(cenario_combate, (posição, 0))
             if dados["progresso"]["missao"] == 1 and not dados_obtidos:
-                inimigo_local = [("parado", inimigo.posição_x), ("parado", inimigo.posição_x + 1200), ("parado", inimigo.posição_x + 1200 * 2)]
-                status_inimigo = [[inimigo.dano_base, inimigo.velocidade_base, inimigo.defesa_base, inimigo.vida_atual],
-                                  [inimigo.dano_base, inimigo.velocidade_base, inimigo.defesa_base, inimigo.vida_atual],
-                                  [inimigo.dano_base, inimigo.velocidade_base, inimigo.defesa_base, inimigo.vida_atual]]
-                status_inimigo_inicial = [[inimigo.dano_final, inimigo.velocidade_final, inimigo.defesa_final, inimigo.vida_final],
-                                          [inimigo.dano_final, inimigo.velocidade_final, inimigo.defesa_final, inimigo.vida_final],
-                                          [inimigo.dano_final, inimigo.velocidade_final, inimigo.defesa_final, inimigo.vida_final]]
+                inimigo_local = [("parado", slime.posição_x), ("parado", slime.posição_x + 1200), ("parado", slime.posição_x + 1200 * 2)]
+                status_inimigo = [[slime.dano_base, slime.velocidade_base, slime.defesa_base, slime.vida_base],
+                                  [slime.dano_base, slime.velocidade_base, slime.defesa_base, slime.vida_base],
+                                  [slime.dano_base, slime.velocidade_base, slime.defesa_base, slime.vida_base]]
+                status_inimigo_inicial = [[slime.dano_base, slime.velocidade_base, slime.defesa_base, slime.vida_base],
+                                         [slime.dano_base, slime.velocidade_base, slime.defesa_base, slime.vida_base],
+                                         [slime.dano_base, slime.velocidade_base, slime.defesa_base, slime.vida_base]]
                 inimigos_pachs_parado = slime_parado
                 inimigos_pachs_direita = slime_direita
+                inimigos_pachs_morto = slime_morto
                 dados_obtidos = True
                 inimigo_contato = [False, False, False]
+
+                frame_inimigo_parado = [0, 0, 0]
+                frame_inimigo_direita = [0, 0, 0]
+                frame_inimigo_esquerda = [0, 0, 0]
+                frame_inimigo_morto = [0, 0, 0]
             if contador <= 0:
                 vida_inicial = jogador.vida_máxima
                 vida_atual = jogador.vida_atual
@@ -431,6 +432,7 @@ if __name__ == "__main__":
 
                 derrotados = 0
                 for i, (diresao_adiversario, posicao_x) in enumerate(inimigo_local):
+                    
                     if status_inimigo[i][3] > 0:
                         if posicao_x - 500 >= posição_personagem_X:
                             diresao_adiversario = "parado"
@@ -445,49 +447,37 @@ if __name__ == "__main__":
                             diresao_adiversario = "direita"
 
                         if diresao_adiversario == "parado":
-                            screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 200))
-                            if andar_inimigo:
-                                frame_inimigo_parado += len(inimigos_pachs_parado) * 0.08
-                                andar_inimigo = False
-                            if frame_inimigo_parado >= len(inimigos_pachs_parado):
-                                frame_inimigo_parado = 0
+                            screen.blit(inimigos_pachs_parado[int(frame_inimigo_parado[i])], (posicao_x, 735 - 180))
+                            frame_inimigo_parado[i] += len(inimigos_pachs_parado) * 0.08
+                            if frame_inimigo_parado[i] >= len(inimigos_pachs_parado):
+                                frame_inimigo_parado[i] = 0
                         
 
                         elif diresao_adiversario == "direita":
-                            screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 180))
-                            if andar_inimigo:
-                                frame_inimigo_direita += len(inimigos_pachs_direita) * 0.08
-                                andar_inimigo = False
+                            screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita[i])], (posicao_x, 735 - 180))
+                            frame_inimigo_direita[i] += len(inimigos_pachs_direita) * 0.08
                             posicao_x = posicao_x + 6 * LARGURA // 1980
-                            if frame_inimigo_direita >= len(inimigos_pachs_direita):
-                                frame_inimigo_direita = 0
+                            if frame_inimigo_direita[i] >= len(inimigos_pachs_direita):
+                                frame_inimigo_direita[i] = 0
 
                         elif diresao_adiversario == "esquerda":
-                            screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 180))
-                            if andar_inimigo:
-                                frame_inimigo_direita += len(inimigos_pachs_direita) * 0.08
-                                andar_inimigo = False
+                            screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita[i])], (posicao_x, 735 - 180))
+                            frame_inimigo_direita[i] += len(inimigos_pachs_direita) * 0.08
                             posicao_x = posicao_x - 6 * LARGURA // 1980
-                            if frame_inimigo_direita >= len(inimigos_pachs_direita):
-                                frame_inimigo_direita = 0
+                            if frame_inimigo_direita[i] >= len(inimigos_pachs_direita):
+                                frame_inimigo_direita[i] = 0
 
                         elif diresao_adiversario == "soco":
-                            screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita)], (posicao_x, 735 - 180))
-                            if andar_inimigo:
-                                frame_inimigo_direita += len(inimigos_pachs_direita) * 0.08
-                                andar_inimigo = False
+                            screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita[i])], (posicao_x, 735 - 180))
+                            frame_inimigo_direita[i] += len(inimigos_pachs_direita) * 0.08
                             if cooldown_dano <= contador_cooldown:
-                                vida_atual -= status_inimigo[i][0]
+                                vida_atual -= status_inimigo[i][0] - jogador.defesa_base if status_inimigo[i][0] - jogador.defesa_base > 0 else 1
                                 diresao = "dano"
                                 contador_cooldown = 0
                             else:
                                 contador_cooldown += 0.2
-                            if frame_inimigo_direita >= len(inimigos_pachs_direita):
-                                frame_inimigo_direita = 0
-
-
-                        if i == len(inimigo_local) - 1:
-                            andar_inimigo = True
+                            if frame_inimigo_direita[i] >= len(inimigos_pachs_direita):
+                                frame_inimigo_direita[i] = 0
 
                         porcentagem_vida_adiversario = font_vida.render(str(status_inimigo[i][3] * 100 // status_inimigo_inicial[i][3]) + "%", True, cor_usada_adiversario)
                         screen.blit(porcentagem_vida_adiversario, (posicao_x + 60, 735 - 170))
@@ -496,12 +486,20 @@ if __name__ == "__main__":
 
                     else:
                         derrotados += 1
+                        if frame_inimigo_morto[i] <= len(inimigos_pachs_morto) - len(inimigos_pachs_morto) * 0.05:
+                            screen.blit(inimigos_pachs_morto[int(frame_inimigo_morto[i])], (posicao_x, 735 - 150))
+                            frame_inimigo_morto[i] += len(inimigos_pachs_morto) * 0.05
+                        else:
+                            screen.blit(inimigos_pachs_morto[len(inimigos_pachs_morto) - 1], (posicao_x, 735 - 150))
 
                 if diresao != "dano":
                     cor_usada = cor_normal
                     
                 if derrotados >= len(inimigo_local):
-                    print("vitoria")
+                    dados["progresso"]["missao"] += 1
+                    salvar(teclas, dados)
+                    dados_obtidos = False
+                    estado = JOGO
                 
                 if key[pygame.K_ESCAPE] and not click:
                     click = True

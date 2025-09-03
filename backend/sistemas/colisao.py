@@ -1,12 +1,19 @@
 import pygame
-import math
 
-def colidiu(p1, p2):
-    rect1 = pygame.Rect(p1.posição_x, p1.posição_y, 50, 80)
-    rect2 = pygame.Rect(p2.posição_x, p2.posição_y, 50, 80)
-    return rect1.colliderect(rect2)
+pygame.init()
 
-def dentro_do_range(p1, p2, alcance):
-    cx1, cy1 = p1.posição_x + 25, p1.posição_y + 40
-    cx2, cy2 = p2.posição_x + 25, p2.posição_y + 40
-    return math.dist((cx1, cy1), (cx2, cy2)) <= alcance
+class arvore_pequena:
+    def __init__(self, x, y, largura, altura, imagem_pach):
+        self.x = x
+        self.y = y
+        self.largura =  largura
+        self.altura = altura
+        self.imagem_pach = imagem_pach
+
+    def hit_box(self, top_left, top_right, bottom_left, bottom_right):
+        self.top_left = (self.x, self.y)
+        self.top_right = (self.x + self.largura, self.y)
+        self.bottom_left = (self.x, self.y + self.altura)
+        self.bottom_right = (self.x + self.largura, self.y + self.altura)
+        return (self.top_left, self.top_right, self.bottom_left, self.bottom_right)
+    

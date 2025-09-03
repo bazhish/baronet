@@ -86,7 +86,7 @@ input_boxes = [
 
 id_usuario = obter_id_usuario_por_nome(dados["usuario"])
 
-def salvar(teclas):
+def salvar(teclas, dados=dados):
     global id_usuario
     dados["keys"] = teclas
     with open(rf"{endereço}\usuario.json", "w") as arquivo:

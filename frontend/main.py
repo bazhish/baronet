@@ -149,7 +149,10 @@ rect_opcoes = pygame.Rect(LARGURA // 2.5, LARGURA // 1.5, ALTURA // 1.6, ALTURA 
 click = False
 click_e = False
 
-
+quadrado_7 = pygame.Surface((50, 50))
+personagem_x = 500
+personagem_y = 1000
+personagem = pygame.Rect(personagem_x, personagem_y, 50, 50)
 
 
 
@@ -235,15 +238,100 @@ if __name__ == "__main__":
 
 
         if estado == JOGO:
+            from backend.sistemas.colisao import pach_objects, pach_objects_colision, pach_objects_hit_boxes_colision, pach_objects_rects_colision, gerenciador_colisao
             anterior = JOGO
             dados_do_alvo_recebidos = False
             screen.fill((180, 180, 180))
+
+            quadrado_7.fill((0, 200, 0))
+            personagem = pygame.Rect(personagem_x, personagem_y, 50, 50)
+            screen.blit(quadrado_7, (personagem_x, personagem_y))
+            
+
+            # atualiza todos os objetos do gerenciador de colisão
+            gerenciador_colisao.atualizar()
+
+            # desenha objetos
+
+
+            # velocidade
+            vel = 5
+
+            if key[pygame.K_a] and key[pygame.K_w]:
+                novo_personagem = personagem.move(-vel, -vel)
+                if not gerenciador_colisao.colide(novo_personagem):
+                    personagem_x -= vel // 1.5
+                    personagem_y -= vel // 1.5
+
+                    for obj in gerenciador_colisao.todos_objetos:
+                        obj.x += vel // 1.5
+                        obj.y += vel // 1.5
+            elif key[pygame.K_d] and key[pygame.K_w]:
+                novo_personagem = personagem.move(vel, -vel)
+                if not gerenciador_colisao.colide(novo_personagem):
+                    personagem_x += vel // 1.5
+                    personagem_y -= vel // 1.5
+
+                    for obj in gerenciador_colisao.todos_objetos:
+                        obj.x -= vel // 1.5
+                        obj.y += vel // 1.5
+            elif key[pygame.K_a] and key[pygame.K_s]:
+                novo_personagem = personagem.move(-vel, vel)
+                if not gerenciador_colisao.colide(novo_personagem):
+                    personagem_x -= vel // 1.5
+                    personagem_y += vel // 1.5
+
+                    for obj in gerenciador_colisao.todos_objetos:
+                        obj.x += vel // 1.5
+                        obj.y -= vel // 1.5
+            elif key[pygame.K_d] and key[pygame.K_s]:
+                novo_personagem = personagem.move(vel, vel)
+                if not gerenciador_colisao.colide(novo_personagem):
+                    personagem_x += vel // 1.5
+                    personagem_y += vel // 1.5
+
+                    for obj in gerenciador_colisao.todos_objetos:
+                        obj.x -= vel // 1.5
+                        obj.y -= vel // 1.5
+            elif key[pygame.K_d]:
+                novo_personagem = personagem.move(vel, 0)
+                if not gerenciador_colisao.colide(novo_personagem):
+                    personagem_x += vel // 1.5
+
+                    for obj in gerenciador_colisao.todos_objetos:
+                        obj.x -= vel // 1.5
+            elif key[pygame.K_a]:
+                novo_personagem = personagem.move(-vel, 0)
+                if not gerenciador_colisao.colide(novo_personagem):
+                    personagem_x -= vel // 1.5
+
+                    for obj in gerenciador_colisao.todos_objetos:
+                        obj.x += vel // 1.5
+            elif key[pygame.K_w]:
+                novo_personagem = personagem.move(0, -vel)
+                if not gerenciador_colisao.colide(novo_personagem):
+                    personagem_y -= vel // 1.5
+
+                    for obj in gerenciador_colisao.todos_objetos:
+                        obj.y += vel // 1.5
+            elif key[pygame.K_s]:
+                novo_personagem = personagem.move(0, vel)
+                if not gerenciador_colisao.colide(novo_personagem):
+                    personagem_y += vel // 1.5
+
+                    for obj in gerenciador_colisao.todos_objetos:
+                        obj.y -= vel // 1.5
+
+
+            # ESCAPE → abre opções
             if key[pygame.K_ESCAPE] and not click:
                 click = True
                 contador = 0
                 estado = OPCOES
             if not key[pygame.K_ESCAPE]:
                 click = False
+
+            # INVENTÁRIO → abre inventário
             if key[inventario] and not click_e:
                 click_e = True
                 contador = 0

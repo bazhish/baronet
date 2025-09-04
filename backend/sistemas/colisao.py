@@ -41,7 +41,7 @@ class arvore_grande:
     
     def rect(self):
         """Retorna um pygame.Rect para usar na colisão"""
-        return pygame.Rect(20 + self.x, 310 + self.y, 220, 50)
+        return pygame.Rect(30 + self.x, 300 + self.y, 200, 60)
     
 class barril:
     def __init__(self, x, y, largura, altura, imagem_pach):
@@ -172,7 +172,8 @@ pach_objects_sem_interação = cogumelos + pedras
 
 #--------------------------------------------------- TODOS OS OBJETOS DO CENÁRIO ---------------------------------------------------------------------------------
 
-pach_objects = pach_objects_sem_interação + pach_objects_colision_lentidao + pach_objects_colision
+pach_objects = pach_objects_colision_lentidao + pach_objects_colision
+pach_objects_intamgible = pach_objects_sem_interação
 
 class GerenciadorDeColisao:
     def __init__(self, arvores_pequenas, arvores_grandes, barris, arbustos, cogumelos, pedras):

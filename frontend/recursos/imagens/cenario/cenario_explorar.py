@@ -57,4 +57,8 @@ pedras_1 = transform.scale(pedras_1, (48 * LArgura // 1920, 36 * LArgura // 1920
 pedras_2 = image.load(fr"{endereço}\pedras 2.png")
 pedras_2 = transform.scale(pedras_2, (52 * LArgura // 1920, 32 * LArgura // 1920))
 
+# mapa = image.load(fr"{endereço}\mapa.png")
+# mapa = transform.scale(mapa, (800 * LArgura // 1920, 600 * LArgura // 1920))
 
+# chao = image.load(fr"{endereço}\chao.png")
+# chao = transform.scale(chao, (10 * LArgura, 10 * LArgura))

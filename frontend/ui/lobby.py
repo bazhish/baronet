@@ -114,9 +114,9 @@ def salvar(teclas, dados=dados):
 
     cursor.execute("""
         UPDATE inventario
-        SET item = ?, quantidade = ?
+        SET item = ?
         WHERE usuario_id = ?
-    """, (dados["inventario"][0][0], dados["inventario"][0][1], id_usuario))
+    """, (dados["inventario"], id_usuario))
 
     cursor.execute("""
         UPDATE keys

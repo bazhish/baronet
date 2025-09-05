@@ -3,64 +3,64 @@ import os
 import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from frontend.recursos.imagens.cenario.cenario_explorar import arbusto_0, arbusto_2, arbusto_1, arbusto_3, arvore_grande_0, arvore_grande_1, arvore_pequena_0, arvore_pequena_1, arvore_pequena_2, arvore_pequena_3, barril_0, barril_1, barril_2, cogumelo_0, pedras_0, pedras_1, pedras_2
+from frontend.recursos.imagens.cenario.cenario_explorar import arbusto_0, arbusto_2, arbusto_1, arbusto_3, arvore_grande_0, arvore_grande_1, arvore_pequena_0, arvore_pequena_1, arvore_pequena_2, arvore_pequena_3, barril_0, barril_1, barril_2, cogumelo_0, pedras_0, pedras_1, pedras_2, LArgura
 
 class arvore_pequena:
     def __init__(self, x, y, largura, altura, imagem_pach):
-        self.x = x
-        self.y = y
-        self.largura =  largura
-        self.altura = altura
+        self.x = x * LArgura // 1920
+        self.y = y * LArgura // 1920
+        self.largura =  largura * LArgura // 1920
+        self.altura = altura * LArgura // 1920
         self.imagem_pach = imagem_pach
 
     def hit_box(self):
-        self.top_left = 32 + self.x, 156 + self.y
-        self.top_right = 92 + self.x, 156 + self.y
-        self.bottom_left = 32 + self.x, 176 + self.y
-        self.bottom_right = 92 + self.x, 176 + self.y
+        self.top_left = 32 * LArgura // 1920 + self.x, 156 * LArgura // 1920 + self.y
+        self.top_right = 92 * LArgura // 1920 + self.x, 156 * LArgura // 1920 + self.y
+        self.bottom_left = 32 * LArgura // 1920 + self.x, 176 * LArgura // 1920 + self.y
+        self.bottom_right = 92 * LArgura // 1920 + self.x, 176 * LArgura // 1920 + self.y
         return (self.top_left, self.top_right, self.bottom_left, self.bottom_right)
     
     def rect(self):
         """Retorna um pygame.Rect para usar na colisão"""
-        return pygame.Rect(32 + self.x, 156 + self.y, 60, 20)
+        return pygame.Rect(32 * LArgura // 1920 + self.x, 156 * LArgura // 1920 + self.y, 60 * LArgura // 1920, 20 * LArgura // 1920)
     
 class arvore_grande:
     def __init__(self, x, y, largura, altura, imagem_pach):
-        self.x = x
-        self.y = y
-        self.largura =  largura
-        self.altura = altura
+        self.x = x * LArgura // 1920
+        self.y = y * LArgura // 1920
+        self.largura =  largura * LArgura // 1920
+        self.altura = altura * LArgura // 1920
         self.imagem_pach = imagem_pach
 
     def hit_box(self):
-        self.top_left = 20 + self.x, 136 + self.y
-        self.top_right = 160 + self.x, 136 + self.y
-        self.bottom_left = 20 + self.x, 172 + self.y
-        self.bottom_right = 160 + self.x, 172 + self.y
+        self.top_left = 20 * LArgura // 1920 + self.x, 136 * LArgura // 1920 + self.y
+        self.top_right = 160 * LArgura // 1920 + self.x, 136 * LArgura // 1920 + self.y
+        self.bottom_left = 20 * LArgura // 1920 + self.x, 172 * LArgura // 1920 + self.y
+        self.bottom_right = 160 * LArgura // 1920 + self.x, 172 * LArgura // 1920 + self.y
         return (self.top_left, self.top_right, self.bottom_left, self.bottom_right)
     
     def rect(self):
         """Retorna um pygame.Rect para usar na colisão"""
-        return pygame.Rect(30 + self.x, 300 + self.y, 200, 60)
+        return pygame.Rect(30 * LArgura // 1920 + self.x, 300 * LArgura // 1920 + self.y, 200 * LArgura // 1920, 60 * LArgura // 1920)
     
 class barril:
     def __init__(self, x, y, largura, altura, imagem_pach):
-        self.x = x
-        self.y = y
-        self.largura =  largura
-        self.altura = altura
+        self.x = x * LArgura // 1920
+        self.y = y * LArgura // 1920
+        self.largura =  largura * LArgura // 1920
+        self.altura = altura * LArgura // 1920
         self.imagem_pach = imagem_pach
 
     def hit_box(self):
-        self.top_left = 0 + self.x, 18 + self.y
-        self.top_right = 23 + self.x, 18 + self.y
-        self.bottom_left = 0 + self.x, 28 + self.y
-        self.bottom_right = 23 + self.x, 28 + self.y
+        self.top_left = 0 + self.x, 18 * LArgura // 1920 + self.y
+        self.top_right = 23 * LArgura // 1920 + self.x, 18 * LArgura // 1920 + self.y
+        self.bottom_left = 0 + self.x, 28 * LArgura // 1920 + self.y
+        self.bottom_right = 23 * LArgura // 1920 + self.x, 28 * LArgura // 1920 + self.y
         return (self.top_left, self.top_right, self.bottom_left, self.bottom_right)
     
     def rect(self):
         """Retorna um pygame.Rect para usar na colisão"""
-        return pygame.Rect(0 + self.x, 82 + self.y, 92, 30)
+        return pygame.Rect(0 + self.x, 82 * LArgura // 1920 + self.y, 92 * LArgura // 1920, 30 * LArgura // 1920)
 
 
 
@@ -104,22 +104,22 @@ pach_objects_rects_colision = arvores_pequenas_rects + arvores_grandes_rects + b
 
 class arbusto:
     def __init__(self, x, y, largura, altura, imagem_pach):
-        self.x = x
-        self.y = y
-        self.largura =  largura
-        self.altura = altura
+        self.x = x * LArgura // 1920
+        self.y = y * LArgura // 1920
+        self.largura =  largura * LArgura // 1920
+        self.altura = altura * LArgura // 1920
         self.imagem_pach = imagem_pach
 
     def hit_box(self):
         self.top_left = 0 + self.x, 0 + self.y
-        self.top_right = 48 + self.x, 0 + self.y
-        self.bottom_left = 0 + self.x, 48 + self.y
-        self.bottom_right = 48 + self.x, 48 + self.y
+        self.top_right = 48 * LArgura // 1920 + self.x, 0 + self.y
+        self.bottom_left = 0 + self.x, 48 * LArgura // 1920 + self.y
+        self.bottom_right = 48 * LArgura // 1920 + self.x, 48 * LArgura // 1920 + self.y
         return (self.top_left, self.top_right, self.bottom_left, self.bottom_right)
     
     def rect(self):
         """Retorna um pygame.Rect para usar na colisão"""
-        return pygame.Rect(0 + self.x, 0 + self.y, 48, 48)
+        return pygame.Rect(0 + self.x, 0 + self.y, 48 * LArgura // 1920, 48 * LArgura // 1920)
     
 #--------------------------------------------------- ARBUSTOS ---------------------------------------------------------------------------------
 
@@ -142,18 +142,18 @@ pach_objects_rects_colision_lentidao = arbustos_rects
 
 class cogumelo:
     def __init__(self, x, y, largura, altura, imagem_pach):
-        self.x = x
-        self.y = y
-        self.largura =  largura
-        self.altura = altura
+        self.x = x * LArgura // 1920
+        self.y = y * LArgura // 1920
+        self.largura =  largura * LArgura // 1920
+        self.altura = altura * LArgura // 1920
         self.imagem_pach = imagem_pach
 
 class pedras:
     def __init__(self, x, y, largura, altura, imagem_pach):
-        self.x = x
-        self.y = y
-        self.largura =  largura
-        self.altura = altura
+        self.x = x * LArgura // 1920
+        self.y = y * LArgura // 1920
+        self.largura =  largura * LArgura // 1920
+        self.altura = altura * LArgura // 1920
         self.imagem_pach = imagem_pach
 
 #--------------------------------------------------- COGUMELOS ---------------------------------------------------------------------------------

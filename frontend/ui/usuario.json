@@ -2,20 +2,19 @@
     "usuario": "ggg",
     "dados_pessoais": {
         "Nome": "ggg",
-        "Classe": "espadachin"
+        "Classe": "lanceiro"
     },
     "inventario": [
         [
-            "Espada Cega",
-            1
+            "[[\"Lan\\u00e7a Com Cabo Quebrado\", 1]]"
         ]
     ],
     "status": {
         "nivel": 1,
-        "dano": 100,
+        "dano": 11,
         "velocidade": 4,
-        "defesa": 3,
-        "vida": 12,
+        "defesa": 4,
+        "vida": 13,
         "experiencia": 0
     },
     "progresso": {
@@ -24,7 +23,7 @@
     },
     "keys": {
         "inventario": "E",
-        "correr": "Lshift",
+        "correr": "lctrl",
         "habilidade": "R",
         "habilidade_1": "Z",
         "habilidade_2": "X",

@@ -24,8 +24,10 @@ font_vida = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", 30
 
 with open(rf"{endereço}\ui\usuario.json", "r") as arquivo:
     dados = json.load(arquivo)
+    dados["inventario"] = json.loads(dados["inventario"][0][0])
 
 teclas = dados["keys"]
+print(dados["inventario"])
 
 posição = 0
 colisao_chao = True
@@ -224,7 +226,6 @@ if __name__ == "__main__":
         habilidade_1 = getattr(pygame, f"K_{tecla[3]}")
         habilidade_2 = getattr(pygame, f"K_{tecla[4]}")
         mapa = getattr(pygame, f"K_{tecla[5]}")
-
         posição_chao = 735
 
         if  parede and colisao_chao:
@@ -249,7 +250,10 @@ if __name__ == "__main__":
                 screen.blit(obj.imagem_pach, (obj.x, obj.y))
             screen.blit(quadrado_7, (personagem_x, personagem_y))
             for obj in pach_objects:
-                screen.blit(obj.imagem_pach, (obj.x, obj.y))          
+                screen.blit(obj.imagem_pach, (obj.x, obj.y))
+            for obj in pach_objects_rects_colision:
+                pygame.draw.rect(screen, (200, 0, 0), obj, 2)
+                    
 
             # atualiza todos os objetos do gerenciador de colisão
             gerenciador_colisao.atualizar()

@@ -377,8 +377,7 @@ def inicializar_banco():
     CREATE TABLE IF NOT EXISTS inventario (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         usuario_id INTEGER,
-        item LIST,
-        quantidade INTEGER,
+        item TEXT,
         FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
     )""")
 
@@ -407,6 +406,7 @@ def criar_personagem(nome, classe, dano, velocidade, defesa, vida, arma):
     conexao = sqlite3.connect(endereco_banco_de_dados)
     cursor = conexao.cursor()
     cursor.execute("PRAGMA foreign_keys = ON")
+    arma = [(arma, 1)]
 
 
     # Inserir usuário
@@ -431,14 +431,14 @@ def criar_personagem(nome, classe, dano, velocidade, defesa, vida, arma):
 
     # Inserir inventário
     cursor.execute("""
-    INSERT INTO inventario (usuario_id, item, quantidade)
-    VALUES (?, ?, ?)
-""", (usuario_id, arma, 1))
+    INSERT INTO inventario (usuario_id, item)
+    VALUES (?, ?)
+""", (usuario_id,  json.dumps(arma)))
 
     cursor.execute("""
         INSERT INTO keys (usuario_id, inventario, correr, habilidades, habilidade_1, habilidade_2, mapa)
         VALUES (?, ?, ?, ?, ?, ?, ?)
-    """, (usuario_id, "E", "Lctrl", "R", "Z", "X", "M"))
+    """, (usuario_id, "E", "lctrl", "R", "Z", "X", "M"))
 
     conexao.commit()
     conexao.close()
@@ -466,7 +466,7 @@ def obter_inventario_do_usuario(usuario_id):
     cursor = conexao.cursor()
 
     cursor.execute("""
-        SELECT item, quantidade
+        SELECT item
         FROM inventario
         WHERE usuario_id = ?
     """, (usuario_id,))

@@ -8,17 +8,19 @@ sys.path.append(project_root)
 
 from backend.sistemas.modelos.habilidades_ativa_combatentes import (
     golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada,
-    giro_de_lanca, arremesso_de_lanca,
+    giro_de_lanca, arremesso_de_lanca, aura_venenosa, olhar_paralisante,
     disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida,
-    passo_fantasma, areia, combo_relampago, postura_de_ferro 
+    passo_fantasma, areia, combo_relampago, postura_de_ferro,
+    grito_de_guerra, investida_brutal, 
 )
 from backend.sistemas.modelos.habilidades_passiva_combatentes import (
     furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada,
-    ataque_rapido, danca_da_lanca,
+    ataque_rapido, danca_da_lanca, serpentes_venenosas, olhar_petrificante,
     controle_passivo, controle_total, disparo_preciso, passos_silenciosos,
     flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva, 
     foco_interno, tecnica_perfeita, golpe_fatal, mira_aprimorada,
-    arsenal_tatico, fogo_sucessivo
+    arsenal_tatico, fogo_sucessivo, persistencia_guerreira,
+    furia_de_batalha, resistencia_implacavel, persistencia_mitologica,
 )
 
 @dataclass
@@ -191,6 +193,45 @@ class ArtistaMarcial(Classe):
         )
         self.atualizar_descrição()
 
+class Guerreiro(Classe):
+    def __init__(self):
+        super().__init__(
+            nome = "Guerreiro",
+            dano_base = 5,
+            velocidade_base = 3,
+            defesa_base = 5,
+            vida_base = 160,
+            estamina_base = 140,
+            multiplicador_de_experiência = 1.0,
+            arma = "Machado",
+            primeira_habilidade_passiva = grito_de_guerra,  
+            segunda_habilidade_passiva = investida_brutal,       
+            terceira_habilidade_passiva = persistencia_guerreira,
+            habilidade_ativa =  furia_de_batalha,              
+            habilidade_especial = resistencia_implacavel          
+        )
+        self.atualizar_descrição()
+
+class Medusa(Classe):
+    def __init__(self):
+        super().__init__(
+            nome = "???",
+            dano_base = 4,
+            velocidade_base = 3,
+            defesa_base = 3,
+            vida_base = 110,
+            estamina_base = 120,
+            multiplicador_de_experiência = 1.7,
+            arma = "nenhuma",
+            primeira_habilidade_passiva = persistencia_mitologica,           
+            segunda_habilidade_passiva = olhar_petrificante,       
+            terceira_habilidade_passiva = serpentes_venenosas,
+            habilidade_ativa = aura_venenosa,
+            habilidade_especial = olhar_paralisante
+        )
+        self.atualizar_descrição()
+
+guerreiro = Guerreiro()
 assassino = Assassino()
 espadachim = Espadachim()
 lanceiro = Lanceiro()
@@ -198,3 +239,4 @@ arqueiro = Arqueiro()
 batedor = Batedor()
 artilheiro = Artilheiro()
 artista_marcial = ArtistaMarcial()
+medusa = Medusa()

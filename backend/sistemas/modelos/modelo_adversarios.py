@@ -1,5 +1,5 @@
-# backend\sistemas\modelos\adversarios.py
-from random import randint, random
+# backend\sistemas\modelos\modelo_adversarios.py
+from random import randint
 
 class AdversarioDemiHumano:
     def __init__(self, nome, nível, experiência, queda, taxa_de_queda):
@@ -8,7 +8,7 @@ class AdversarioDemiHumano:
         self.nome = nome
 
         # NÍVEL
-        self.nível = nível
+        self.nível_atual = nível
 
         # EXPERIÊNCIA QUEDADA
         self.experiência = experiência
@@ -88,6 +88,7 @@ class AdversarioDemiHumano:
         self.precisao_bonus = 0
         self.critico_bonus = 0
         self.resistencia_empurrao = False
+        self.multiplicador_de_experiência = 0
 
     def post_init(self):
         self.atualizar_atributos()
@@ -124,11 +125,31 @@ class AdversarioDemiHumano:
         self.habilidade_especial = self.classe.habilidade_especial
 
     def atualizar_atributos(self):
-            self.vida_máxima = self.vida_base * self.nível + self.vida_bonus
-            self.estamina_máxima = self.estamina_base * self.nível + self.estamina_bonus
-            self.dano_final = self.dano_base * self.nível + self.dano_bonus
-            self.defesa_final = self.defesa_base * self.nível + self.defesa_bonus
-            self.velocidade_final = self.velocidade_base * self.nível + self.velocidade_bonus
+            self.vida_máxima = self.vida_base * self.nível_atual + self.vida_bonus
+            self.estamina_máxima = self.estamina_base * self.nível_atual + self.estamina_bonus
+            self.dano_final = self.dano_base * self.nível_atual + self.dano_bonus
+            self.defesa_final = self.defesa_base * self.nível_atual + self.defesa_bonus
+            self.velocidade_final = self.velocidade_base * self.nível_atual + self.velocidade_bonus
+            self.vida_atual = self.vida_máxima
+            self.estamina_atual = self.estamina_máxima
+
+    def equipar_arma(self, arma):
+        self.nome_da_arma = f"{arma.nome} {arma.raridade} nível {arma.nível}"
+        self.arma = arma 
+
+    def remover_arma(self):
+        self.arma = None
+        self.dano_bonus = 0
+        self.velocidade_bonus = 0
+
+    def equipar_escudo(self, escudo):
+        self.escudo = escudo.nome 
+        self.defesa_bonus = escudo.defesa_final if escudo else 0
+
+    def remover_escudo(self):
+        self.escudo = None
+        self.defesa_bonus = 0
+
 
     def atacar(self, alvo):
         if alvo.defesa_final >= self.dano_final:
@@ -143,7 +164,7 @@ class AdversarioDemiHumano:
     def atualizar_descrição(self) -> None:
         self.descrição = (
             f"nome: {self.nome}\n"
-            f"nível: {self.nível}\n"
+            f"nível: {self.nível_atual}\n"
             f"experiência: {self.experiência}\n"
             f"dano: {self.dano_final}\n"
             f"velocidade: {self.velocidade_final}\n"

@@ -83,6 +83,7 @@ medusa.atualizar_atributos()
 medusa.atualizar_descrição()
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 # CHEFÃO
 troll = AdversarioMonstro("troll", 20, 500, 260, 110, 320, 50, 30, "Olhos", 100)
 troll.posição_x = 1200
@@ -257,3 +258,9 @@ vampiro.posição_x = 1200
 vampiro.atualizar_atributos()
 vampiro.atualizar_descrição()
 >>>>>>> f957f8a8e06ad47c67d607fb0d886fe676528684
+=======
+vampiro = AdversarioDemiHumano("vampiro", 250, 60.0, "masculino", 2.10, 9, 135, 45, 20, 18, 110, 20, "Sangue", 80)
+vampiro.posição_x = 1200
+vampiro.atualizar_atributos()
+vampiro.atualizar_descrição()
+>>>>>>> origin/new_structure

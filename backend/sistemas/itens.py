@@ -44,6 +44,14 @@ class item_utilizavel:
 endereço = path_os.abspath(path_os.join(path_os.dirname(__file__), '..', '..'))
 endereço = endereço + "\frontend\recursos\imagens\itens"
 
-itens = []
+itens = ["Carne podre.png", "cauda.png", "cifre de Minotauro -pixilart.png", "couro.png", "dente.png","dente(1).png", "membrana de fantasma.png", "Moeda.png", "Osso.png", "tentaculo.png"]
+itens2 = []
 
+for item2 in itens:
+    itens2.append("{endereço}\drops\{item2}")
+itens.clear()
+
+for i, item in enumerate(itens2):
+    itens.append(pygame.image.load(f"{item}"))
+    itens[i] = pygame.transform.scale(itens[i], (32,32))
 

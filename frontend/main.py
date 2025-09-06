@@ -3,7 +3,7 @@ import sys
 import os
 from random import choice
 from ui.menus import desenhar_botao, TEXTO_S, COR_TEXTO, COR_INATIVA, COR_ATIVA
-from ui.lobby import input_boxes, salvar, fonte_input, font_title
+from ui.lobby import input_boxes, salvar, fonte_input, font_title, nome_rect, primeiro_nome
 from recursos.imagens.missao.missao1.slime import slime_parado, slime_direita, slime_morto
 import sqlite3
 import pyautogui
@@ -24,7 +24,10 @@ font_vida = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", 30
 
 with open(rf"{endereço}\ui\usuario.json", "r") as arquivo:
     dados = json.load(arquivo)
-    dados["inventario"] = json.loads(dados["inventario"][0][0])
+if dados["inventario"] != "str":
+    dados["inventario"] = json.loads(dados["inventario"])
+else:
+    dados["inventario"] = dados["inventario"]
 
 teclas = dados["keys"]
 print(dados["inventario"])
@@ -60,6 +63,8 @@ morto = False
 frame_morto = 0
 time_morrer = 0
 
+font_nome = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", ALTURA // 50)
+nome = font_nome.render(f"{primeiro_nome}", True, (190, 190, 230))
 
 if __name__ == "__main__":
     if not os.path.exists(rf"{endereço}\ui\usuario.json"):
@@ -164,6 +169,13 @@ vida_ficticia_atual = vida_ficticia
 
 
 
+rect = pygame.Rect(
+                personagem_x - (len(list(primeiro_nome)) * 7),
+                personagem_y - 45,
+                nome_rect.width,
+                nome_rect.height
+                )
+
 if __name__ == "__main__":
     screen = pygame.display.set_mode((LARGURA, ALTURA), pygame.FULLSCREEN)
     while True:
@@ -243,6 +255,10 @@ if __name__ == "__main__":
             anterior = JOGO
             dados_do_alvo_recebidos = False
             screen.fill((180, 180, 180))
+            rect.x = personagem_x - (len(list(primeiro_nome)) * 6)
+            nome_rect.x = personagem_x - (len(list(primeiro_nome)) * 2)
+            nome_rect.y = personagem_y - 40
+
 
             quadrado_7.fill((0, 200, 0))
             personagem = pygame.Rect(personagem_x, personagem_y, 50, 50)
@@ -254,6 +270,11 @@ if __name__ == "__main__":
             for obj in pach_objects_rects_colision:
                 pygame.draw.rect(screen, (200, 0, 0), obj, 2)
                     
+            # Desenha o retângulo cinza atrás do nome
+            pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
+
+            # Desenha o texto do nome por cima do retângulo
+            screen.blit(nome, nome_rect)
 
             # atualiza todos os objetos do gerenciador de colisão
             gerenciador_colisao.atualizar()
@@ -261,56 +282,56 @@ if __name__ == "__main__":
             # velocidade
             vel = 5
 
-            if key[pygame.K_a] and key[pygame.K_w]:
+            if key[pygame.K_a] and key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(-vel, -vel)):
                 novo_personagem = personagem.move(-vel, -vel)
                 if not gerenciador_colisao.colide(novo_personagem):
 
                     for obj in gerenciador_colisao.todos_objetos:
                         obj.x += vel // 1.5
                         obj.y += vel // 1.5
-            elif key[pygame.K_d] and key[pygame.K_w]:
+            elif key[pygame.K_d] and key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(vel, -vel)):
                 novo_personagem = personagem.move(vel, -vel)
                 if not gerenciador_colisao.colide(novo_personagem):
 
                     for obj in gerenciador_colisao.todos_objetos:
                         obj.x -= vel // 1.5
                         obj.y += vel // 1.5
-            elif key[pygame.K_a] and key[pygame.K_s]:
+            elif key[pygame.K_a] and key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(-vel, vel)):
                 novo_personagem = personagem.move(-vel, vel)
                 if not gerenciador_colisao.colide(novo_personagem):
 
                     for obj in gerenciador_colisao.todos_objetos:
                         obj.x += vel // 1.5
                         obj.y -= vel // 1.5
-            elif key[pygame.K_d] and key[pygame.K_s]:
+            elif key[pygame.K_d] and key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(vel, vel)):
                 novo_personagem = personagem.move(vel, vel)
                 if not gerenciador_colisao.colide(novo_personagem):
 
                     for obj in gerenciador_colisao.todos_objetos:
                         obj.x -= vel // 1.5
                         obj.y -= vel // 1.5
-            elif key[pygame.K_d]:
+            elif key[pygame.K_d] and not gerenciador_colisao.colide(personagem.move(vel, 0)):
                 novo_personagem = personagem.move(vel, 0)
                 if not gerenciador_colisao.colide(novo_personagem):
 
 
                     for obj in gerenciador_colisao.todos_objetos:
                         obj.x -= vel // 1.5
-            elif key[pygame.K_a]:
+            elif key[pygame.K_a] and not gerenciador_colisao.colide(personagem.move(-vel, 0)):
                 novo_personagem = personagem.move(-vel, 0)
                 if not gerenciador_colisao.colide(novo_personagem):
 
 
                     for obj in gerenciador_colisao.todos_objetos:
                         obj.x += vel // 1.5
-            elif key[pygame.K_w]:
+            elif key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(0, -vel)):
                 novo_personagem = personagem.move(0, -vel)
                 if not gerenciador_colisao.colide(novo_personagem):
 
 
                     for obj in gerenciador_colisao.todos_objetos:
                         obj.y += vel // 1.5
-            elif key[pygame.K_s]:
+            elif key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(0, vel)):
                 novo_personagem = personagem.move(0, vel)
                 if not gerenciador_colisao.colide(novo_personagem):
 

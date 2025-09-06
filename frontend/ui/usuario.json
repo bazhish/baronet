@@ -4,11 +4,7 @@
         "Nome": "ggg",
         "Classe": "lanceiro"
     },
-    "inventario": [
-        [
-            "[[\"Lan\\u00e7a Com Cabo Quebrado\", 1]]"
-        ]
-    ],
+    "inventario": "\"[[\\\"[[\\\\\\\"Lan\\\\\\\\u00e7a Com Cabo Quebrado\\\\\\\", 1]]\\\"]]\"",
     "status": {
         "nivel": 1,
         "dano": 11,
@@ -22,8 +18,8 @@
         "missao": 1
     },
     "keys": {
-        "inventario": "E",
-        "correr": "lctrl",
+        "inventario": "R",
+        "correr": "Lctrl",
         "habilidade": "R",
         "habilidade_1": "Z",
         "habilidade_2": "X",

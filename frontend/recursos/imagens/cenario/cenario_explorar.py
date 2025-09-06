@@ -37,16 +37,16 @@ arbusto_3 = image.load(fr"{endereço}\arbusto_3.png")
 arbusto_3 = transform.scale(arbusto_3, (56 * LArgura // 1920, 56 * LArgura // 1920))
 
 barril_0 = image.load(fr"{endereço}\barril 0.png")
-barril_0 = transform.scale(barril_0, (96 * LArgura // 1920, 116 * LArgura // 1920))
+barril_0 = transform.scale(barril_0, (40 * LArgura // 1920, 65 * LArgura // 1920))
 
 barril_1 = image.load(fr"{endereço}\barril 1.png")
-barril_1 = transform.scale(barril_1, (96 * LArgura // 1920, 116 * LArgura // 1920))
+barril_1 = transform.scale(barril_1, (40 * LArgura // 1920, 65 * LArgura // 1920))
 
 barril_2 = image.load(fr"{endereço}\barril 2.png")
-barril_2 = transform.scale(barril_2, (96 * LArgura // 1920, 116 * LArgura // 1920))
+barril_2 = transform.scale(barril_2, (40 * LArgura // 1920, 65 * LArgura // 1920))
 
 cogumelo_0 = image.load(fr"{endereço}\cogumelo 0.png")
-cogumelo_0 = transform.scale(cogumelo_0, (48 * LArgura // 1920, 52 * LArgura // 1920))
+cogumelo_0 = transform.scale(cogumelo_0, (28 * LArgura // 1920, 32 * LArgura // 1920))
 
 pedras_0 = image.load(fr"{endereço}\pedras 0.png")
 pedras_0 = transform.scale(pedras_0, (40 * LArgura // 1920, 60 * LArgura // 1920))
@@ -55,7 +55,10 @@ pedras_1 = image.load(fr"{endereço}\pedras 1.png")
 pedras_1 = transform.scale(pedras_1, (48 * LArgura // 1920, 36 * LArgura // 1920))
 
 pedras_2 = image.load(fr"{endereço}\pedras 2.png")
-pedras_2 = transform.scale(pedras_2, (52 * LArgura // 1920, 32 * LArgura // 1920))
+pedras_2 = transform.scale(pedras_2, (36 * LArgura // 1920, 16 * LArgura // 1920))
+
+casa_pequena0 = image.load(fr"{endereço}\casa_pequena0.png")
+casa_pequena0 = transform.scale(casa_pequena0, (120 * LArgura // 1920, 90 * LArgura // 1920))
 
 # mapa = image.load(fr"{endereço}\mapa.png")
 # mapa = transform.scale(mapa, (800 * LArgura // 1920, 600 * LArgura // 1920))

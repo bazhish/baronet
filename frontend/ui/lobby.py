@@ -1,7 +1,6 @@
 import pygame
 import sys
 import os
-from random import choice
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from menus import desenhar_botao, font_title, TEXTO_S, obter_id_usuario_por_nome
 import sqlite3
@@ -21,7 +20,7 @@ if __name__ == "__main__":
 
 endereco_banco_de_dados = rf"{endereco_frontend}\ui\banco_de_dados.db"
 
-imagem_personagem = pygame.image.load(rf"{endereco_frontend}\recursos\Imagens\classes\personagem_representacao.png")
+imagem_personagem = pygame.image.load(rf"{endereco_frontend}\recursos\Imagens\classes\personagem_parado1.png")
 imagem_personagem = pygame.transform.scale(imagem_personagem, (LARGURA // 4, ALTURA // 3))
 
 imagem_fundo_secundario = pygame.image.load(rf"{endereco_frontend}\recursos\Imagens\classes\fundo_secundario.png")
@@ -55,7 +54,7 @@ COR_BG = (255, 255, 255)
 # Fontes
 fonte_input = pygame.font.SysFont("arial", LARGURA // 40)
 
-nome = font_nome.render(f"{primeiro_nome}", True, (190, 190, 230))
+nome = font_nome.render(f"{primeiro_nome}", True, (0, 0, 0))
 
 # Centraliza o nome em determinada posição
 nome_rect = nome.get_rect(center=(LARGURA - LARGURA // 8, ALTURA // 2.1))
@@ -85,10 +84,11 @@ input_boxes = [
             ]
 
 id_usuario = obter_id_usuario_por_nome(dados["usuario"])
-
 def salvar(teclas, dados=dados):
     global id_usuario
     dados["keys"] = teclas
+    if dados["inventario"] != "str":
+        dados["inventario"] = json.dumps(dados["inventario"])
     with open(rf"{endereço}\usuario.json", "w") as arquivo:
         json.dump(dados, arquivo, indent=4)
     conexao = sqlite3.connect(endereco_banco_de_dados)

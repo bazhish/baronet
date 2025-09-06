@@ -3,7 +3,7 @@ import os
 import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from frontend.recursos.imagens.cenario.cenario_explorar import arbusto_0, arbusto_2, arbusto_1, arbusto_3, arvore_grande_0, arvore_grande_1, arvore_pequena_0, arvore_pequena_1, arvore_pequena_2, arvore_pequena_3, barril_0, barril_1, barril_2, cogumelo_0, pedras_0, pedras_1, pedras_2, LArgura
+from frontend.recursos.imagens.cenario.cenario_explorar import arbusto_0, arbusto_2, arbusto_1, arbusto_3, arvore_grande_0, arvore_grande_1, arvore_pequena_0, arvore_pequena_1, arvore_pequena_2, arvore_pequena_3, barril_0, barril_1, barril_2, cogumelo_0, pedras_0, pedras_1, pedras_2, LArgura, casa_pequena0
 
 class arvore_pequena:
     def __init__(self, x, y, largura, altura, imagem_pach):
@@ -60,8 +60,26 @@ class barril:
     
     def rect(self):
         """Retorna um pygame.Rect para usar na colisão"""
-        return pygame.Rect(0 + self.x, 82 * LArgura // 1920 + self.y, 92 * LArgura // 1920, 30 * LArgura // 1920)
+        return pygame.Rect(0 + self.x, 45 * LArgura // 1920 + self.y, 40 * LArgura // 1920, 15 * LArgura // 1920)
 
+class casa_pequena:
+    def __init__(self, x, y, largura, altura, imagem_pach):
+        self.x = x * LArgura // 1920
+        self.y = y * LArgura // 1920
+        self.largura =  largura * LArgura // 1920
+        self.altura = altura * LArgura // 1920
+        self.imagem_pach = imagem_pach
+
+    def hit_box(self):
+        self.top_left = 0 + self.x, 18 * LArgura // 1920 + self.y
+        self.top_right = 23 * LArgura // 1920 + self.x, 18 * LArgura // 1920 + self.y
+        self.bottom_left = 0 + self.x, 28 * LArgura // 1920 + self.y
+        self.bottom_right = 23 * LArgura // 1920 + self.x, 28 * LArgura // 1920 + self.y
+        return (self.top_left, self.top_right, self.bottom_left, self.bottom_right)
+    
+    def rect(self):
+        """Retorna um pygame.Rect para usar na colisão"""
+        return pygame.Rect(0 + self.x, 45 * LArgura // 1920 + self.y, 40 * LArgura // 1920, 15 * LArgura // 1920)
 
 
 #--------------------------------------------------- ÁRVORES PEQUENAS ---------------------------------------------------------------------------------
@@ -94,11 +112,17 @@ barris_hit_boxes = [barril.hit_box() for barril in barris]
 
 barris_rects = [barril.rect() for barril in barris]
 
+#--------------------------------------------------- CASA PEQUENA ---------------------------------------------------------
+casas_pequena = [casa_pequena(1000, 500, 50, 50, casa_pequena0)]
+
+casas_pequena_hit_box = [casa_pequena.hit_box() for casa in casas_pequena]
+
+casas_pequena_rect = [casa_pequena.rect() for casa in casas_pequena]
 #--------------------------------------------------- TODOS OS OBJETOS COM COLISAO ---------------------------------------------------------------------------------
 
-pach_objects_colision = barris + arvores_pequenas + arvores_grandes
-pach_objects_hit_boxes_colision = arvores_pequenas_hit_boxes + arvores_grandes_hit_boxes + barris_hit_boxes
-pach_objects_rects_colision = arvores_pequenas_rects + arvores_grandes_rects + barris_rects
+pach_objects_colision = barris + arvores_pequenas + arvores_grandes + casas_pequena
+pach_objects_hit_boxes_colision = arvores_pequenas_hit_boxes + arvores_grandes_hit_boxes + barris_hit_boxes + casas_pequena_hit_box
+pach_objects_rects_colision = arvores_pequenas_rects + arvores_grandes_rects + barris_rects + casas_pequena_rect
 
 #--------------------------------------------------- COM LENTIDAO ---------------------------------------------------------------------------------
 

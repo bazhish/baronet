@@ -3,6 +3,7 @@ from sys import path
 from os import path as path_os
 path.append(path_os.abspath(path_os.join(path_os.dirname(__file__), '..', '..')))
 from frontend.recursos.imagens.itens.drops import *
+from backend.sistemas.modelos.modelos_armas import criar_arma
 
 class item_ataque:
     def __init__(self, x, y, nome, ataque, defesa, velocidade, descricao, imagem_path):

@@ -12,7 +12,7 @@ from subprocess import Popen
 import json
 from recursos.imagens.personagem_principal import personagem_parado, personagem_andando_D, personagem_soco_d, personagem_morto, personagem_dano
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from backend.entidades.adversarios import slime
+from backend.entidades.inimigos import slime
 from backend.entidades.jogador import jogador
 from backend.sistemas.itens import itens, itens_rect
 #from backend.app.models.sistema.habilidades_ativa_combatentes import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida

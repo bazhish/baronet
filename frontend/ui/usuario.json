@@ -1,16 +1,20 @@
 {
-    "usuario": "ggg",
+    "usuario": "g",
     "dados_pessoais": {
-        "Nome": "ggg",
-        "Classe": "lanceiro"
+        "Nome": "g",
+        "Classe": "escudeiro"
     },
-    "inventario": "\"[[\\\"[[\\\\\\\"Lan\\\\\\\\u00e7a Com Cabo Quebrado\\\\\\\", 1]]\\\"]]\"",
+    "inventario": {
+        "item": "[[[\"Escudo\", \"comum\"], 1]]",
+        "equipado": "[]",
+        "dinheiro": 100
+    },
     "status": {
         "nivel": 1,
-        "dano": 11,
-        "velocidade": 4,
-        "defesa": 4,
-        "vida": 13,
+        "dano": 8,
+        "velocidade": 3,
+        "defesa": 5,
+        "vida": 15,
         "experiencia": 0
     },
     "progresso": {
@@ -18,8 +22,8 @@
         "missao": 1
     },
     "keys": {
-        "inventario": "R",
-        "correr": "Lctrl",
+        "inventario": "E",
+        "correr": "lctrl",
         "habilidade": "R",
         "habilidade_1": "Z",
         "habilidade_2": "X",

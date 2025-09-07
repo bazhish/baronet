@@ -5,6 +5,7 @@ from random import choice
 from ui.menus import desenhar_botao, TEXTO_S, COR_TEXTO, COR_INATIVA, COR_ATIVA
 from ui.lobby import input_boxes, salvar, fonte_input, font_title, nome_rect, primeiro_nome
 from recursos.imagens.missao.missao1.slime import slime_parado, slime_direita, slime_morto
+from recursos.imagens.cenario.cenario_explorar import inventario_pach
 import sqlite3
 import pyautogui
 from subprocess import Popen
@@ -13,6 +14,7 @@ from recursos.imagens.personagem_principal import personagem_parado, personagem_
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from backend.entidades.inimigos import slime
 from backend.entidades.jogador import jogador
+from backend.sistemas.itens import itens, itens_rect
 #from backend.app.models.sistema.habilidades_ativa_combatentes import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
 #from backend.app.models.sistema.habilidades_passivas_combatentes import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
 LARGURA, ALTURA = pyautogui.size()
@@ -24,13 +26,11 @@ font_vida = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", 30
 
 with open(rf"{endereço}\ui\usuario.json", "r") as arquivo:
     dados = json.load(arquivo)
-if dados["inventario"] != "str":
-    dados["inventario"] = json.loads(dados["inventario"])
-else:
-    dados["inventario"] = dados["inventario"]
+dados["inventario"]["item"] = json.loads(dados["inventario"]["item"])
+dados["inventario"]["equipado"] = json.loads(dados["inventario"]["equipado"])
+
 
 teclas = dados["keys"]
-print(dados["inventario"])
 
 posição = 0
 colisao_chao = True
@@ -62,6 +62,7 @@ andar_inimigo = True
 morto = False
 frame_morto = 0
 time_morrer = 0
+mesma_linha = 0
 
 font_nome = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", ALTURA // 50)
 nome = font_nome.render(f"{primeiro_nome}", True, (190, 190, 230))
@@ -87,7 +88,11 @@ cor_dano_adiversario = (190, 80, 80)
 cor_usada_adiversario = cor_normal_adiversario
 cor_usada = cor_normal
 
-
+buff_vida = 0
+buff_estamina = 0
+buff_dano = 0
+buff_defesa = 0
+buff_recebido = False
 
 # if dados["dados_pessoais"]["Classe"] == "arqueiro":
 #     habilidade_1_usavel = disparo_perfurante
@@ -155,13 +160,14 @@ contador = 0
 rect_opcoes = pygame.Rect(LARGURA // 2.5, LARGURA // 1.5, ALTURA // 1.6, ALTURA // 2)
 click = False
 click_e = False
+quadrado_3.fill((*(0, 0, 0), 150))
 
 quadrado_7 = pygame.Surface((50, 50))
 personagem_x = LARGURA // 2
 personagem_y = ALTURA // 2
 personagem = pygame.Rect(personagem_x, personagem_y, 50, 50)
 
-
+tempo_salvar = 0
 
 dano_ficticio = 13
 vida_ficticia = 120
@@ -175,6 +181,10 @@ rect = pygame.Rect(
                 nome_rect.width,
                 nome_rect.height
                 )
+
+
+dados["inventario"]["item"].append([[itens[0].nome, "comum"], 1])
+
 
 if __name__ == "__main__":
     screen = pygame.display.set_mode((LARGURA, ALTURA), pygame.FULLSCREEN)
@@ -218,7 +228,11 @@ if __name__ == "__main__":
 
         pygame.draw.ellipse(sombra, (0, 0, 0, tranparencia), sombra.get_rect())
 
-        
+        tempo_salvar += 1
+
+        if (tempo_salvar % 32) >= 10 * 60:
+            tempo_salvar = 0
+            salvar(teclas, dados)
 
         teclas = dados["keys"]
         
@@ -248,7 +262,12 @@ if __name__ == "__main__":
         if not parede:
             travar = False
 
-
+        for i, item in enumerate(dados["inventario"]["item"]):
+            for i2, item2 in enumerate(dados["inventario"]["item"]):
+                if i != i2:
+                    if item[0] == item2[0]:
+                        item[1] += item2[1]
+                        dados["inventario"]["item"].pop(i2)
 
         if estado == JOGO:
             from backend.sistemas.colisao import pach_objects, pach_objects_colision, pach_objects_hit_boxes_colision, pach_objects_rects_colision, gerenciador_colisao, pach_objects_intamgible
@@ -721,11 +740,246 @@ if __name__ == "__main__":
                 screen.blit(texto_surface, (box["rect"].x + 5, box["rect"].y + 5))
 
         if estado == INVENTARIO:
-            if contador == 0:
-                quadrado_3.fill((*(0, 0, 0), 150))
-                screen.blit(quadrado_3, (0, 0))
-            contador += 1
-            
+            screen.fill((180, 180, 180))
+            rect.x = personagem_x - (len(list(primeiro_nome)) * 6)
+            nome_rect.x = personagem_x - (len(list(primeiro_nome)) * 2)
+            nome_rect.y = personagem_y - 40
+
+            buff_vida = 0
+            buff_estamina = 0
+            buff_dano = 0
+            buff_defesa = 0
+
+            quadrado_7.fill((0, 200, 0))
+            personagem = pygame.Rect(personagem_x, personagem_y, 50, 50)
+            for obj in pach_objects_intamgible:
+                screen.blit(obj.imagem_pach, (obj.x, obj.y))
+            screen.blit(quadrado_7, (personagem_x, personagem_y))
+            for obj in pach_objects:
+                screen.blit(obj.imagem_pach, (obj.x, obj.y))
+            for obj in pach_objects_rects_colision:
+                pygame.draw.rect(screen, (200, 0, 0), obj, 2)
+                    
+            # Desenha o retângulo cinza atrás do nome
+            pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
+
+            # Desenha o texto do nome por cima do retângulo
+            screen.blit(nome, nome_rect)
+
+            quadrado_3.fill((*(0, 0, 0), 150))
+            screen.blit(quadrado_3, (0, 0))
+            screen.blit(inventario_pach, (LARGURA // 2 - (1344 * LARGURA // 1920) // 2, ALTURA // 2 - (966  * ALTURA // 1080) // 2))
+
+            for item in itens:
+                item.x = 912 * LARGURA // 1920
+                item.y = 147 * ALTURA // 1080
+            mesma_linha = 0
+            mouse_pos = pygame.mouse.get_pos()
+            item_hover = None  # <- guarda qual item o mouse está em cima
+            pos_x, pos_y = item.x, item.y
+
+            for recurso in dados["inventario"]["item"]:
+                for i, item in enumerate(itens):
+                    if recurso[0][0] == item.nome and recurso[0][1] == (item.raridade if item.type != "comum" else recurso[0][1]):
+                        pos_x, pos_y = item.x, item.y
+                        mesma_linha += 1
+                        objeto_rect = pygame.Rect(item.rect())
+
+                        # Desenha o item
+                        screen.blit(item.imagem_pach, (item.x, item.y))
+
+                        if item.nome in (equipamento[0] for equipamento in dados["inventario"]["equipado"]) and item.type != "comum":
+                            pygame.draw.rect(screen, (100, 255, 100), objeto_rect, 6)
+
+                        # Se o mouse está em cima, marca o item
+                        if objeto_rect.collidepoint(mouse_pos):
+                            item_hover = item_hover = (item, pos_x, pos_y)
+                            pygame.draw.rect(screen, (230, 230, 230), objeto_rect, 6)
+                            if botoes[0]:
+                                if not precionado:
+                                    precionado = True
+                                    if item.nome not in (equipamento[0] for equipamento in dados["inventario"]["equipado"]) and item.type != "comum":
+                                        dados["inventario"]["equipado"].append([item.nome, item.raridade])
+                                    elif item.type != "comum":
+                                        dados["inventario"]["equipado"].remove([item.nome, item.raridade])
+                                        buff_vida -= item.vida
+                                        buff_estamina -= item.peso
+                                        buff_dano -= item.ataque
+                                        buff_defesa -= item.defesa
+                            else:
+                                precionado = False
+
+
+                        # Quantidade do item
+                        quantidade_itens = font_nome.render(str(recurso[1]), True, (100, 100, 100))
+                        screen.blit(quantidade_itens, (item.x + 5, item.y + 120))
+
+                        # Atualiza posições
+                        for item2 in itens:
+                            item2.x = item2.x + 174 * LARGURA // 1920 if item2.x == 912 * LARGURA // 1920 or item2.x == 1254 * LARGURA // 1920 else item2.x + 168 * LARGURA // 1920
+                            if mesma_linha % 4 == 0:
+                                item2.x = 912 * LARGURA // 1920
+                                if item2.y == 147 * ALTURA // 1080:
+                                    item2.y += 174 * ALTURA // 1080
+                                elif item2.y == 321 * ALTURA // 1080 or item2.y == 489 * ALTURA // 1080:
+                                    item2.y += 168 * ALTURA // 1080
+                                elif item2.y == 657 * ALTURA // 1080:
+                                    item2.y += 162 * ALTURA // 1080
+
+            # 2️⃣ Só agora desenha a tooltip por cima de tudo
+            if item_hover:
+                if item_hover[0].type == "comum":
+                    if len(item_hover[0].descricao) >= 13:
+                        frases_descriacao = item_hover[0].descricao.split()
+                        for i, linha in enumerate(frases_descriacao):
+                            if len(frases_descriacao) > i + 1:
+                                
+                                if len(linha + frases_descriacao[i + 1]) <= 13:
+                                    linha = f"{linha} {frases_descriacao[i + 1]}"
+                                    frases_descriacao.pop(i + 1)
+                                    
+                                    if len(frases_descriacao) > i + 1:
+                                        if len(linha + frases_descriacao[i + 1]) <= 13:
+                                            linha = f"{linha} {frases_descriacao[i + 1]}"
+                                            frases_descriacao.pop(i + 1)
+                                            
+                    quantidade_linhas = len(frases_descriacao)
+                    descricao_rect = pygame.Rect(item_hover[1] + 110, item_hover[2] - 40, 300 * LARGURA // 1920, 10)
+                    descricao_rect.height = 130 + (quantidade_linhas * 25)
+                    if descricao_rect.bottom > ALTURA:
+                        descricao_rect.top = item_hover[2] - 340
+                    pygame.draw.rect(screen, (50, 50, 50), descricao_rect, border_radius=10)   # fundo
+                    pygame.draw.rect(screen, (230, 230, 230), descricao_rect, 2, border_radius=10)  # borda
+                    pygame.draw.line(screen, (230, 230, 230), (descricao_rect.x, descricao_rect.y + 60), (descricao_rect.x + descricao_rect.width, descricao_rect.y + 60), 2)
+
+                    if len(item_hover[0].nome) >= 13:
+                        frases = item_hover[0].nome.split()
+                        for i, linha in enumerate(frases):
+                            if len(frases) > i + 1:
+                                if len(linha + frases[i + 1]) <= 13:
+                                    linha = f"{linha} {frases[i + 1]}"
+                                    frases.pop(i + 1)
+                            texto = font_nome.render(linha, True, (255, 180, 180))
+                            screen.blit(texto, (descricao_rect.x + 10, descricao_rect.y + 10 + i * 20))
+                    else:
+                        texto = font_nome.render(item_hover[0].nome, True, (255, 180, 180))
+                        screen.blit(texto, (descricao_rect.x + 10, descricao_rect.y + 10))
+                    if len(item_hover[0].descricao) >= 13:
+                        frases_descriacao = item_hover[0].descricao.split()
+                        for i, linha in enumerate(frases_descriacao):
+                            if len(frases_descriacao) > i + 1:
+                                if len(linha + frases_descriacao[i + 1]) <= 13:
+                                    linha = f"{linha} {frases_descriacao[i + 1]}"
+                                    frases_descriacao.pop(i + 1)
+                                    if len(frases_descriacao) > i + 1:
+                                        if len(linha + frases_descriacao[i + 1]) <= 13:
+                                            linha = f"{linha} {frases_descriacao[i + 1]}"
+                                            frases_descriacao.pop(i + 1)
+                            texto = font_nome.render(linha, True, (255, 255, 255))
+                            screen.blit(texto, (descricao_rect.x + 10, descricao_rect.y + 100 + i * 30))
+
+
+
+                elif item_hover[0].type == "ataque":
+
+                    descricao_rect = pygame.Rect(item_hover[1] + 110, item_hover[2] - 40, 300 * LARGURA // 1920, 10)
+                    descricao_rect.height = 130 + (4 * 25)
+                    if descricao_rect.bottom > ALTURA:
+                        descricao_rect.top = item_hover[2] - 340
+                    pygame.draw.rect(screen, (50, 50, 50), descricao_rect, border_radius=10)   # fundo
+                    pygame.draw.rect(screen, (230, 230, 230), descricao_rect, 2, border_radius=10)  # borda
+                    pygame.draw.line(screen, (230, 230, 230), (descricao_rect.x, descricao_rect.y + 60), (descricao_rect.x + descricao_rect.width, descricao_rect.y + 60), 2)
+
+                    if len(item_hover[0].nome) >= 13:
+                        frases = item_hover[0].nome.split()
+                        for i, linha in enumerate(frases):
+                            if len(frases) > i + 1:
+                                if len(linha + frases[i + 1]) <= 13:
+                                    linha = f"{linha} {frases[i + 1]}"
+                                    frases.pop(i + 1)
+                            texto = font_nome.render(linha, True, (255, 180, 180))
+                            screen.blit(texto, (descricao_rect.x + 10, descricao_rect.y + 10 + i * 20))
+                    else:
+                        texto = font_nome.render(item_hover[0].nome, True, (255, 180, 180))
+                        screen.blit(texto, (descricao_rect.x + 10, descricao_rect.y + 10))
+                    
+                    dano, peso, raridade = (item_hover[0].ataque, item_hover[0].peso, item_hover[0].raridade)
+                    status_arma = [f"Dano: {dano}", f"Peso: {peso}", f"Raridade: {raridade}"]
+                    for i, status in enumerate(status_arma):
+                        if len(status) >= 13:
+                            status = status.split()
+                            for i2, status2 in enumerate(status):
+                                texto = font_nome.render(status2, True, (255, 255, 255))
+                                screen.blit(texto, (descricao_rect.x + 10, descricao_rect.y + 80 + (i + i2) * 40))
+                        else:
+                            texto = font_nome.render(status, True, (255, 255, 255))
+                            screen.blit(texto, (descricao_rect.x + 10, descricao_rect.y + 80 + i * 40))
+
+                elif item_hover[0].type == "ataque e defesa":
+
+                    descricao_rect = pygame.Rect(item_hover[1] + 110, item_hover[2] - 40, 300 * LARGURA // 1920, 10)
+                    descricao_rect.height = 130 + (6 * 25)
+                    if descricao_rect.bottom > ALTURA:
+                        descricao_rect.top = item_hover[2] - 340
+                    pygame.draw.rect(screen, (50, 50, 50), descricao_rect, border_radius=10)   # fundo
+                    pygame.draw.rect(screen, (230, 230, 230), descricao_rect, 2, border_radius=10)  # borda
+                    pygame.draw.line(screen, (230, 230, 230), (descricao_rect.x, descricao_rect.y + 60), (descricao_rect.x + descricao_rect.width, descricao_rect.y + 60), 2)
+
+                    if len(item_hover[0].nome) >= 13:
+                        frases = item_hover[0].nome.split()
+                        for i, linha in enumerate(frases):
+                            if len(frases) > i + 1:
+                                if len(linha + frases[i + 1]) <= 13:
+                                    linha = f"{linha} {frases[i + 1]}"
+                                    frases.pop(i + 1)
+                            texto = font_nome.render(linha, True, (255, 180, 180))
+                            screen.blit(texto, (descricao_rect.x + 10, descricao_rect.y + 10 + i * 20))
+                    else:
+                        texto = font_nome.render(item_hover[0].nome, True, (255, 180, 180))
+                        screen.blit(texto, (descricao_rect.x + 10, descricao_rect.y + 10))
+                    
+                    dano, peso, raridade, defesa = (item_hover[0].ataque, item_hover[0].peso, item_hover[0].raridade, item_hover[0].defesa)
+                    status_arma = [f"Dano: {dano}", f"Peso: {peso}", f"Defesa: {defesa}", f"Raridade: {raridade}"]
+                    for i, status in enumerate(status_arma):
+                        if len(status) >= 13:
+                            status = status.split()
+                            for i2, status2 in enumerate(status):
+                                texto = font_nome.render(status2, True, (255, 255, 255))
+                                screen.blit(texto, (descricao_rect.x + 10, descricao_rect.y + 80 + (i + i2) * 40))
+                        else:
+                            texto = font_nome.render(status, True, (255, 255, 255))
+                            screen.blit(texto, (descricao_rect.x + 10, descricao_rect.y + 80 + i * 40))
+
+            for equipamento in dados["inventario"]["equipado"]:
+                for item in itens:
+                    if equipamento[0] == item.nome and equipamento[1] == item.raridade:
+                        buff_vida += item.vida
+                        buff_estamina += item.peso
+                        buff_dano += item.ataque
+                        buff_defesa += item.defesa
+
+
+            vida_text = font_vida.render(str(dados["status"]["vida"] * 5 + buff_vida), True, (240, 100, 100))
+            estamina_text = font_vida.render(str(dados["status"]["dano"] * 2 - buff_estamina), True, (140, 255, 140))
+            dano_text = font_vida.render(str(dados["status"]["dano"] + buff_dano), True, (240, 100, 100))
+            defesa_text = font_vida.render(str(dados["status"]["defesa"] + buff_defesa), True, (160, 160, 255))
+            dinheiro_text = font_vida.render(str(dados["inventario"]["dinheiro"]), True, (255, 255, 150))
+
+
+            screen.blit(vida_text, (420, 740))
+            screen.blit(estamina_text, (670, 740))
+            screen.blit(dano_text, (430, 830))
+            screen.blit(defesa_text, (600, 830))
+            screen.blit(dinheiro_text, (410, 665))
+                        
+                                    
+                        
+                                    
+
+                        
+
+                
+
             if key[inventario] and not click_e:
                 click_e = True
                 estado = JOGO

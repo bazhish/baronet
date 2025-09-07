@@ -113,7 +113,28 @@ class Arma:
             f"experiência: {self.experiência_atual}/{self.experiência_máxima}\n"
         )
         return info
-    
+
+tabela_armas = {
+        "espada": {"comum": (6,3), "rara": (11,3), "épica": (18,2), "lendaria": (23,2)},
+        "espada Curta": {"comum": (6,2), "rara": (8,2), "épica": (12,1), "lendaria": (18,1)},
+        "espada Longa": {"comum": (9,4), "rara": (12,4), "épica": (16,3), "lendaria": (24,3)},
+        "espada Dupla": {"comum": (10,5), "rara": (14,5), "épica": (18,3), "lendaria": (21,3)},
+        "adaga": {"comum": (5,3), "rara": (8,3), "épica": (10,2), "lendaria": (13,2)},
+        "adaga dupla": {"comum": (7,5), "rara": (16,5), "épica": (20,4), "lendaria": (26,4)},
+        "zarabatana": {"comum": (4,3), "rara": (6,3), "épica": (8,2), "lendaria": (13,2)},
+        "besta": {"comum": (6,5), "rara": (9,5), "épica": (12,4), "lendaria": (16,4)},
+        "arco": {"comum": (5,3), "rara": (8,3), "épica": (10,2), "lendaria": (16,2)},
+        "lança": {"comum": (6,4), "rara": (8,4), "épica": (11,3), "lendaria": (16,5)},
+        "machado": {"comum": (8,4), "rara": (10,4), "épica": (16,4), "lendaria": (20,4)},
+        "machado duplo": {"comum": (10,6), "rara": (18,6), "épica": (24,6), "lendaria": (26,5)},
+        "cutelo": {"comum": (9,4), "rara": (12,4), "épica": (15,3), "lendaria": (18,3)},
+        "cutelo duplo": {"comum": (11,6), "rara": (16,6), "épica": (20,5), "lendaria": (25,5)},
+        "manopla": {"comum": (8,4), "rara": (13,4), "épica": (18,3), "lendaria": (23,3)},
+        "katana": {"comum": (9,4), "rara": (15,4), "épica": (18,3), "lendaria": (20,33)},
+        "sabre": {"comum": (7,4), "rara": (10,4), "épica": (15,3), "lendaria": (20,3)},
+        "punho": {"comum": (2,1), "rara": (4,1), "épica": (7,1), "lendaria": (10,1)},
+    }
+
 def criar_arma(tipo: str, nome: str, raridade: str, usuario, durabilidade: int, experiência_máxima_inicial: int, crescimento_de_experiência: float, porcentagem_de_reparo: float, porcentagem_de_evolução: float ):
     tabela_armas = {
         "espada": {"comum": (6,3), "rara": (11,3), "épica": (18,2), "lendaria": (23,2)},

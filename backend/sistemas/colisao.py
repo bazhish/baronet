@@ -3,7 +3,7 @@ import os
 import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from frontend.recursos.imagens.cenario.cenario_explorar import arbusto_0, arbusto_2, arbusto_1, arbusto_3, arvore_grande_0, arvore_grande_1, arvore_pequena_0, arvore_pequena_1, arvore_pequena_2, arvore_pequena_3, barril_0, barril_1, barril_2, cogumelo_0, pedras_0, pedras_1, pedras_2, LArgura, casa_pequena0
+from frontend.recursos.imagens.cenario.cenario_explorar import arbusto_0, arbusto_2, arbusto_1, arbusto_3, arvore_grande_0, arvore_grande_1, arvore_pequena_0, arvore_pequena_1, arvore_pequena_2, arvore_pequena_3, barril_0, barril_1, barril_2, cogumelo_0, pedras_0, pedras_1, pedras_2, pedras_3, LArgura, casa_pequena0
 
 class arvore_pequena:
     def __init__(self, x, y, largura, altura, imagem_pach):
@@ -79,7 +79,7 @@ class casa_pequena:
     
     def rect(self):
         """Retorna um pygame.Rect para usar na colisão"""
-        return pygame.Rect(0 + self.x, 45 * LArgura // 1920 + self.y, 40 * LArgura // 1920, 15 * LArgura // 1920)
+        return pygame.Rect(20 * LArgura // 1920 + self.x, 170 * LArgura // 1920 + self.y, 243 * LArgura // 1920, 90 * LArgura // 1920)
 
 
 #--------------------------------------------------- ÁRVORES PEQUENAS ---------------------------------------------------------------------------------
@@ -113,11 +113,12 @@ barris_hit_boxes = [barril.hit_box() for barril in barris]
 barris_rects = [barril.rect() for barril in barris]
 
 #--------------------------------------------------- CASA PEQUENA ---------------------------------------------------------
-casas_pequena = [casa_pequena(1000, 500, 50, 50, casa_pequena0)]
 
-casas_pequena_hit_box = [casa_pequena.hit_box() for casa in casas_pequena]
+casas_pequena = [casa_pequena(1200, 600, 100, 100, casa_pequena0)]  # Exemplo de posição e tamanho
 
-casas_pequena_rect = [casa_pequena.rect() for casa in casas_pequena]
+casas_pequena_hit_box = [casa.hit_box() for casa in casas_pequena]
+
+casas_pequena_rect = [casa.rect() for casa in casas_pequena]
 #--------------------------------------------------- TODOS OS OBJETOS COM COLISAO ---------------------------------------------------------------------------------
 
 pach_objects_colision = barris + arvores_pequenas + arvores_grandes + casas_pequena
@@ -172,7 +173,7 @@ class cogumelo:
         self.altura = altura * LArgura // 1920
         self.imagem_pach = imagem_pach
 
-class pedras:
+class pedra:
     def __init__(self, x, y, largura, altura, imagem_pach):
         self.x = x * LArgura // 1920
         self.y = y * LArgura // 1920
@@ -186,9 +187,10 @@ cogumelos = [cogumelo(450, 150, 50, 50, cogumelo_0)]
 
 #--------------------------------------------------- PEDRAS ---------------------------------------------------------------------------------
 
-pedras = [pedras(250, 350, 50, 50, pedras_0),
-               pedras(850, 400, 50, 50, pedras_1),
-                pedras(1050, 200, 50, 50, pedras_2)]
+pedras = [pedra(250, 350, 50, 50, pedras_0),
+          pedra(850, 400, 50, 50, pedras_1),
+          pedra(1050, 200, 50, 50, pedras_2),
+          pedra(1050, 40, 50, 50, pedras_3)]
 
 #--------------------------------------------------- TODOS OS OBJETOS SEM INTERAÇÃO ---------------------------------------------------------------------------------
 
@@ -200,13 +202,14 @@ pach_objects = pach_objects_colision_lentidao + pach_objects_colision
 pach_objects_intamgible = pach_objects_sem_interação
 
 class GerenciadorDeColisao:
-    def __init__(self, arvores_pequenas, arvores_grandes, barris, arbustos, cogumelos, pedras):
+    def __init__(self, arvores_pequenas, arvores_grandes, barris, casas_pequenas, arbustos, cogumelos, pedras):
         self.arvores_pequenas = arvores_pequenas
         self.arvores_grandes = arvores_grandes
         self.barris = barris
         self.arbustos = arbustos
         self.cogumelos = cogumelos
         self.pedras = pedras
+        self.casas_pequenas = casas_pequenas
 
         self.objetos_colisao = []
         self.objetos_lentidao = []
@@ -215,7 +218,7 @@ class GerenciadorDeColisao:
 
     def atualizar(self):
         """Atualiza listas de objetos a cada frame"""
-        self.objetos_colisao = self.arvores_pequenas + self.arvores_grandes + self.barris
+        self.objetos_colisao = self.arvores_pequenas + self.arvores_grandes + self.barris + self.casas_pequenas
         self.objetos_lentidao = self.arbustos
         self.objetos_sem_interacao = self.cogumelos + self.pedras
         self.todos_objetos = self.objetos_sem_interacao + self.objetos_lentidao + self.objetos_colisao
@@ -228,6 +231,6 @@ class GerenciadorDeColisao:
         """Verifica colisão com objetos que reduzem velocidade"""
         return any(rect.colliderect(obj.rect()) for obj in self.objetos_lentidao)
     
-gerenciador_colisao = GerenciadorDeColisao(arvores_pequenas, arvores_grandes, barris, arbustos, cogumelos, pedras)
+gerenciador_colisao = GerenciadorDeColisao(arvores_pequenas, arvores_grandes, barris, casas_pequena ,arbustos, cogumelos, pedras)
 gerenciador_colisao.atualizar()
 

@@ -87,37 +87,59 @@ id_usuario = obter_id_usuario_por_nome(dados["usuario"])
 def salvar(teclas, dados=dados):
     global id_usuario
     dados["keys"] = teclas
-    if dados["inventario"] != "str":
-        dados["inventario"] = json.dumps(dados["inventario"])
-    with open(rf"{endereço}\usuario.json", "w") as arquivo:
-        json.dump(dados, arquivo, indent=4)
+
+    # Converte inventário para JSON se for lista
+    if isinstance(dados["inventario"]["item"], list):
+        dados["inventario"]["item"] = json.dumps(dados["inventario"]["item"], ensure_ascii=False)
+        
+    if isinstance(dados["inventario"]["equipado"], list):
+        dados["inventario"]["equipado"] = json.dumps(dados["inventario"]["equipado"], ensure_ascii=False)
+
+    # Salva no arquivo JSON
+    with open(rf"{endereço}\usuario.json", "w", encoding="utf-8") as arquivo:
+        json.dump(dados, arquivo, indent=4, ensure_ascii=False)
+
+    # Conecta no SQLite
     conexao = sqlite3.connect(endereco_banco_de_dados)
     cursor = conexao.cursor()
 
+    # Atualiza dados do usuário
     cursor.execute("""
         UPDATE usuarios
         SET nome = ?, classe = ?
         WHERE id = ?
     """, (dados["usuario"], dados["dados_pessoais"]["Classe"], id_usuario))
 
+    # Atualiza status
     cursor.execute("""
         UPDATE status
         SET nivel = ?, dano = ?, velocidade = ?, defesa = ?, vida = ?, experiencia = ?
         WHERE usuario_id = ?
-    """, (dados["status"]["nivel"], dados["status"]["dano"], dados["status"]["velocidade"], dados["status"]["defesa"], dados["status"]["vida"], dados["status"]["experiencia"], id_usuario))
+    """, (
+        dados["status"]["nivel"],
+        dados["status"]["dano"],
+        dados["status"]["velocidade"],
+        dados["status"]["defesa"],
+        dados["status"]["vida"],
+        dados["status"]["experiencia"],
+        id_usuario
+    ))
 
+    # Atualiza progresso
     cursor.execute("""
         UPDATE progresso
         SET capitulo = ?, missao = ?
         WHERE usuario_id = ?
     """, (dados["progresso"]["capitulo"], dados["progresso"]["missao"], id_usuario))
 
+    # Atualiza inventário
     cursor.execute("""
         UPDATE inventario
-        SET item = ?
+        SET item = ?, item_equipado = ?, dinheiro = ?
         WHERE usuario_id = ?
-    """, (dados["inventario"], id_usuario))
+    """, (dados["inventario"]["item"], dados["inventario"]["equipado"], dados["inventario"]["dinheiro"], id_usuario))
 
+    # Atualiza teclas
     cursor.execute("""
         UPDATE keys
         SET inventario = ?, correr = ?, habilidades = ?, habilidade_1 = ?, habilidade_2 = ?, mapa = ?

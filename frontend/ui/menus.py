@@ -378,6 +378,8 @@ def inicializar_banco():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         usuario_id INTEGER,
         item TEXT,
+        item_equipado TEXT,
+        dinheiro INTEGER,
         FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
     )""")
 
@@ -431,9 +433,9 @@ def criar_personagem(nome, classe, dano, velocidade, defesa, vida, arma):
 
     # Inserir inventário
     cursor.execute("""
-    INSERT INTO inventario (usuario_id, item)
-    VALUES (?, ?)
-""", (usuario_id,  json.dumps(arma)))
+    INSERT INTO inventario (usuario_id, item, item_equipado, dinheiro)
+    VALUES (?, ?, ?, ?)
+""", (usuario_id,  json.dumps(arma), json.dumps([]), 100))
 
     cursor.execute("""
         INSERT INTO keys (usuario_id, inventario, correr, habilidades, habilidade_1, habilidade_2, mapa)
@@ -466,12 +468,19 @@ def obter_inventario_do_usuario(usuario_id):
     cursor = conexao.cursor()
 
     cursor.execute("""
-        SELECT item
+        SELECT item, item_equipado, dinheiro
         FROM inventario
         WHERE usuario_id = ?
     """, (usuario_id,))
 
-    inventario = cursor.fetchall()
+
+    for item, equipado, dinheiro in cursor.fetchall():
+        inventario = {
+            "item": item,
+            "equipado": equipado,
+            "dinheiro": dinheiro
+        }
+
     conexao.close()
     return inventario
 
@@ -1432,42 +1441,42 @@ if __name__ == "__main__":
                 if dados_pessoais["Classe"] == ASSASSINO:
                     criar_personagem(dados_pessoais["Nome"],
                                     ASSASSINO,
-                                    10, 5, 2, 10, "Adaga Sem Ponta")
+                                    10, 5, 2, 10, ["Adaga", "comum"])
                     
                     status = [10, 5, 2, 10]
                     
                 elif dados_pessoais["Classe"] == ESPADACHIN:
                     criar_personagem(dados_pessoais["Nome"],
                                     ESPADACHIN,
-                                    12, 4, 3, 12, "Espada Cega")
+                                    12, 4, 3, 12, ["Espada", "comum"])
                     
                     status = [12, 4, 3, 12]
                     
                 elif dados_pessoais["Classe"] == LANCEIRO:
                     criar_personagem(dados_pessoais["Nome"],
                                     LANCEIRO,
-                                    11, 4, 4, 13, "Lança Com Cabo Quebrado")
+                                    11, 4, 4, 13, ["Lança", "comum"])
                     
                     status = [11, 4, 4, 13]
                 
                 elif dados_pessoais["Classe"] == ARQUEIRO:
                     criar_personagem(dados_pessoais["Nome"],
                                     ARQUEIRO,
-                                    9, 6, 2, 11, "Arco E Flexa Velho")
+                                    9, 6, 2, 11, ["Arco e flexa", "comum"])
                     
                     status = [9, 6, 2, 11]
                     
                 elif dados_pessoais["Classe"] == BATEDOR:
                     criar_personagem(dados_pessoais["Nome"],
                                     BATEDOR,
-                                    7, 5, 3, 14, "Soco Espinhado")
+                                    7, 5, 3, 14, ["Manopla", "comum"])
                     
                     status = [7, 5, 3, 14]
                     
                 else:
                     criar_personagem(dados_pessoais["Nome"],
                                     ESCUDEIRO,
-                                    8, 3, 5, 15, "Escudo De Mão")
+                                    8, 3, 5, 15, ["Escudo", "comum"])
                     
                     status = [8, 3, 5, 15]
                 
@@ -1493,7 +1502,7 @@ if __name__ == "__main__":
                                               "missao": 1},
                                 
                                 "keys": {"inventario": "E",
-                                         "correr": "Ctrl",
+                                         "correr": "lctrl",
                                          "habilidade": "R",
                                          "habilidade_1": "Z",
                                          "habilidade_2": "X",

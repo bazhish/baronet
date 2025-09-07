@@ -2,7 +2,9 @@
 from random import random
 
 class AdversarioDemiHumano:
-    def __init__(self, nome, idade, peso, gênero, altura, nível, experiência, dano_base, velocidade_base, defesa_base, vida_base, estamina_base, queda, taxa_de_queda):
+    def __init__(self, nome, idade, peso, gênero, altura, nível,
+                  experiência, dano_base, velocidade_base,
+                    defesa_base, vida_base, estamina_base, queda, taxa_de_queda):
         # DADOS PESSOAIS
         self.nome = nome
         self.idade = idade

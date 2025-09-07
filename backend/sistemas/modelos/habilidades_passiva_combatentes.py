@@ -146,6 +146,34 @@ def efeito_golpe_fatal(usuario):
     usuario.vida_bonus += usuario.vida_base * 0.75
     usuario.defesa_bonus += usuario.defesa_base * 0.85
 
+# GUERREIRO
+def efeito_resistencia_implacavel(usuario):
+    usuario.defesa_bonus += usuario.defesa_base * 1.0
+    usuario.vida_bonus += usuario.vida_base * 0.5
+
+def efeito_furia_de_batalha(usuario):
+    usuario.dano_bonus += usuario.dano_base * 0.7
+    usuario.estamina_bonus += usuario.estamina_base * 0.4
+
+def efeito_persistencia_guerreira(usuario):
+    usuario.vida_bonus += usuario.vida_base * 0.8
+    usuario.estamina_bonus += usuario.estamina_base * 0.6
+
+def efeito_olhar_petrificante(usuario):
+    usuario.defesa_bonus += usuario.defesa_base * 0.4
+    usuario.dano_bonus += usuario.dano_base * 0.2
+
+def efeito_serpentes_venenosas(usuario):
+    usuario.dano_bonus += usuario.dano_base * 0.5
+    usuario.velocidade_bonus += usuario.velocidade_base * 0.2
+
+def efeito_persistencia_mitologica(usuario):
+    usuario.vida_bonus += usuario.vida_base * 0.7
+    usuario.defesa_bonus += usuario.defesa_base * 0.3
+
+resistencia_implacavel = HabilidadePassiva("resistência implacável", efeito_resistencia_implacavel, 12)
+furia_de_batalha = HabilidadePassiva("fúria de batalha", efeito_furia_de_batalha, 45)
+persistencia_guerreira = HabilidadePassiva("persistência guerreira", efeito_persistencia_guerreira, 70)
 foco_interno = HabilidadePassiva("foco interno", efeito_foco_interno, 12)
 tecnica_perfeita = HabilidadePassiva("técnica perfeita", efeito_tecnica_perfeita, 45)
 golpe_fatal = HabilidadePassiva("golpe fatal", efeito_golpe_fatal, 70)
@@ -167,3 +195,6 @@ mira_aprimorada = HabilidadePassiva("mira aprimorada", efeito_mira_aprimorada, 1
 arsenal_tatico = HabilidadePassiva("arsenal tático", efeito_arsenal_tatico, 45)
 fogo_sucessivo = HabilidadePassiva("fogo sucessivo", efeito_fogo_sucessivo, 70)
 exploracao_furtiva = HabilidadePassiva("exploração furtiva", efeito_exploracao_furtiva, 70)
+olhar_petrificante = HabilidadePassiva("olhar petrificante", efeito_olhar_petrificante, 12)
+serpentes_venenosas = HabilidadePassiva("serpentes venenosas", efeito_serpentes_venenosas, 45)
+persistencia_mitologica = HabilidadePassiva("persistência mitológica", efeito_persistencia_mitologica, 70)

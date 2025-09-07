@@ -3,10 +3,15 @@ from pyautogui import size
 from sys import path
 from os import path as path_os
 path.append(path_os.abspath(path_os.join(path_os.dirname(__file__), '..', '..')))
+<<<<<<< HEAD:backend/sistemas/itens.py
 from backend.sistemas.modelos.armas import tabela_armas
 
 LARGURA, ALTURA = size()
 
+=======
+from frontend.recursos.imagens.itens.drops import *
+from backend.sistemas.modelos.modelos_armas import criar_arma
+>>>>>>> aabe11569bac8c119dde8963b0e103a9f04ea7ff:backend/entidades/itens.py
 
 class item_ataque:
     def __init__(self, nome, type, raridade, ataque, peso, imagem_path):

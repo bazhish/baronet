@@ -682,8 +682,161 @@ class PosturaDeFerro(HabilidadeAtiva):
                 timer.cancel()
             restaurar()
 
-# Instâncias das habilidades
+# GUERREIRO
+class GritoDeGuerra(HabilidadeAtiva):
+    def __init__(self, duração_efeito=5):
+        super().__init__(
+            nome="Grito de Guerra",
+            efeito=self.efeito_grito_de_guerra,
+            tempo_de_recarga=10,
+            nivel_minimo=1,
+            duração=1
+        )
+        self.duração_efeito = duração_efeito
+        self.descrição_do_efeito = (
+            f"Aumenta o dano e a defesa de todos aliados próximos por {duração_efeito} segundos."
+        )
+        self.atualizar_descrição()
 
+    def efeito_grito_de_guerra(self, usuario, aliados):
+        for aliado in aliados:
+            aliado.dano_bonus += int(usuario.dano_base * 0.5)
+            aliado.defesa_bonus += int(usuario.defesa_base * 0.5)
+
+        def restaurar():
+            for aliado in aliados:
+                aliado.dano_bonus -= int(usuario.dano_base * 0.5)
+                aliado.defesa_bonus -= int(usuario.defesa_base * 0.5)
+
+        timer = threading.Timer(self.duração_efeito, restaurar)
+        timer.start()
+
+    def ativar(self, usuario, aliados):
+        self.efeito_grito_de_guerra(usuario, aliados)
+
+class InvestidaBrutal(HabilidadeAtiva):
+    def __init__(self, distancia=200):
+        super().__init__(
+            nome="Investida Brutal",
+            efeito=self.efeito_investida_brutal,
+            tempo_de_recarga=8,
+            nivel_minimo=1,
+            duração=0.5
+        )
+        self.distancia = distancia
+        self.descrição_do_efeito = (
+            f"Avança rapidamente e causa dano elevado ao primeiro inimigo atingido em até {distancia} unidades."
+        )
+        self.atualizar_descrição()
+
+    def efeito_investida_brutal(self, usuario, inimigos):
+        usuario.posição_x += usuario.direcao[0] * self.distancia
+        usuario.posição_y += usuario.direcao[1] * self.distancia
+        for inimigo in inimigos:
+            direção_x = usuario.posição_x - inimigo.posição_x
+            direção_y = usuario.posição_y - inimigo.posição_y
+            distancia = math.sqrt(direção_x*direção_x + direção_y*direção_y)
+            if distancia < 30: 
+                dano = int(max(0, (usuario.dano_final * 2.5) - (inimigo.defesa_final)))
+                inimigo.vida -= dano
+                break
+
+    def ativar(self, usuario, inimigos):
+        self.efeito_investida_brutal(usuario, inimigos)
+
+# MEDUSA
+class AuraVenenosa(HabilidadeAtiva):
+    def __init__(self, raio=120, duração_efeito=4):
+        super().__init__(
+            nome="Aura Venenosa",
+            efeito=self.efeito_aura_venenosa,
+            tempo_de_recarga=10,
+            nivel_minimo=1,
+            duração=duração_efeito
+        )
+        self.raio = raio
+        self.duração_efeito = duração_efeito
+        self.descrição_do_efeito = (
+            f"Aplica veneno em inimigos dentro de {raio} unidades por {duração_efeito} segundos."
+        )
+        self.atualizar_descrição()
+        self.usuario = None
+        self.inimigos = []
+        self.tempo_ativação = None
+        self.ativa = False
+
+    def ativar(self, usuario, inimigos):
+        self.usuario = usuario
+        self.inimigos = inimigos
+        self.tempo_ativação = time.time()
+        self.ativa = True
+
+    def atualizar(self):
+        if not self.ativa:
+            return
+
+        tempo_passado = time.time() - self.tempo_ativação
+        if tempo_passado > self.duração_efeito:
+            self.ativa = False
+            self.iniciar_cooldown()
+            return
+
+        for inimigo in self.inimigos:
+            direção_x = inimigo.posição_x - self.usuario.posição_x
+            direção_y = inimigo.posição_y - self.usuario.posição_y
+            distancia = math.sqrt(direção_x**2 + direção_y**2)
+            if distancia <= self.raio:
+                inimigo.veneno_ativo = True
+                inimigo.vida -= int(self.usuario.dano_base * 0.3)  # dano de veneno por tick
+
+    def efeito_aura_venenosa(self, usuario, inimigos):
+        self.ativar(usuario, inimigos)
+
+class OlharParalisante(HabilidadeAtiva):
+    def __init__(self, raio=100, duração_efeito=3):
+        super().__init__(
+            nome="Olhar Paralisante",
+            efeito=self.efeito_olhar_paralisante,
+            tempo_de_recarga=12,
+            nivel_minimo=1,
+            duração=duração_efeito
+        )
+        self.raio = raio
+        self.duração_efeito = duração_efeito
+        self.descrição_do_efeito = (
+            f"Paralisa inimigos dentro de {raio} unidades por {duração_efeito} segundos."
+        )
+        self.atualizar_descrição()
+        self.usuario = None
+        self.inimigos = []
+        self.tempo_ativação = None
+        self.ativa = False
+
+    def ativar(self, usuario, inimigos):
+        self.usuario = usuario
+        self.inimigos = inimigos
+        self.tempo_ativação = time.time()
+        self.ativa = True
+        for inimigo in self.inimigos:
+            direção_x = inimigo.posição_x - self.usuario.posição_x
+            direção_y = inimigo.posição_y - self.usuario.posição_y
+            distancia = math.sqrt(direção_x**2 + direção_y**2)
+            if distancia <= self.raio:
+                inimigo.paralisado = True
+
+        def restaurar():
+            for inimigo in self.inimigos:
+                inimigo.paralisado = False
+
+        timer = threading.Timer(self.duração_efeito, restaurar)
+        timer.start()
+
+    def efeito_olhar_paralisante(self, usuario, inimigos):
+        self.ativar(usuario, inimigos)
+
+# ISTÂNCIAS DAS HABILIDADES
+grito_de_guerra = GritoDeGuerra()
+investida_brutal = InvestidaBrutal()
 golpe_mortal = GolpeMortal()
 intangibilidade = Intangibilidade()
 impacto_cruzado = ImpactoCruzado()
@@ -698,3 +851,5 @@ passo_fantasma = PassoFantasma()
 areia = Areia()
 combo_relampago = ComboRelampago()
 postura_de_ferro = PosturaDeFerro()
+aura_venenosa = AuraVenenosa()
+olhar_paralisante = OlharParalisante()

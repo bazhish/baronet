@@ -69,8 +69,8 @@ inventario_pach = transform.scale(inventario_pach, (1344 * LArgura // 1920, 966 
 inventario_icon = image.load(fr"{endereço}\inventario_icon.png")
 inventario_icon = transform.scale(inventario_icon, (100 * LArgura // 1920, 100 * LArgura // 1920))
 
-# mapa = image.load(fr"{endereço}\mapa.png")
-# mapa = transform.scale(mapa, (800 * LArgura // 1920, 600 * LArgura // 1920))
+mapa_img = image.load(fr"{endereço}\mapa.png")
+mapa_img = transform.scale(mapa_img, (1420 * LArgura // 1920, 880 * LArgura // 1920))
 
-# chao = image.load(fr"{endereço}\chao.png")
-# chao = transform.scale(chao, (10 * LArgura, 10 * LArgura))
+chao = image.load(fr"{endereço}\mapa.png")
+chao = transform.scale(chao, (10 * LArgura, 10 * Altura))

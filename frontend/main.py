@@ -5,7 +5,7 @@ from random import choice
 from ui.menus import desenhar_botao, TEXTO_S, COR_TEXTO, COR_INATIVA, COR_ATIVA
 from ui.lobby import input_boxes, salvar, fonte_input, font_title, nome_rect, primeiro_nome
 from recursos.imagens.missao.missao1.slime import slime_parado, slime_direita, slime_morto
-from recursos.imagens.cenario.cenario_explorar import inventario_pach, inventario_icon
+from recursos.imagens.cenario.cenario_explorar import inventario_pach, inventario_icon, mapa_img, chao
 import sqlite3
 import pyautogui
 from subprocess import Popen
@@ -131,10 +131,13 @@ buff_recebido = False
 #     habilidade_passiva_2 = evasao_rapida
 #     habilidade_passiva_3 = exploracao_furtiva
 
-
+tamanho_font = 30
 
 pygame.init()
 clock = pygame.time.Clock()
+botao_segurado = False
+
+
 
 usuario = jogador
 
@@ -143,13 +146,17 @@ JOGO = "jogo"
 OPCOES = "opcoes"
 MENU = "menu"
 INVENTARIO = "inventario"
+MAPA = "mapa"
 COMBATE = "combate"
 estado = JOGO
 
 tranparencia = 150
 sombra = pygame.Surface((100 * LARGURA // 1920, 20 * LARGURA // 1920), pygame.SRCALPHA)
 
+marcado = False
+desmarcar = True
 
+pos_chao_x, pos_chao_y = (-5000, -3500)
 
 quadrado = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
 quadrado_2 = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
@@ -168,12 +175,11 @@ personagem_y = ALTURA // 2
 personagem = pygame.Rect(personagem_x, personagem_y, 50, 50)
 
 tempo_salvar = 0
+travar_mapa = False
 
 dano_ficticio = 13
 vida_ficticia = 120
 vida_ficticia_atual = vida_ficticia
-
-
 
 rect = pygame.Rect(
                 personagem_x - (len(list(primeiro_nome)) * 7),
@@ -229,6 +235,7 @@ if __name__ == "__main__":
         pygame.draw.ellipse(sombra, (0, 0, 0, tranparencia), sombra.get_rect())
 
         tempo_salvar += 1
+        mouse_pos = pygame.mouse.get_pos()
 
         if (tempo_salvar % 32) >= 10 * 60:
             tempo_salvar = 0
@@ -267,13 +274,13 @@ if __name__ == "__main__":
                 if i != i2:
                     if item[0] == item2[0]:
                         item[1] += item2[1]
-                        dados["inventario"]["item"].pop(i2)
+                        dados["inventario"]["item"].pop(i2)          
 
         if estado == JOGO:
             from backend.sistemas.colisao import pach_objects, pach_objects_colision, pach_objects_hit_boxes_colision, pach_objects_rects_colision, gerenciador_colisao, pach_objects_intamgible
             anterior = JOGO
             dados_do_alvo_recebidos = False
-            screen.fill((180, 180, 180))
+            screen.blit(chao, (pos_chao_x, pos_chao_y))
             rect.x = 16 + personagem_x - (len(list(primeiro_nome)) * 6)
             nome_rect.x = 16 + personagem_x - (len(list(primeiro_nome)) * 2)
             nome_rect.y = personagem_y - 40
@@ -315,7 +322,7 @@ if __name__ == "__main__":
 
 
             # velocidade
-            vel = 5
+            vel = dados["status"]["velocidade"] * 2
 
             if key[pygame.K_a] and key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(-vel, -vel)):
                 novo_personagem = personagem.move(-vel, -vel)
@@ -324,6 +331,9 @@ if __name__ == "__main__":
                     for obj in gerenciador_colisao.todos_objetos:
                         obj.x += vel // 1.5
                         obj.y += vel // 1.5
+
+                    pos_chao_x += vel // 1.5
+                    pos_chao_y += vel // 1.5
             elif key[pygame.K_d] and key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(vel, -vel)):
                 novo_personagem = personagem.move(vel, -vel)
                 if not gerenciador_colisao.colide(novo_personagem):
@@ -331,6 +341,9 @@ if __name__ == "__main__":
                     for obj in gerenciador_colisao.todos_objetos:
                         obj.x -= vel // 1.5
                         obj.y += vel // 1.5
+
+                    pos_chao_x -= vel // 1.5
+                    pos_chao_y += vel // 1.5
             elif key[pygame.K_a] and key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(-vel, vel)):
                 novo_personagem = personagem.move(-vel, vel)
                 if not gerenciador_colisao.colide(novo_personagem):
@@ -338,6 +351,9 @@ if __name__ == "__main__":
                     for obj in gerenciador_colisao.todos_objetos:
                         obj.x += vel // 1.5
                         obj.y -= vel // 1.5
+
+                    pos_chao_x += vel // 1.5
+                    pos_chao_y -= vel // 1.5
             elif key[pygame.K_d] and key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(vel, vel)):
                 novo_personagem = personagem.move(vel, vel)
                 if not gerenciador_colisao.colide(novo_personagem):
@@ -345,6 +361,9 @@ if __name__ == "__main__":
                     for obj in gerenciador_colisao.todos_objetos:
                         obj.x -= vel // 1.5
                         obj.y -= vel // 1.5
+
+                    pos_chao_x -= vel // 1.5
+                    pos_chao_y -= vel // 1.5
             elif key[pygame.K_d] and not gerenciador_colisao.colide(personagem.move(vel, 0)):
                 novo_personagem = personagem.move(vel, 0)
                 if not gerenciador_colisao.colide(novo_personagem):
@@ -352,6 +371,9 @@ if __name__ == "__main__":
 
                     for obj in gerenciador_colisao.todos_objetos:
                         obj.x -= vel // 1.5
+
+                    pos_chao_x -= vel // 1.5
+
             elif key[pygame.K_a] and not gerenciador_colisao.colide(personagem.move(-vel, 0)):
                 novo_personagem = personagem.move(-vel, 0)
                 if not gerenciador_colisao.colide(novo_personagem):
@@ -359,6 +381,9 @@ if __name__ == "__main__":
 
                     for obj in gerenciador_colisao.todos_objetos:
                         obj.x += vel // 1.5
+
+                    pos_chao_x += vel // 1.5
+
             elif key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(0, -vel)):
                 novo_personagem = personagem.move(0, -vel)
                 if not gerenciador_colisao.colide(novo_personagem):
@@ -366,12 +391,16 @@ if __name__ == "__main__":
 
                     for obj in gerenciador_colisao.todos_objetos:
                         obj.y += vel // 1.5
+
+                    pos_chao_y += vel // 1.5
             elif key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(0, vel)):
                 novo_personagem = personagem.move(0, vel)
                 if not gerenciador_colisao.colide(novo_personagem):
 
                     for obj in gerenciador_colisao.todos_objetos:
                         obj.y -= vel // 1.5
+
+                    pos_chao_y -= vel // 1.5
 
 
             # ESCAPE → abre opções
@@ -389,6 +418,35 @@ if __name__ == "__main__":
                 estado = INVENTARIO
             if not key[inventario]:
                 click_e = False
+
+            if key[mapa] and not travar_mapa:
+                travar_mapa = True
+                contador = 0
+                estado = MAPA
+            if not key[mapa]:
+                travar_mapa = False
+
+            if marcado:
+                loc_mapa = [
+                            ((loc_marcado[0] - 250) * 19200) // (1670 - 250) + pos_chao_x,
+                            ((loc_marcado[1] - 100) * 10800) // (980 - 100) + pos_chao_y
+                        ]
+                
+                if loc_mapa[0] <= 0:
+                    loc_mapa[0] = 0
+                if loc_mapa[0] >= 1920:
+                    loc_mapa[0] = 1920
+                if loc_mapa[1] <= 0:
+                    loc_mapa[1] = 0
+                if loc_mapa[1] >= 1080:
+                    loc_mapa[1] = 1080
+
+                loc_mapa = (loc_mapa[0],
+                            loc_mapa[1])
+
+                pygame.draw.circle(screen, (190, 60, 60), loc_mapa, 20)
+
+
 
         if estado == COMBATE:
             anterior = COMBATE
@@ -760,7 +818,7 @@ if __name__ == "__main__":
 
 
         if estado == INVENTARIO:
-            screen.fill((180, 180, 180))
+            screen.blit(chao, (pos_chao_x, pos_chao_y))
             rect.x = personagem_x - (len(list(primeiro_nome)) * 6)
             nome_rect.x = personagem_x - (len(list(primeiro_nome)) * 2)
             nome_rect.y = personagem_y - 40
@@ -784,6 +842,21 @@ if __name__ == "__main__":
             # Desenha o texto do nome por cima do retângulo
             screen.blit(nome, nome_rect)
 
+            item_x = 1800
+            item_y = 250
+            # icon do inventario
+            screen.blit(inventario_icon, (1800, 250))
+            screen.blit(inventario_icon, (1800, 370))
+            screen.blit(inventario_icon, (1800, 490))
+            screen.blit(inventario_icon, (1800, 610))
+            screen.blit(inventario_icon, (1800, 730))
+
+            for equipamento in dados["inventario"]["equipado"]:
+                for i, item in enumerate(itens):
+                    if item.nome == equipamento[0] and item.raridade == equipamento[1] and item.type != "comum" and item.type != "defesa":
+                        screen.blit(itens_icons[i], (1800, item_y))
+                        item_y += 120
+
             quadrado_3.fill((*(0, 0, 0), 150))
             screen.blit(quadrado_3, (0, 0))
             screen.blit(inventario_pach, (LARGURA // 2 - (1344 * LARGURA // 1920) // 2, ALTURA // 2 - (966  * ALTURA // 1080) // 2))
@@ -793,7 +866,6 @@ if __name__ == "__main__":
                     item.x = 912 * LARGURA // 1920
                     item.y = 147 * ALTURA // 1080
             mesma_linha = 0
-            mouse_pos = pygame.mouse.get_pos()
             item_hover = None  # <- guarda qual item o mouse está em cima
             pos_x, pos_y = item.x, item.y
 
@@ -1036,6 +1108,119 @@ if __name__ == "__main__":
                 estado = JOGO
             if not key[pygame.K_ESCAPE]:
                 click = False
+
+            if key[mapa] and not travar_mapa:
+                travar_mapa = True
+                contador = 0
+                estado = MAPA
+            if not key[mapa]:
+                travar_mapa = False
+
+        if estado == MAPA:
+            screen.blit(chao, (pos_chao_x, pos_chao_y))
+            rect.x = personagem_x - (len(list(primeiro_nome)) * 6)
+            nome_rect.x = personagem_x - (len(list(primeiro_nome)) * 2)
+            nome_rect.y = personagem_y - 40
+
+            buff_vida = 0
+            buff_estamina = 0
+            buff_dano = 0
+            buff_defesa = 0
+
+            quadrado_7.fill((0, 200, 0))
+            personagem = pygame.Rect(personagem_x, personagem_y, 50, 50)
+            for obj in pach_objects_intamgible:
+                screen.blit(obj.imagem_pach, (obj.x, obj.y))
+            screen.blit(quadrado_7, (personagem_x, personagem_y))
+            for obj in pach_objects:
+                screen.blit(obj.imagem_pach, (obj.x, obj.y))
+                    
+            # Desenha o retângulo cinza atrás do nome
+            pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
+
+            # Desenha o texto do nome por cima do retângulo
+            screen.blit(nome, nome_rect)
+
+
+            item_x = 1800
+            item_y = 250
+            # icon do inventario
+            screen.blit(inventario_icon, (1800, 250))
+            screen.blit(inventario_icon, (1800, 370))
+            screen.blit(inventario_icon, (1800, 490))
+            screen.blit(inventario_icon, (1800, 610))
+            screen.blit(inventario_icon, (1800, 730))
+
+            for equipamento in dados["inventario"]["equipado"]:
+                for i, item in enumerate(itens):
+                    if item.nome == equipamento[0] and item.raridade == equipamento[1] and item.type != "comum" and item.type != "defesa":
+                        screen.blit(itens_icons[i], (1800, item_y))
+                        item_y += 120
+
+            
+            quadrado_3.fill((*(0, 0, 0), 150))
+            screen.blit(quadrado_3, (0, 0))
+            pygame.draw.rect(screen, (200, 200, 200), (100, 50, 1720, 980), border_radius=20)
+            screen.blit(mapa_img, (250, 100))
+
+            if botoes[0] and not botao_segurado:  # clique esquerdo
+                botao_segurado = True
+                if not marcado:
+                    pos_atual_mouse = pygame.mouse.get_pos()
+                    marcado = True
+                else:
+                    marcado = False
+            
+            if not botoes[0]:
+                botao_segurado = False
+            
+            if marcado and pos_atual_mouse[0] in range(250, 1420) and pos_atual_mouse[1] in range(100, 880):
+                pygame.draw.circle(screen, (140, 20, 20), pos_atual_mouse, 10)
+                loc_marcado = pos_atual_mouse
+            loc_personagem = (
+                            (( (personagem_x - pos_chao_x) * (1670 - 250)) // 19200 + 250),
+                            (( (personagem_y - pos_chao_y) * (980 - 100)) // 10800 + 100)
+                             )
+            pygame.draw.circle(screen, (20, 20, 90), (loc_personagem[0], loc_personagem[1]), 10)
+
+            
+
+            for item in itens:
+                if not (item.type == "defesa") or item.nome not in (equipamento[0] for equipamento in dados["inventario"]["equipado"]):
+                    item.x = 912 * LARGURA // 1920
+                    item.y = 147 * ALTURA // 1080
+            mesma_linha = 0
+            item_hover = None  # <- guarda qual item o mouse está em cima
+            pos_x, pos_y = item.x, item.y
+
+
+
+
+            # ESCAPE → abre opções
+            if key[pygame.K_ESCAPE] and not click:
+                click = True
+                contador = 0
+                estado = JOGO
+            if not key[pygame.K_ESCAPE]:
+                click = False
+
+            # INVENTÁRIO → abre inventário
+            if key[inventario] and not click_e:
+                click_e = True
+                contador = 0
+                estado = INVENTARIO
+            if not key[inventario]:
+                click_e = False
+
+            
+            if key[mapa] and not travar_mapa:
+                travar_mapa = True
+                contador = 0
+                estado = JOGO
+            if not key[mapa]:
+                travar_mapa = False
+                
+            
 
             
         pygame.display.flip()

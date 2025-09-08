@@ -311,6 +311,26 @@ if __name__ == "__main__":
             # atualiza todos os objetos do gerenciador de colisão
             gerenciador_colisao.atualizar()
 
+            if marcado:
+                loc_mapa = [
+                            ((loc_marcado[0] - 250) * 19200) // (1670 - 250) + pos_chao_x,
+                            ((loc_marcado[1] - 100) * 10800) // (980 - 100) + pos_chao_y
+                        ]
+                
+                if loc_mapa[0] <= 0:
+                    loc_mapa[0] = 0
+                if loc_mapa[0] >= 1920:
+                    loc_mapa[0] = 1920
+                if loc_mapa[1] <= 0:
+                    loc_mapa[1] = 0
+                if loc_mapa[1] >= 1080:
+                    loc_mapa[1] = 1080
+
+                loc_mapa = (loc_mapa[0],
+                            loc_mapa[1])
+
+                pygame.draw.circle(screen, (190, 60, 60), loc_mapa, 30)
+
             item_x = 1800
             item_y = 250
             # icon do inventario
@@ -432,26 +452,6 @@ if __name__ == "__main__":
                 estado = MAPA
             if not key[mapa]:
                 travar_mapa = False
-
-            if marcado:
-                loc_mapa = [
-                            ((loc_marcado[0] - 250) * 19200) // (1670 - 250) + pos_chao_x,
-                            ((loc_marcado[1] - 100) * 10800) // (980 - 100) + pos_chao_y
-                        ]
-                
-                if loc_mapa[0] <= 0:
-                    loc_mapa[0] = 0
-                if loc_mapa[0] >= 1920:
-                    loc_mapa[0] = 1920
-                if loc_mapa[1] <= 0:
-                    loc_mapa[1] = 0
-                if loc_mapa[1] >= 1080:
-                    loc_mapa[1] = 1080
-
-                loc_mapa = (loc_mapa[0],
-                            loc_mapa[1])
-
-                pygame.draw.circle(screen, (190, 60, 60), loc_mapa, 20)
 
         
             if dados["progresso"]["missao"] <= 1 and estrucao == 0:

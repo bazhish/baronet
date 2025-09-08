@@ -1,20 +1,20 @@
 {
-    "usuario": "g",
+    "usuario": "ggg",
     "dados_pessoais": {
-        "Nome": "g",
-        "Classe": "escudeiro"
+        "Nome": "ggg",
+        "Classe": "arqueiro"
     },
     "inventario": {
-        "item": "[[[\"Escudo\", \"comum\"], 1]]",
+        "item": "[[[\"Arco e flexa\", \"comum\"], 1]]",
         "equipado": "[]",
         "dinheiro": 100
     },
     "status": {
         "nivel": 1,
-        "dano": 8,
-        "velocidade": 3,
-        "defesa": 5,
-        "vida": 15,
+        "dano": 9,
+        "velocidade": 6,
+        "defesa": 2,
+        "vida": 11,
         "experiencia": 0
     },
     "progresso": {

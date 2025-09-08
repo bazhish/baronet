@@ -57,7 +57,6 @@ fonte_box = pygame.font.Font(rf"{endereco_frontend}\recursos\fontes\Minha fonte.
 
 
 # Telas do jogo
-MENU = "menu"
 LOGIN = "login"
 COMO_SERA_ESCOLHIDO_A_CLASSE = "como sera escolhido a classe"
 ESCOLHA_DE_CLASSES = "escolha de classe"
@@ -84,7 +83,7 @@ PERSONALIDADE_tela_3 = "personalidade tela 3"
 PERSONALIDADE_tela_4 = "personalidade tela 4"
 CRIAR_E_IR = "criar e ir"
 DEFINIR_CLASSE = "definir classe"
-estado = MENU
+estado = LOGIN
 
 # verificar se o botão do mause esta ativo
 clicou = False
@@ -615,69 +614,7 @@ if __name__ == "__main__":
                             if evento.unicode in input_usuario["peritido"]:
                                 input_usuario["text"] += evento.unicode
 
-
-            screen.fill(WHITE)
-            
-            # Tela inicial
-            if estado == MENU:
-
-                inicializar_banco()
-                # Botão iniciar
-                screen.blit(imagem_fundo, (0, 0))
-
-            
-                # Mensagens Digitadas no inicio
-                mensagens = [
-                            {"texto": "Olá, seja bem-vindo", "inicio": 0},
-                            {"texto": "aqui cada escolha", "inicio": 2300},
-                            {"texto": "importa, então", "inicio": 4160},
-                            {"texto": "cuidado!!!", "inicio": 6050},
-                            {"texto": "Pressione G para iniciar", "inicio": 7850},
-                            ]
-                mensagens_renderizadas = ["" for _ in mensagens]
-
-                tempo_atual = pygame.time.get_ticks()
-                
-
-                for i, msg in enumerate(mensagens):
-
-                    
-                    teclado = pygame.mixer.Sound(rf"{endereco_frontend}\recursos\sons\teclado\keypress-{contador}.wav")
-                    teclado.set_volume(0.5)
-
-                    
-
-                    tempo_relativo = tempo_atual - inicio_texto
-                    letras_para_mostrar = (tempo_relativo - msg["inicio"]) // tempo_por_letra
-
-                    if letras_para_mostrar < len(msg["texto"]) and tempo_relativo >= msg["inicio"]:
-                        contador += 1
-                        if contador > 32:
-                            contador = 1
-                        mensagens_renderizadas[i] = msg["texto"][:max(0, letras_para_mostrar)]
-                        teclado.play()
-                        pygame.time.delay(70)
-                        
-
-                    elif letras_para_mostrar >= len(msg["texto"]):
-                        
-                        mensagens_renderizadas[i] = msg["texto"]
-                        
-
-                    # Renderiza sempre a quantidade certa de texto
-                    imagem = font_title.render(mensagens_renderizadas[i], True, (240, 220, 255))
-                    screen.blit(imagem, (50, 300 + i * 50))
-                    
-                    
-                    
-                # Verifica a tecla precionada
-                key = pygame.key.get_pressed()
-                if key[pygame.K_g]:
-                    estado =  LOGIN
-
-
-            # Ve se quer entrar ou se cadastrar
-            elif estado == LOGIN:
+            if estado == LOGIN:
                 screen.blit(imagem_fundo_secundario, (0, 0))
                 if desenhar_botao("LOGIN", 200, 100, 350, 500, 30, (90, 150, 90), (60, 120, 60), 20, rf"{endereco_frontend}\recursos\Imagens\classes\entrar.png", 290, 290, fonte=27):
                     estado = ENTRAR

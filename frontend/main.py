@@ -5,7 +5,7 @@ from random import choice
 from ui.menus import desenhar_botao, TEXTO_S, COR_TEXTO, COR_INATIVA, COR_ATIVA
 from ui.lobby import input_boxes, salvar, fonte_input, font_title, nome_rect, primeiro_nome
 from recursos.imagens.missao.missao1.slime import slime_parado, slime_direita, slime_morto
-from recursos.imagens.cenario.cenario_explorar import inventario_pach
+from recursos.imagens.cenario.cenario_explorar import inventario_pach, inventario_icon
 import sqlite3
 import pyautogui
 from subprocess import Popen
@@ -14,7 +14,7 @@ from recursos.imagens.personagem_principal import personagem_parado, personagem_
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from backend.entidades.inimigos import slime
 from backend.entidades.jogador import jogador
-from backend.sistemas.itens import itens, itens_rect
+from backend.sistemas.itens import itens, itens_icons
 #from backend.app.models.sistema.habilidades_ativa_combatentes import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
 #from backend.app.models.sistema.habilidades_passivas_combatentes import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
 LARGURA, ALTURA = pyautogui.size()
@@ -184,7 +184,7 @@ rect = pygame.Rect(
 
 
 dados["inventario"]["item"].append([[itens[0].nome, "comum"], 1])
-
+dados["inventario"]["item"].append([[itens[-1].nome, itens[-1].raridade], 1])
 
 if __name__ == "__main__":
     screen = pygame.display.set_mode((LARGURA, ALTURA), pygame.FULLSCREEN)
@@ -274,8 +274,8 @@ if __name__ == "__main__":
             anterior = JOGO
             dados_do_alvo_recebidos = False
             screen.fill((180, 180, 180))
-            rect.x = personagem_x - (len(list(primeiro_nome)) * 6)
-            nome_rect.x = personagem_x - (len(list(primeiro_nome)) * 2)
+            rect.x = 16 + personagem_x - (len(list(primeiro_nome)) * 6)
+            nome_rect.x = 16 + personagem_x - (len(list(primeiro_nome)) * 2)
             nome_rect.y = personagem_y - 40
 
 
@@ -286,8 +286,7 @@ if __name__ == "__main__":
             screen.blit(quadrado_7, (personagem_x, personagem_y))
             for obj in pach_objects:
                 screen.blit(obj.imagem_pach, (obj.x, obj.y))
-            for obj in pach_objects_rects_colision:
-                pygame.draw.rect(screen, (200, 0, 0), obj, 2)
+
                     
             # Desenha o retângulo cinza atrás do nome
             pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
@@ -297,6 +296,23 @@ if __name__ == "__main__":
 
             # atualiza todos os objetos do gerenciador de colisão
             gerenciador_colisao.atualizar()
+
+            item_x = 1800
+            item_y = 250
+            # icon do inventario
+            screen.blit(inventario_icon, (1800, 250))
+            screen.blit(inventario_icon, (1800, 370))
+            screen.blit(inventario_icon, (1800, 490))
+            screen.blit(inventario_icon, (1800, 610))
+            screen.blit(inventario_icon, (1800, 730))
+
+            for equipamento in dados["inventario"]["equipado"]:
+                for i, item in enumerate(itens):
+                    if item.nome == equipamento[0] and item.raridade == equipamento[1] and item.type != "comum" and item.type != "defesa":
+                        screen.blit(itens_icons[i], (1800, item_y))
+                        item_y += 120
+
+
 
             # velocidade
             vel = 5
@@ -739,6 +755,10 @@ if __name__ == "__main__":
                 texto_surface = fonte_input.render(box["text"], True, COR_TEXTO)
                 screen.blit(texto_surface, (box["rect"].x + 5, box["rect"].y + 5))
 
+
+
+
+
         if estado == INVENTARIO:
             screen.fill((180, 180, 180))
             rect.x = personagem_x - (len(list(primeiro_nome)) * 6)
@@ -757,8 +777,6 @@ if __name__ == "__main__":
             screen.blit(quadrado_7, (personagem_x, personagem_y))
             for obj in pach_objects:
                 screen.blit(obj.imagem_pach, (obj.x, obj.y))
-            for obj in pach_objects_rects_colision:
-                pygame.draw.rect(screen, (200, 0, 0), obj, 2)
                     
             # Desenha o retângulo cinza atrás do nome
             pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
@@ -771,8 +789,9 @@ if __name__ == "__main__":
             screen.blit(inventario_pach, (LARGURA // 2 - (1344 * LARGURA // 1920) // 2, ALTURA // 2 - (966  * ALTURA // 1080) // 2))
 
             for item in itens:
-                item.x = 912 * LARGURA // 1920
-                item.y = 147 * ALTURA // 1080
+                if not (item.type == "defesa") or item.nome not in (equipamento[0] for equipamento in dados["inventario"]["equipado"]):
+                    item.x = 912 * LARGURA // 1920
+                    item.y = 147 * ALTURA // 1080
             mesma_linha = 0
             mouse_pos = pygame.mouse.get_pos()
             item_hover = None  # <- guarda qual item o mouse está em cima
@@ -786,16 +805,40 @@ if __name__ == "__main__":
                         objeto_rect = pygame.Rect(item.rect())
 
                         # Desenha o item
+                        if item.type == "defesa" and item.nome in (equipamento[0] for equipamento in dados["inventario"]["equipado"]):
+                            if item.nome.split()[0] == "Capacete":
+                                item.x = 594
+                                item.y =210
+                                pos_x = item.x
+                                pos_y = item.y
+                            elif item.nome.split()[0] == "Bota":
+                                item.x = 594
+                                item.y =430
+                            elif item.nome.split()[0] == "Peitoral":
+                                item.x = 594
+                                item.y =320
                         screen.blit(item.imagem_pach, (item.x, item.y))
 
                         if item.nome in (equipamento[0] for equipamento in dados["inventario"]["equipado"]) and item.type != "comum":
-                            pygame.draw.rect(screen, (100, 255, 100), objeto_rect, 6)
+                            if not (item.type == "defesa") or item.nome not in (equipamento[0] for equipamento in dados["inventario"]["equipado"]):
+                                pygame.draw.rect(screen, (100, 255, 100), objeto_rect, 6)
+                            elif item.nome.split()[0] == "Capacete":
+                                objeto_rect = pygame.Rect((624, 243, 84, 84))
+                                pygame.draw.rect(screen, (100, 255, 100), objeto_rect, 6)
+                            elif item.nome.split()[0] == "Bota":
+                                objeto_rect = pygame.Rect((624, 459, 84, 84))
+                                pygame.draw.rect(screen, (100, 255, 100), objeto_rect, 6)
+                            elif item.nome.split()[0] == "Peitoral":
+                                objeto_rect = pygame.Rect((624, 351, 84, 84))
+                                pygame.draw.rect(screen, (100, 255, 100), objeto_rect, 6)
 
                         # Se o mouse está em cima, marca o item
                         if objeto_rect.collidepoint(mouse_pos):
                             item_hover = item_hover = (item, pos_x, pos_y)
-                            pygame.draw.rect(screen, (230, 230, 230), objeto_rect, 6)
+                            if not (item.type == "defesa") or item.nome not in (equipamento[0] for equipamento in dados["inventario"]["equipado"]):
+                                pygame.draw.rect(screen, (230, 230, 230), objeto_rect, 6)
                             if botoes[0]:
+                                pygame.draw.rect(screen, (100, 180, 100), objeto_rect, 6)
                                 if not precionado:
                                     precionado = True
                                     if item.nome not in (equipamento[0] for equipamento in dados["inventario"]["equipado"]) and item.type != "comum":
@@ -811,8 +854,9 @@ if __name__ == "__main__":
 
 
                         # Quantidade do item
-                        quantidade_itens = font_nome.render(str(recurso[1]), True, (100, 100, 100))
-                        screen.blit(quantidade_itens, (item.x + 5, item.y + 120))
+                        if not (item.type == "defesa") or item.nome not in (equipamento[0] for equipamento in dados["inventario"]["equipado"]):
+                            quantidade_itens = font_nome.render(str(recurso[1]), True, (100, 100, 100))
+                            screen.blit(quantidade_itens, (item.x + 5, item.y + 120))
 
                         # Atualiza posições
                         for item2 in itens:
@@ -915,7 +959,7 @@ if __name__ == "__main__":
                             texto = font_nome.render(status, True, (255, 255, 255))
                             screen.blit(texto, (descricao_rect.x + 10, descricao_rect.y + 80 + i * 40))
 
-                elif item_hover[0].type == "ataque e defesa":
+                elif item_hover[0].type == "ataque e defesa" or item_hover[0].type == "defesa":
 
                     descricao_rect = pygame.Rect(item_hover[1] + 110, item_hover[2] - 40, 300 * LARGURA // 1920, 10)
                     descricao_rect.height = 130 + (6 * 25)

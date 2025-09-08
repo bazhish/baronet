@@ -66,6 +66,9 @@ casa_pequena0 = transform.scale(casa_pequena0, (288 * LArgura // 1920, 450 * LAr
 inventario_pach = image.load(fr"{endereço}\inventario_final.png")
 inventario_pach = transform.scale(inventario_pach, (1344 * LArgura // 1920, 966 * LArgura // 1920))
 
+inventario_icon = image.load(fr"{endereço}\inventario_icon.png")
+inventario_icon = transform.scale(inventario_icon, (100 * LArgura // 1920, 100 * LArgura // 1920))
+
 # mapa = image.load(fr"{endereço}\mapa.png")
 # mapa = transform.scale(mapa, (800 * LArgura // 1920, 600 * LArgura // 1920))
 

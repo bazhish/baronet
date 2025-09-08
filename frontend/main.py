@@ -64,6 +64,11 @@ frame_morto = 0
 time_morrer = 0
 mesma_linha = 0
 
+estrucao = 0
+vel_letra = 0.5
+tamanho_estrucao = 36
+font_estrucao = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", tamanho_estrucao)
+
 font_nome = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", ALTURA // 50)
 nome = font_nome.render(f"{primeiro_nome}", True, (190, 190, 230))
 
@@ -276,6 +281,8 @@ if __name__ == "__main__":
                         item[1] += item2[1]
                         dados["inventario"]["item"].pop(i2)          
 
+        font_estrucao = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", int(tamanho_estrucao))
+
         if estado == JOGO:
             from backend.sistemas.colisao import pach_objects, pach_objects_colision, pach_objects_hit_boxes_colision, pach_objects_rects_colision, gerenciador_colisao, pach_objects_intamgible
             anterior = JOGO
@@ -445,6 +452,22 @@ if __name__ == "__main__":
                             loc_mapa[1])
 
                 pygame.draw.circle(screen, (190, 60, 60), loc_mapa, 20)
+
+        
+            if dados["progresso"]["missao"] <= 1 and estrucao == 0:
+                texto = font_estrucao.render("pricione a tecla E", True, (200, 110, 110))
+                largura_texto, altura_texto = font_estrucao.size("pricione a tecla E")
+                quadrado_estrucao = pygame.Surface((largura_texto + 20, altura_texto + 20), pygame.SRCALPHA)
+                quadrado_estrucao.fill((*(0, 0, 0), 150))
+                screen.blit(quadrado_estrucao, ((LARGURA // 2) - (largura_texto // 2) - 10, 1000 - 10))
+                screen.blit(texto, ((LARGURA // 2) - (largura_texto // 2), 1000))
+                if tamanho_estrucao <= 36:
+                    vel_letra = 0.5
+                if tamanho_estrucao >= 40:
+                    vel_letra = -0.5
+                tamanho_estrucao += vel_letra
+                if key[inventario]:
+                    estrucao += 1
 
 
 

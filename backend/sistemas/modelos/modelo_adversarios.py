@@ -154,6 +154,8 @@ class AdversarioDemiHumano:
     def atacar(self, alvo):
         if alvo.defesa_final >= self.dano_final:
             dano = 0
+        elif alvo.bloqueio_ativo:
+            dano = 0
         else:
             dano = int(self.dano_final - alvo.defesa_final)
             alvo.vida_atual -= dano

@@ -41,13 +41,13 @@ class HabilidadeAtiva:
 
 #  ASSASSINO
 class GolpeMortal(HabilidadeAtiva):
-    def __init__(self, range_pixel=100):
+    def __init__(self, range_pixel = 250):
         super().__init__(
             nome = "Golpe Mortal",
             efeito = self.efeito_golpe_mortal,
-            tempo_de_recarga = 1,
-            nivel_minimo = 1,
-            duração = 1
+            tempo_de_recarga = 7,
+            nivel_minimo = 16,
+            duração = 5
         )
         self.descrição_do_efeito = (
             "Causa dano massivo a um único alvo próximo. "
@@ -57,14 +57,15 @@ class GolpeMortal(HabilidadeAtiva):
         self.range_pixel = range_pixel
         self.usuario = None
         self.alvo = None
-        self.tempo_ativação = None
         self.ativa = False
 
     def ativar(self, usuario, alvo):
         self.usuario = usuario
         self.alvo = alvo
-        self.tempo_ativação = time.time()
+        self.duração = time.time()
         self.ativa = True
+        self.esta_no_range()
+        self.atualizar()
 
     def esta_no_range(self):
         direção_x = self.usuario.posição_x - self.alvo.posição_x
@@ -76,7 +77,7 @@ class GolpeMortal(HabilidadeAtiva):
         if not self.ativa:
             return
 
-        tempo_passado = time.time() - self.tempo_ativação
+        tempo_passado = time.time() - self.duração
         if tempo_passado > self.duração:
             self.ativa = False
             self.iniciar_cooldown()
@@ -89,23 +90,22 @@ class GolpeMortal(HabilidadeAtiva):
 
     def efeito_golpe_mortal(self, usuario, alvo):
         dano = int(max(0, (usuario.dano_final * 3) - (alvo.defesa_final * uniform(0.6, 0.8))))
-        alvo.vida -= dano
+        alvo.vida_atual -= dano
 
 class Intangibilidade(HabilidadeAtiva):
     def __init__(self):
         super().__init__(
             nome="Intangibilidade",
             efeito=self.efeito_intangibilidade,
-            tempo_de_recarga=1,
-            nivel_minimo=1,
-            duração=1
+            tempo_de_recarga=10,
+            nivel_minimo=50,
+            duração=10
         )
         self.descrição_do_efeito = (
             "Torna o usuário intangível, evitando todos os danos por um curto período."
         )
         self.atualizar_descrição()
         self.usuario = None
-        self.tempo_ativação = None
         self.ativa = False
 
     def efeito_intangibilidade(self):
@@ -113,27 +113,29 @@ class Intangibilidade(HabilidadeAtiva):
 
     def ativar(self, usuario):
         self.usuario = usuario
-        self.tempo_ativação = time.time()
+        self.duração = time.time()
         self.ativa = True
         self.usuario.estado = "intangivel"
+        self.atualizar()
 
     def atualizar(self):
         if not self.ativa:
             return
 
-        tempo_passado = time.time() - self.tempo_ativação
+        tempo_passado = time.time() - self.duração
         if tempo_passado > self.duração:
             self.ativa = False
             self.usuario.estado = "normal"
+            
 # ESPADACHIN
 class ImpactoCruzado(HabilidadeAtiva):
-    def __init__(self, range_pixel=100):
+    def __init__(self, range_pixel=150):
         super().__init__(
             nome="Impacto Cruzado",
             efeito=self.efeito_impacto_cruzado,
-            tempo_de_recarga=1,
-            nivel_minimo=1,
-            duração=1
+            tempo_de_recarga=5,
+            nivel_minimo=16,
+            duração=9
         )
         self.descrição_do_efeito = (
             "Causa dano dobrado a um alvo próximo."
@@ -142,14 +144,15 @@ class ImpactoCruzado(HabilidadeAtiva):
         self.usuario = None
         self.alvo = None
         self.range_pixel = range_pixel
-        self.tempo_ativação = None
         self.ativa = False
 
     def ativar(self, usuario, alvo):
         self.usuario = usuario
         self.alvo = alvo
-        self.tempo_ativação = time.time()
+        self.duração = time.time()
         self.ativa = True
+        self.esta_no_range()
+        self.atualizar()
 
     def esta_no_range(self):
         direção_x = self.usuario.posição_x - self.alvo.posição_x
@@ -161,7 +164,7 @@ class ImpactoCruzado(HabilidadeAtiva):
         if not self.ativa:
             return
 
-        tempo_passado = time.time() - self.tempo_ativação
+        tempo_passado = time.time() - self.duração
         if tempo_passado > self.duração:
             self.ativa = False
             self.iniciar_cooldown()
@@ -174,35 +177,34 @@ class ImpactoCruzado(HabilidadeAtiva):
 
     def efeito_impacto_cruzado(self, usuario, alvo):
         dano = int(max(0, (usuario.dano_final * 2) - (alvo.defesa_final * 0.5)))
-        alvo.vida -= dano
+        alvo.vida_atual -= dano
 
 class BloqueioDeEspada(HabilidadeAtiva):
     def __init__(self):
         super().__init__(
             nome="Bloqueio de Espada",
             efeito=self.efeito_bloqueio_de_espada,
-            tempo_de_recarga=1,
-            nivel_minimo=1,
-            duração=1
+            tempo_de_recarga=15,
+            nivel_minimo=50,
+            duração=5
         )
         self.descrição_do_efeito = (
             "Bloqueia ataques recebidos por um curto período."
         )
         self.atualizar_descrição()
         self.alvo = None
-        self.tempo_ativação = None
         self.ativa = False
 
     def ativar(self, alvo):
         self.alvo = alvo
-        self.tempo_ativação = time.time()
+        self.duração = time.time()
         self.ativa = True
         self.alvo.bloqueio_ativo = True
 
     def atualizar(self):
         if not self.ativa:
             return
-        tempo_passado = time.time() - self.tempo_ativação
+        tempo_passado = time.time() - self.duração
         if tempo_passado > self.duração:
             self.ativa = False
             self.alvo.bloqueio_ativo = False

@@ -8,7 +8,7 @@ sys.path.append(project_root)
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from backend.sistemas.modelos.adversarios import AdversarioDemiHumano
+from backend.sistemas.modelos.modelo_adversarios import AdversarioDemiHumano
 
 @dataclass
 class EnfraquecimentoBase(ABC):

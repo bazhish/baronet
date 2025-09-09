@@ -288,8 +288,8 @@ if __name__ == "__main__":
             anterior = JOGO
             dados_do_alvo_recebidos = False
             screen.blit(chao, (pos_chao_x, pos_chao_y))
-            rect.x = 16 + personagem_x - (len(list(primeiro_nome)) * 6)
-            nome_rect.x = 16 + personagem_x - (len(list(primeiro_nome)) * 2)
+            rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 3
+            nome_rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 9
             nome_rect.y = personagem_y - 40
 
 

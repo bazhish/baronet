@@ -313,7 +313,7 @@ if __name__ == "__main__":
 
             if marcado:
                 loc_mapa = [
-                            ((loc_marcado[0] - 250) * 19200) // (1670 - 250) + pos_chao_x,
+                            ((loc_marcado[0] - 500) * 19200) // (1380 - 500) + pos_chao_x,
                             ((loc_marcado[1] - 100) * 10800) // (980 - 100) + pos_chao_y
                         ]
                 
@@ -1183,8 +1183,8 @@ if __name__ == "__main__":
             
             quadrado_3.fill((*(0, 0, 0), 150))
             screen.blit(quadrado_3, (0, 0))
-            pygame.draw.rect(screen, (200, 200, 200), (100, 50, 1720, 980), border_radius=20)
-            screen.blit(mapa_img, (250, 100))
+            pygame.draw.rect(screen, (200, 200, 200), (350, 50, 1220, 980), border_radius=20)
+            screen.blit(mapa_img, (500, 100))
 
             if botoes[0] and not botao_segurado:  # clique esquerdo
                 botao_segurado = True
@@ -1197,13 +1197,14 @@ if __name__ == "__main__":
             if not botoes[0]:
                 botao_segurado = False
             
-            if marcado and pos_atual_mouse[0] in range(250, 1420) and pos_atual_mouse[1] in range(100, 880):
+            if marcado and pos_atual_mouse[0] in range(500, 1380) and pos_atual_mouse[1] in range(100, 980):
                 pygame.draw.circle(screen, (140, 20, 20), pos_atual_mouse, 10)
                 loc_marcado = pos_atual_mouse
             loc_personagem = (
-                            (( (personagem_x - pos_chao_x) * (1670 - 250)) // 19200 + 250),
+                            (( (personagem_x - pos_chao_x) * (1380 - 500)) // 19200 + 500),
                             (( (personagem_y - pos_chao_y) * (980 - 100)) // 10800 + 100)
                              )
+
             pygame.draw.circle(screen, (20, 20, 90), (loc_personagem[0], loc_personagem[1]), 10)
 
             
@@ -1234,6 +1235,7 @@ if __name__ == "__main__":
                 estado = INVENTARIO
             if not key[inventario]:
                 click_e = False
+
 
             
             if key[mapa] and not travar_mapa:

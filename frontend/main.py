@@ -173,6 +173,12 @@ rect_opcoes = pygame.Rect(LARGURA // 2.5, LARGURA // 1.5, ALTURA // 1.6, ALTURA 
 click = False
 click_e = False
 quadrado_3.fill((*(0, 0, 0), 150))
+estrucao_inventario = [pygame.Surface((LARGURA, 640), pygame.SRCALPHA),
+                       pygame.Surface((350, 240), pygame.SRCALPHA),
+                       pygame.Surface((1070, 240), pygame.SRCALPHA),
+                       pygame.Surface((LARGURA, 200), pygame.SRCALPHA)]
+for quadrad in estrucao_inventario:
+    quadrad.fill((*(0, 0, 0), 200))
 
 quadrado_7 = pygame.Surface((50, 50))
 personagem_x = LARGURA // 2
@@ -352,7 +358,7 @@ if __name__ == "__main__":
                         screen.blit(itens_icons[i], (1800, item_y))
                         item_y += 120
 
-            print(personagem_x, personagem_y)
+
 
             # velocidade
             vel = dados["status"]["velocidade"] * 2
@@ -1195,7 +1201,20 @@ if __name__ == "__main__":
             screen.blit(dano_text, (430, 830))
             screen.blit(defesa_text, (600, 830))
             screen.blit(dinheiro_text, (410, 665))
+
+            if estrucao <= 2:
+                screen.blit(estrucao_inventario[0], (0, 0))
+                screen.blit(estrucao_inventario[1], (0, 640))
+                screen.blit(estrucao_inventario[2], (850, 640))
+                screen.blit(estrucao_inventario[3], (0, 880))
+                pygame.draw.line(screen, (200, 200, 200), (850, 760), (1400, 760), 3)
+                pygame.draw.line(screen, (200, 200, 200), (1400, 760), (1400, 500), 3)
+
+                pygame.draw.rect(screen, (30, 30, 30), (1200, 250, 400, 250), border_radius=8)
+                pygame.draw.rect(screen, (200, 200, 200), (1200, 250, 400, 250), 3, 8)
+                texto = font_nome.render("Aqui mostra seu dinheiro, vida, estamina, dano e defesa", True, (200, 200, 200))
                         
+            
                                     
                         
                                     

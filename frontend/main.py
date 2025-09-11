@@ -137,6 +137,7 @@ buff_recebido = False
 #     habilidade_passiva_3 = exploracao_furtiva
 
 tamanho_font = 30
+timer = 0
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -177,7 +178,28 @@ estrucao_inventario = [pygame.Surface((LARGURA, 640), pygame.SRCALPHA),
                        pygame.Surface((350, 240), pygame.SRCALPHA),
                        pygame.Surface((1070, 240), pygame.SRCALPHA),
                        pygame.Surface((LARGURA, 200), pygame.SRCALPHA)]
+estrucao_inventario2 = [pygame.Surface((LARGURA, 130), pygame.SRCALPHA),
+                       pygame.Surface((880, 850), pygame.SRCALPHA),
+                       pygame.Surface((320, 850), pygame.SRCALPHA),
+                       pygame.Surface((LARGURA, 100), pygame.SRCALPHA)]
+
+estrucao_inventario3 = [pygame.Surface((LARGURA, 230), pygame.SRCALPHA),
+                       pygame.Surface((610, 320), pygame.SRCALPHA),
+                       pygame.Surface((1260, 320), pygame.SRCALPHA),
+                       pygame.Surface((LARGURA, 530), pygame.SRCALPHA)]
+
+estrucao_inventario4 = [pygame.Surface((LARGURA, 147), pygame.SRCALPHA),
+                       pygame.Surface((912, 144), pygame.SRCALPHA),
+                       pygame.Surface((880, 144), pygame.SRCALPHA),
+                       pygame.Surface((LARGURA, 789), pygame.SRCALPHA)]
+
 for quadrad in estrucao_inventario:
+    quadrad.fill((*(0, 0, 0), 200))
+for quadrad in estrucao_inventario2:
+    quadrad.fill((*(0, 0, 0), 200))
+for quadrad in estrucao_inventario3:
+    quadrad.fill((*(0, 0, 0), 200))
+for quadrad in estrucao_inventario4:
     quadrad.fill((*(0, 0, 0), 200))
 
 quadrado_7 = pygame.Surface((50, 50))
@@ -199,6 +221,11 @@ rect = pygame.Rect(
                 nome_rect.height
                 )
 
+skip = font_nome.render("click para passar", True, (200, 130, 130))
+capacete_E = []
+peitoral_E = []
+botas_E = []
+normal = []
 
 dados["inventario"]["item"].append([[itens[0].nome, "comum"], 1])
 dados["inventario"]["item"].append([[itens[-1].nome, itens[-1].raridade], 1])
@@ -253,6 +280,11 @@ if __name__ == "__main__":
             salvar(teclas, dados)
 
         teclas = dados["keys"]
+
+        capacete_E.clear()
+        peitoral_E.clear()
+        botas_E.clear()
+        normal.clear()
         
         tecla = [teclas["inventario"].lower(), teclas["correr"].lower(), teclas["habilidade"].lower(), teclas["habilidade_1"].lower(), teclas["habilidade_2"].lower(), teclas["mapa"].lower()]
         for nome_tecla in tecla:
@@ -546,8 +578,8 @@ if __name__ == "__main__":
 
         
             if dados["progresso"]["missao"] <= 1 and estrucao == 0:
-                texto = font_estrucao.render("pricione a tecla E", True, (200, 110, 110))
-                largura_texto, altura_texto = font_estrucao.size("pricione a tecla E")
+                texto = font_estrucao.render(f"pricione a tecla {dados["keys"]["inventario"]}", True, (200, 110, 110))
+                largura_texto, altura_texto = font_estrucao.size(f"pricione a tecla {dados["keys"]["inventario"]}")
                 quadrado_estrucao = pygame.Surface((largura_texto + 20, altura_texto + 20), pygame.SRCALPHA)
                 quadrado_estrucao.fill((*(0, 0, 0), 150))
                 screen.blit(quadrado_estrucao, ((LARGURA // 2) - (largura_texto // 2) - 10, 1000 - 10))
@@ -1029,6 +1061,24 @@ if __name__ == "__main__":
                                     precionado = True
                                     if item.nome not in (equipamento[0] for equipamento in dados["inventario"]["equipado"]) and item.type != "comum":
                                         dados["inventario"]["equipado"].append([item.nome, item.raridade])
+                                        for p, equipamento in enumerate(dados["inventario"]["equipado"]):
+                                            if equipamento[0].split()[0] == "Capacete":
+                                                capacete_E.append(p)
+                                            elif equipamento[0].split()[0] == "Peitoral":
+                                                peitoral_E.append(p)
+                                            elif equipamento[0].split()[0] == "Bota":
+                                                botas_E.append(p)
+                                            else:
+                                                normal.append(p)
+                                            if len(capacete_E) > 1:
+                                                dados["inventario"]["equipado"].pop(p)
+                                            if len(peitoral_E) > 1:
+                                                dados["inventario"]["equipado"].pop(p)
+                                            if len(botas_E) > 1:
+                                                dados["inventario"]["equipado"].pop(p)
+                                            if len(normal) > 5:
+                                                dados["inventario"]["equipado"].pop(p)
+                                            
                                     elif item.type != "comum":
                                         dados["inventario"]["equipado"].remove([item.nome, item.raridade])
                                         buff_vida -= item.vida
@@ -1190,7 +1240,7 @@ if __name__ == "__main__":
 
 
             vida_text = font_vida.render(str(dados["status"]["vida"] * 5 + buff_vida), True, (240, 100, 100))
-            estamina_text = font_vida.render(str(dados["status"]["dano"] * 2 - buff_estamina), True, (140, 255, 140))
+            estamina_text = font_vida.render(str(dados["status"]["dano"] * 2 - buff_estamina), True, (70, 215, 70))
             dano_text = font_vida.render(str(dados["status"]["dano"] + buff_dano), True, (240, 100, 100))
             defesa_text = font_vida.render(str(dados["status"]["defesa"] + buff_defesa), True, (160, 160, 255))
             dinheiro_text = font_vida.render(str(dados["inventario"]["dinheiro"]), True, (255, 255, 150))
@@ -1210,17 +1260,162 @@ if __name__ == "__main__":
                 pygame.draw.line(screen, (200, 200, 200), (850, 760), (1400, 760), 3)
                 pygame.draw.line(screen, (200, 200, 200), (1400, 760), (1400, 500), 3)
 
-                pygame.draw.rect(screen, (30, 30, 30), (1200, 250, 400, 250), border_radius=8)
-                pygame.draw.rect(screen, (200, 200, 200), (1200, 250, 400, 250), 3, 8)
-                texto = font_nome.render("Aqui mostra seu dinheiro, vida, estamina, dano e defesa", True, (200, 200, 200))
+                pygame.draw.rect(screen, (30, 30, 30), (1200, 300, 400, 200), border_radius=8)
+                pygame.draw.rect(screen, (200, 200, 200), (1200, 300, 400, 200), 3, 8)
+                texto = font_nome.render(" Aqui mostra seu", True, (200, 200, 200))
+                texto1 = font_nome.render("dinheiro, vida,", True, (200, 200, 200))
+                texto2 = font_nome.render("estamina, dano", True, (200, 200, 200))
+                texto3 = font_nome.render("e defesa.", True, (200, 200, 200))
+                if timer <= 2:
+                    skip.set_colorkey((200, 130, 130))
+                    timer += 0.25
+                    if timer >= 2:
+                        timer = 4
+                else:
+                    skip.set_colorkey((30, 30, 30))
+                    timer -= 0.25
+                    if timer <= 2:
+                        timer = 0
+                
+                screen.blit(texto, (1230, 320))
+                screen.blit(texto1, (1230, 350))
+                screen.blit(texto2, (1230, 380))
+                screen.blit(texto3, (1230, 410))
+                screen.blit(skip, (1225, 470))
+
+                if botoes[0] and not botao_segurado:
+                    estrucao = 3
+                    botao_segurado = True
+                if not botoes[0]:
+                    botao_segurado = False
+
+            elif estrucao <= 3:
+                screen.blit(estrucao_inventario2[0], (0, 0))
+                screen.blit(estrucao_inventario2[1], (0, 130))
+                screen.blit(estrucao_inventario2[2], (1600, 130))
+                screen.blit(estrucao_inventario2[3], (0, 980))
+                pygame.draw.line(screen, (200, 200, 200), (881, 200), (440, 200), 3)
+                pygame.draw.line(screen, (200, 200, 200), (440, 200), (440, 300), 3)
+
+                pygame.draw.rect(screen, (30, 30, 30), (220, 300, 400, 220), border_radius=8)
+                pygame.draw.rect(screen, (200, 200, 200), (220, 300, 400, 220), 3, 8)
+                        
+                texto = font_nome.render(" Aqui aparedera", True, (200, 200, 200))
+                texto1 = font_nome.render("todos os itens de", True, (200, 200, 200))
+                texto2 = font_nome.render("seu inventario", True, (200, 200, 200))
+                
+                if timer <= 2:
+                    skip.set_colorkey((200, 130, 130))
+                    timer += 0.25
+                    if timer >= 2:
+                        timer = 4
+                else:
+                    skip.set_colorkey((30, 30, 30))
+                    timer -= 0.25
+                    if timer <= 2:
+                        timer = 0
+
+                screen.blit(texto, (240, 320))
+                screen.blit(texto1, (240, 350))
+                screen.blit(texto2, (240, 380))
+                screen.blit(skip, (245, 470))
+
+                if botoes[0] and not botao_segurado:
+                    estrucao = 4
+                    botao_segurado = True
+                if not botoes[0]:
+                    botao_segurado = False
+            
+            elif estrucao <= 4:
+                screen.blit(estrucao_inventario3[0], (0, 0))
+                screen.blit(estrucao_inventario3[1], (0, 230))
+                screen.blit(estrucao_inventario3[2], (720, 230))
+                screen.blit(estrucao_inventario3[3], (0, 550))
+                pygame.draw.line(screen, (200, 200, 200), (720, 300), (900, 300), 3)
+
+                pygame.draw.rect(screen, (30, 30, 30), (900, 250, 400, 220), border_radius=8)
+                pygame.draw.rect(screen, (200, 200, 200), (900, 250, 400, 220), 3, 8)
+                        
+                texto = font_nome.render(" Aqui aparedera", True, (200, 200, 200))
+                texto1 = font_nome.render("as armaduras que", True, (200, 200, 200))
+                texto2 = font_nome.render("estão equipadas", True, (200, 200, 200))
+                
+                if timer <= 2:
+                    skip.set_colorkey((200, 130, 130))
+                    timer += 0.25
+                    if timer >= 2:
+                        timer = 4
+                else:
+                    skip.set_colorkey((30, 30, 30))
+                    timer -= 0.25
+                    if timer <= 2:
+                        timer = 0
+
+                screen.blit(texto, (920, 270))
+                screen.blit(texto1, (920, 300))
+                screen.blit(texto2, (920, 330))
+                screen.blit(skip, (925, 420))
+
+                if botoes[0] and not botao_segurado:
+                    estrucao = 5
+                    botao_segurado = True
+                if not botoes[0]:
+                    botao_segurado = False
+            
+            elif estrucao <= 5:
+                screen.blit(estrucao_inventario4[0], (0, 0))
+                screen.blit(estrucao_inventario4[1], (0, 147))
+                screen.blit(estrucao_inventario4[2], (1056, 147))
+                screen.blit(estrucao_inventario4[3], (0, 291))
+                pygame.draw.line(screen, (200, 200, 200), (984, 291), (984, 400), 3)
+
+                pygame.draw.rect(screen, (30, 30, 30), (784, 400, 400, 100), border_radius=8)
+                pygame.draw.rect(screen, (200, 200, 200), (784, 400, 400, 100), 3, 8)
+                        
+                texto = font_nome.render(" Click no item", True, (200, 200, 200))
+                texto1 = font_nome.render("para equipa-lo.", True, (200, 200, 200))
+                
+                if timer <= 2:
+                    skip.set_colorkey((200, 130, 130))
+                    timer += 0.25
+                    if timer >= 2:
+                        timer = 4
+                else:
+                    skip.set_colorkey((30, 30, 30))
+                    timer -= 0.25
+                    if timer <= 2:
+                        timer = 0
+
+                screen.blit(texto, (804, 420))
+                screen.blit(texto1, (804, 450))
+
+
+                if len(dados["inventario"]["equipado"]) > 0:
+                    estrucao = 6
+
+            elif estrucao == 6:
+                texto = font_estrucao.render(f"pricione a tecla {dados["keys"]["inventario"]}", True, (200, 110, 110))
+                largura_texto, altura_texto = font_estrucao.size(f"pricione a tecla {dados["keys"]["inventario"]}")
+                quadrado_estrucao = pygame.Surface((largura_texto + 20, altura_texto + 20), pygame.SRCALPHA)
+                quadrado_estrucao.fill((*(0, 0, 0), 150))
+                screen.blit(quadrado_estrucao, ((LARGURA // 2) - (largura_texto // 2) - 10, 1000 - 10))
+                screen.blit(texto, ((LARGURA // 2) - (largura_texto // 2), 1000))
+                if tamanho_estrucao <= 36:
+                    vel_letra = 0.5
+                if tamanho_estrucao >= 40:
+                    vel_letra = -0.5
+                tamanho_estrucao += vel_letra
+                if key[inventario]:
+                    estrucao = 7
+
+
+
+                                    
+                        
+                                    
+
                         
             
-                                    
-                        
-                                    
-
-                        
-
                 
 
             if key[inventario] and not click_e:
@@ -1288,6 +1483,7 @@ if __name__ == "__main__":
             quadrado_3.fill((*(0, 0, 0), 150))
             screen.blit(quadrado_3, (0, 0))
             pygame.draw.rect(screen, (200, 200, 200), (350, 50, 1220, 980), border_radius=20)
+            pygame.draw.rect(screen, (30, 30, 30), (490, 90, 900, 900), 10)
             screen.blit(mapa_img, (500, 100))
 
             if botoes[0] and not botao_segurado:  # clique esquerdo
@@ -1319,6 +1515,7 @@ if __name__ == "__main__":
             mesma_linha = 0
             item_hover = None  # <- guarda qual item o mouse está em cima
             pos_x, pos_y = item.x, item.y
+
 
 
 

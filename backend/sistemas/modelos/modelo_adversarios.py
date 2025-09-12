@@ -152,13 +152,34 @@ class AdversarioDemiHumano:
 
 
     def atacar(self, alvo):
-        if alvo.defesa_final >= self.dano_final:
-            dano = 0
-        elif alvo.bloqueio_ativo:
-            dano = 0
+        if self.precisao_bonus < 0:
+            ataque = randint(0, 100)
+            if ataque >= 100:
+                if alvo.defesa_final >= self.dano_final:
+                    dano = 0
+                    alvo.vida_atual -= dano
+                elif self.bloqueio_ativo:
+                    dano = 0
+                    alvo.vida_atual -= dano
+                elif alvo.estado == "intangível" or "camuflado":
+                    dano = 0
+                    alvo.vida_atual -= dano
+                else:
+                    dano = int(self.dano_final - alvo.defesa_final)
+                    alvo.vida_atual -= dano
         else:
-            dano = int(self.dano_final - alvo.defesa_final)
-            alvo.vida_atual -= dano
+            if alvo.defesa_final >= self.dano_final:
+                dano = 0
+                alvo.vida_atual -= dano
+            elif self.bloqueio_ativo:
+                dano = 0
+                alvo.vida_atual -= dano
+            elif alvo.estado == "intangível" or "camuflado":
+                dano = 0
+                alvo.vida_atual -= dano
+            else:
+                dano = int(self.dano_final - alvo.defesa_final)
+                alvo.vida_atual -= dano
 
     def estar_vivo(self):
         return self.vida_atual > 0

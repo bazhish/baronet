@@ -77,7 +77,7 @@ class GolpeMortal(HabilidadeAtiva):
         if not self.ativa:
             return
 
-        tempo_passado = time.time() - self.duração
+        tempo_passado = time.time()
         if tempo_passado > self.duração:
             self.ativa = False
             self.iniciar_cooldown()
@@ -115,14 +115,14 @@ class Intangibilidade(HabilidadeAtiva):
         self.usuario = usuario
         self.duração = time.time()
         self.ativa = True
-        self.usuario.estado = "intangivel"
+        self.usuario.estado = "intangível"
         self.atualizar()
 
     def atualizar(self):
         if not self.ativa:
             return
 
-        tempo_passado = time.time() - self.duração
+        tempo_passado = time.time()
         if tempo_passado > self.duração:
             self.ativa = False
             self.usuario.estado = "normal"
@@ -164,7 +164,7 @@ class ImpactoCruzado(HabilidadeAtiva):
         if not self.ativa:
             return
 
-        tempo_passado = time.time() - self.duração
+        tempo_passado = time.time()
         if tempo_passado > self.duração:
             self.ativa = False
             self.iniciar_cooldown()
@@ -204,32 +204,31 @@ class BloqueioDeEspada(HabilidadeAtiva):
     def atualizar(self):
         if not self.ativa:
             return
-        tempo_passado = time.time() - self.duração
+        tempo_passado = time.time()
         if tempo_passado > self.duração:
             self.ativa = False
             self.alvo.bloqueio_ativo = False
 
-    def efeito_bloqueio_de_espada(self, alvo):
+    def efeito_bloqueio_de_espada(self):
         pass
 
 # LANCEIRO
 class GiroDeLanca(HabilidadeAtiva):
-    def __init__(self, raio=100, duração=3):
+    def __init__(self, raio=175):
         super().__init__(
             nome="Giro de Lança",
             efeito=self.efeito_giro_de_lanca,
-            tempo_de_recarga=1,
-            nivel_minimo=1,
-            duração=duração
+            tempo_de_recarga=7,
+            nivel_minimo=16,
+            duração=2
         )
         self.descrição_do_efeito = (
-            f"Causa dano em área girando a lança, atingindo inimigos em um raio de {raio}."
+            f"Causa dano em área girando a lança, atingindo inimigos em um raio de {raio}px."
         )
         self.atualizar_descrição()
         self.usuario = None
         self.alvos = []
         self.raio = raio
-        self.tempo_ativação = None
         self.ativa = False
 
     def efeito_giro_de_lanca(self):
@@ -238,9 +237,11 @@ class GiroDeLanca(HabilidadeAtiva):
     def ativar(self, usuario, alvos):
         self.usuario = usuario
         self.alvos = alvos
-        self.tempo_ativação = time.time()
+        self.duração = time.time()
         self.ativa = True
         self.usuario.pode_mover = False
+        self.esta_dentro_area()
+        self.atualizar()
 
     def esta_dentro_area(self, inimigo):
         direção_x = inimigo.posição_x - self.usuario.posição_x
@@ -252,7 +253,7 @@ class GiroDeLanca(HabilidadeAtiva):
         if not self.ativa:
             return
 
-        tempo_passado = time.time() - self.tempo_ativação
+        tempo_passado = time.time()
         if tempo_passado > self.duração:
             self.ativa = False
             self.usuario.pode_mover = True
@@ -292,7 +293,7 @@ class LancaArremessada:
 
         self.distancia_percorrida += math.sqrt(direção_x*direção_x + direção_y*direção_y)
 
-        if self.distancia_percorrida >= self.alcance_maximo or (time.time() - self.tempo_ativação) > self.duração_maxima:
+        if self.distancia_percorrida >= self.alcance_maximo or time.time() > self.duração_maxima:
             self.retornar()
 
     def verificar_colisao(self, inimigos, obstaculos):
@@ -347,7 +348,7 @@ class ArremessoDeLanca(HabilidadeAtiva):
         self.usuario = usuario
         dano_inicial = self.usuario.dano_final * 2 
         redução_por_inimigo = 0.2  
-        alcance_maximo = 300
+        alcance_maximo = 700
         duração_maxima = self.duração
 
         self.lanca = LancaArremessada(self.usuario, direção, alcance_maximo, dano_inicial, redução_por_inimigo, duração_maxima)
@@ -366,6 +367,7 @@ class ArremessoDeLanca(HabilidadeAtiva):
         if not self.lanca.ativa:
             self.ativa = False
             self.iniciar_cooldown()
+
 # ARQUEIRO
 class ProjétilPerfurante:
     def __init__(self, usuario, direção, alcance_maximo, inimigos, obstaculos):
@@ -417,12 +419,12 @@ class DisparoPerfurante(HabilidadeAtiva):
         super().__init__(
             nome="Disparo Perfurante",
             efeito=self.efeito_disparo_perfurante,
-            tempo_de_recarga=5,
-            nivel_minimo=1,
-            duração=10 
+            tempo_de_recarga=12,
+            nivel_minimo=16,
+            duração=3 
         )
         self.descrição_do_efeito = (
-            f"Dispara uma flecha que perfura inimigos em linha reta até {alcance} de alcance."
+            f"Dispara uma flecha que perfura inimigos em linha reta até {alcance}px de alcance."
         )
         self.atualizar_descrição()
         self.usuario = None
@@ -466,19 +468,18 @@ class Camuflagem(HabilidadeAtiva):
         super().__init__(
             nome="Camuflagem",
             efeito=self.efeito_camuflagem,
-            tempo_de_recarga=5, 
-            nivel_minimo=1,
-            duração=10 
+            tempo_de_recarga=15, 
+            nivel_minimo=50,
+            duração=7
         )
         self.descrição_do_efeito = (
-            "Torna o usuário invisível por um tempo limitado."
+            'Torna o usuário "invisível" por um tempo limitado.'
         )
         self.atualizar_descrição()
         self.timer = None
 
     def efeito_camuflagem(self, usuario):
         usuario.estado = "camuflado"
-
         self.agendar_desativacao(usuario)
 
     def agendar_desativacao(self, usuario):
@@ -497,8 +498,8 @@ class AtaqueSurpresa(HabilidadeAtiva):
         super().__init__(
             nome="Ataque Surpresa",
             efeito=self.efeito_ataque_surpresa,
-            tempo_de_recarga=5,
-            nivel_minimo=1,
+            tempo_de_recarga=3,
+            nivel_minimo=16,
             duração=1
         )
         self.descrição_do_efeito = (
@@ -527,12 +528,12 @@ class FugaRapida(HabilidadeAtiva):
         super().__init__(
             nome="Fuga Rápida",
             efeito=self.efeito_fuga_rapida,
-            tempo_de_recarga=5,
-            nivel_minimo=1,
-            duração=1
+            tempo_de_recarga=7,
+            nivel_minimo=50,
+            duração=3
         )
         self.descrição_do_efeito = (
-            "Permite escapar rapidamente de inimigos próximos."
+            "sacrifica parte da vida para permitir escapar rapidamente de inimigos próximos."
         )
         self.atualizar_descrição()
 
@@ -540,29 +541,29 @@ class FugaRapida(HabilidadeAtiva):
         if not inimigos:
             return
         
+        usuario.velocidade_bonus = usuario.velocidade_base + usuario.defesa_base
+        usuario.defesa_bonus = usuario.velocidade_base + usuario.defesa_base
+        
         media_dano_inimigos = sum(inimigo.dano_final for inimigo in inimigos) / len(inimigos)
         dano = int(max(0, (media_dano_inimigos * 5) - (usuario.defesa_final + usuario.velocidade_final)))
 
-        usuario.vida -= dano
-
-        usuario.velocidade_bonus = usuario.velocidade_base + usuario.defesa_base
-        usuario.defesa_bonus = usuario.velocidade_base + usuario.defesa_base
+        usuario.vida_atual -= dano
 
     def ativar(self, usuario, inimigos):
         self.efeito_fuga_rapida(usuario, inimigos)
 
 # ANDARILHO
 class PassoFantasma(HabilidadeAtiva):
-    def __init__(self, distancia=150):
+    def __init__(self, distancia=300):
         super().__init__(
             nome="Passo Fantasma",
             efeito=self.efeito_passo_fantasma,
-            tempo_de_recarga=5,
-            nivel_minimo=1,
+            tempo_de_recarga=8,
+            nivel_minimo=16,
             duração=0.5
         )
         self.descrição_do_efeito = (
-            f"Move rapidamente o usuário na direção escolhida, atravessando obstáculos por {distancia} unidades."
+            f"Move rapidamente o usuário na direção escolhida, atravessando obstáculos por {distancia}px."
         )
         self.atualizar_descrição()
         self.usuario = None
@@ -576,7 +577,7 @@ class PassoFantasma(HabilidadeAtiva):
         self.direcao = direcao
         self.tempo_ativação = time.time()
         self.ativa = True
-        self.usuario.estado = "intangivel"
+        self.usuario.estado = "intangível"
 
     def atualizar(self):
         if not self.ativa:
@@ -599,7 +600,7 @@ class Areia(HabilidadeAtiva):
             nome="Areia nos Olhos",
             efeito=self.efeito_areia_nos_olhos,
             tempo_de_recarga=6,
-            nivel_minimo=1,
+            nivel_minimo=50,
             duração=1
         )
         self.duração_efeito = duração_efeito
@@ -611,15 +612,13 @@ class Areia(HabilidadeAtiva):
 
     def efeito_areia_nos_olhos(self, usuario, alvo):
         if alvo:
-            usuario.vida -= int(max(0, (alvo.dano_final * 5) - (usuario.velocidade_final + usuario.defesa_final)))
+            usuario.vida_atual -= int(max(0, (alvo.dano_final * 5) - (usuario.velocidade_final + usuario.defesa_final)))
             usuario.velocidade_bonus = int(usuario.velocidade_base + usuario.defesa_base)
             usuario.defesa_bonus = int(usuario.velocidade_base + usuario.defesa_base)
             alvo.precisao_bonus -= 50  
-            alvo.critico_bonus -= 50  
 
             def restaurar():
                 alvo.precisao_bonus += 50
-                alvo.critico_bonus += 50
 
             timer = threading.Timer(self.duração_efeito, restaurar)
             timer.start()   
@@ -634,8 +633,8 @@ class ComboRelampago(HabilidadeAtiva):
             nome="Combo Relâmpago",
             efeito=self.efeito_combo_relampago,
             tempo_de_recarga=8,
-            nivel_minimo=1,
-            duração=1
+            nivel_minimo=16,
+            duração=4
         )
 
         self.descrição_do_efeito = (
@@ -658,8 +657,8 @@ class PosturaDeFerro(HabilidadeAtiva):
             nome="Postura de Ferro",
             efeito=self.efeito_postura_de_ferro,
             tempo_de_recarga=12,
-            nivel_minimo=1,
-            duração=1
+            nivel_minimo=50,
+            duração=5
         )
     
         self.duração_efeito = duração_efeito
@@ -686,13 +685,13 @@ class PosturaDeFerro(HabilidadeAtiva):
 
 # GUERREIRO
 class GritoDeGuerra(HabilidadeAtiva):
-    def __init__(self, duração_efeito=5):
+    def __init__(self, duração_efeito=10):
         super().__init__(
             nome="Grito de Guerra",
             efeito=self.efeito_grito_de_guerra,
             tempo_de_recarga=10,
-            nivel_minimo=1,
-            duração=1
+            nivel_minimo=16,
+            duração=4
         )
         self.duração_efeito = duração_efeito
         self.descrição_do_efeito = (
@@ -700,21 +699,19 @@ class GritoDeGuerra(HabilidadeAtiva):
         )
         self.atualizar_descrição()
 
-    def efeito_grito_de_guerra(self, usuario, aliados):
-        for aliado in aliados:
-            aliado.dano_bonus += int(usuario.dano_base * 0.5)
-            aliado.defesa_bonus += int(usuario.defesa_base * 0.5)
+    def efeito_grito_de_guerra(self, usuario):
+        usuario.dano_bonus += int(usuario.dano_base * 0.5)
+        usuario.defesa_bonus += int(usuario.defesa_base * 0.5)
 
         def restaurar():
-            for aliado in aliados:
-                aliado.dano_bonus -= int(usuario.dano_base * 0.5)
-                aliado.defesa_bonus -= int(usuario.defesa_base * 0.5)
+            usuario.dano_bonus -= int(usuario.dano_base * 0.5)
+            usuario.defesa_bonus -= int(usuario.defesa_base * 0.5)
 
         timer = threading.Timer(self.duração_efeito, restaurar)
         timer.start()
 
-    def ativar(self, usuario, aliados):
-        self.efeito_grito_de_guerra(usuario, aliados)
+    def ativar(self, usuario):
+        self.efeito_grito_de_guerra(usuario)
 
 class InvestidaBrutal(HabilidadeAtiva):
     def __init__(self, distancia=200):
@@ -722,12 +719,12 @@ class InvestidaBrutal(HabilidadeAtiva):
             nome="Investida Brutal",
             efeito=self.efeito_investida_brutal,
             tempo_de_recarga=8,
-            nivel_minimo=1,
+            nivel_minimo=50,
             duração=0.5
         )
         self.distancia = distancia
         self.descrição_do_efeito = (
-            f"Avança rapidamente e causa dano elevado ao primeiro inimigo atingido em até {distancia} unidades."
+            f"Avança rapidamente e causa dano elevado ao primeiro inimigo atingido em até {distancia} unipxdades."
         )
         self.atualizar_descrição()
 
@@ -753,7 +750,7 @@ class AuraVenenosa(HabilidadeAtiva):
             nome="Aura Venenosa",
             efeito=self.efeito_aura_venenosa,
             tempo_de_recarga=10,
-            nivel_minimo=1,
+            nivel_minimo=16,
             duração=duração_efeito
         )
         self.raio = raio
@@ -800,7 +797,7 @@ class OlharParalisante(HabilidadeAtiva):
             nome="Olhar Paralisante",
             efeito=self.efeito_olhar_paralisante,
             tempo_de_recarga=12,
-            nivel_minimo=1,
+            nivel_minimo=50,
             duração=duração_efeito
         )
         self.raio = raio

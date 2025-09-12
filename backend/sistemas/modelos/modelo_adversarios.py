@@ -154,7 +154,7 @@ class AdversarioDemiHumano:
     def atacar(self, alvo):
         if self.precisao_bonus < 0:
             ataque = randint(0, 100)
-            if ataque >= 100:
+            if ataque >= 90:
                 if alvo.defesa_final >= self.dano_final:
                     dano = 0
                     alvo.vida_atual -= dano

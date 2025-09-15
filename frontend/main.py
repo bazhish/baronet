@@ -70,6 +70,7 @@ tamanho_estrucao = 36
 font_estrucao = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", tamanho_estrucao)
 
 font_nome = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", ALTURA // 50)
+font_descrição = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", 18)
 nome = font_nome.render(f"{primeiro_nome}", True, (190, 190, 230))
 
 if __name__ == "__main__":
@@ -142,6 +143,7 @@ timer = 0
 pygame.init()
 clock = pygame.time.Clock()
 botao_segurado = False
+botao_segurado_m = False
 
 
 
@@ -162,7 +164,7 @@ sombra = pygame.Surface((100 * LARGURA // 1920, 20 * LARGURA // 1920), pygame.SR
 marcado = False
 desmarcar = True
 
-pos_chao_x, pos_chao_y = (-5000, -3500)
+pos_chao_x, pos_chao_y = (-2360, -6924)
 
 quadrado = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
 quadrado_2 = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
@@ -193,6 +195,11 @@ estrucao_inventario4 = [pygame.Surface((LARGURA, 147), pygame.SRCALPHA),
                        pygame.Surface((880, 144), pygame.SRCALPHA),
                        pygame.Surface((LARGURA, 789), pygame.SRCALPHA)]
 
+estrucao_mapa = [pygame.Surface((LARGURA, 90), pygame.SRCALPHA),
+                       pygame.Surface((490, 900), pygame.SRCALPHA),
+                       pygame.Surface((530, 900), pygame.SRCALPHA),
+                       pygame.Surface((LARGURA, 90), pygame.SRCALPHA)]
+
 for quadrad in estrucao_inventario:
     quadrad.fill((*(0, 0, 0), 200))
 for quadrad in estrucao_inventario2:
@@ -200,6 +207,8 @@ for quadrad in estrucao_inventario2:
 for quadrad in estrucao_inventario3:
     quadrad.fill((*(0, 0, 0), 200))
 for quadrad in estrucao_inventario4:
+    quadrad.fill((*(0, 0, 0), 200))
+for quadrad in estrucao_mapa:
     quadrad.fill((*(0, 0, 0), 200))
 
 quadrado_7 = pygame.Surface((50, 50))
@@ -358,7 +367,7 @@ if __name__ == "__main__":
             if marcado:
                 loc_mapa = [
                             ((loc_marcado[0] - 500) * 19200) // (1380 - 500) + pos_chao_x,
-                            ((loc_marcado[1] - 100) * 10800) // (980 - 100) + pos_chao_y
+                            ((loc_marcado[1] - 100) * 19200) // (980 - 100) + pos_chao_y
                         ]
                 
                 if loc_mapa[0] <= 0:
@@ -374,6 +383,7 @@ if __name__ == "__main__":
                             loc_mapa[1])
 
                 pygame.draw.circle(screen, (190, 60, 60), loc_mapa, 30)
+            print(pos_chao_x, pos_chao_y)
 
             item_x = 1800
             item_y = 250
@@ -397,7 +407,7 @@ if __name__ == "__main__":
 
             # limites do mapa (10x a largura/altura da tela)
             MAPA_LARGURA = LARGURA * 10
-            MAPA_ALTURA = ALTURA * 10
+            MAPA_ALTURA = LARGURA * 10
 
             # ---------------------------
             # Movimento diagonal (A + W)
@@ -590,7 +600,21 @@ if __name__ == "__main__":
                     vel_letra = -0.5
                 tamanho_estrucao += vel_letra
                 if key[inventario]:
-                    estrucao += 1
+                    estrucao = 2
+            elif estrucao == 7:
+                texto = font_estrucao.render(f"pricione a tecla {dados["keys"]["mapa"]}", True, (200, 110, 110))
+                largura_texto, altura_texto = font_estrucao.size(f"pricione a tecla {dados["keys"]["inventario"]}")
+                quadrado_estrucao = pygame.Surface((largura_texto + 20, altura_texto + 20), pygame.SRCALPHA)
+                quadrado_estrucao.fill((*(0, 0, 0), 150))
+                screen.blit(quadrado_estrucao, ((LARGURA // 2) - (largura_texto // 2) - 10, 1000 - 10))
+                screen.blit(texto, ((LARGURA // 2) - (largura_texto // 2), 1000))
+                if tamanho_estrucao <= 36:
+                    vel_letra = 0.5
+                if tamanho_estrucao >= 40:
+                    vel_letra = -0.5
+                tamanho_estrucao += vel_letra
+                if key[mapa]:
+                    estrucao = 8
 
 
 
@@ -1252,7 +1276,7 @@ if __name__ == "__main__":
             screen.blit(defesa_text, (600, 830))
             screen.blit(dinheiro_text, (410, 665))
 
-            if estrucao <= 2:
+            if estrucao == 2:
                 screen.blit(estrucao_inventario[0], (0, 0))
                 screen.blit(estrucao_inventario[1], (0, 640))
                 screen.blit(estrucao_inventario[2], (850, 640))
@@ -1289,7 +1313,7 @@ if __name__ == "__main__":
                 if not botoes[0]:
                     botao_segurado = False
 
-            elif estrucao <= 3:
+            elif estrucao == 3:
                 screen.blit(estrucao_inventario2[0], (0, 0))
                 screen.blit(estrucao_inventario2[1], (0, 130))
                 screen.blit(estrucao_inventario2[2], (1600, 130))
@@ -1326,7 +1350,7 @@ if __name__ == "__main__":
                 if not botoes[0]:
                     botao_segurado = False
             
-            elif estrucao <= 4:
+            elif estrucao == 4:
                 screen.blit(estrucao_inventario3[0], (0, 0))
                 screen.blit(estrucao_inventario3[1], (0, 230))
                 screen.blit(estrucao_inventario3[2], (720, 230))
@@ -1362,7 +1386,7 @@ if __name__ == "__main__":
                 if not botoes[0]:
                     botao_segurado = False
             
-            elif estrucao <= 5:
+            elif estrucao == 5:
                 screen.blit(estrucao_inventario4[0], (0, 0))
                 screen.blit(estrucao_inventario4[1], (0, 147))
                 screen.blit(estrucao_inventario4[2], (1056, 147))
@@ -1486,8 +1510,8 @@ if __name__ == "__main__":
             pygame.draw.rect(screen, (30, 30, 30), (490, 90, 900, 900), 10)
             screen.blit(mapa_img, (500, 100))
 
-            if botoes[0] and not botao_segurado:  # clique esquerdo
-                botao_segurado = True
+            if botoes[0] and not botao_segurado_m:  # clique esquerdo
+                botao_segurado_m = True
                 if not marcado:
                     pos_atual_mouse = pygame.mouse.get_pos()
                     marcado = True
@@ -1495,18 +1519,38 @@ if __name__ == "__main__":
                     marcado = False
             
             if not botoes[0]:
-                botao_segurado = False
+                botao_segurado_m = False
             
             if marcado and pos_atual_mouse[0] in range(500, 1380) and pos_atual_mouse[1] in range(100, 980):
                 pygame.draw.circle(screen, (140, 20, 20), pos_atual_mouse, 10)
                 loc_marcado = pos_atual_mouse
             loc_personagem = (
                             (( (personagem_x - pos_chao_x) * (1380 - 500)) // 19200 + 500),
-                            (( (personagem_y - pos_chao_y) * (980 - 100)) // 10800 + 100)
+                            (( (personagem_y - pos_chao_y) * (980 - 100)) // 19200 + 100)
                              )
             pygame.draw.circle(screen, (20, 20, 90), (loc_personagem[0], loc_personagem[1]), 10)
 
+            texto_descricao_nome = font_descrição.render("Você", True, (30, 30, 30))
+            texto_descricao_marcado = font_descrição.render("Marcado", True, (30, 30, 30))
+            texto_descricao_Missao = font_descrição.render("Missão", True, (30, 30, 30))
+
+            pygame.draw.rect(screen, (190, 190, 190), [1400, 130, 160, 100], border_radius=10)
+            pygame.draw.rect(screen, (30, 30, 30), [1400, 130, 160, 100], 2, 10)
             
+
+            screen.blit(texto_descricao_nome, (1430, 140))
+            screen.blit(texto_descricao_marcado, (1430, 170))
+            screen.blit(texto_descricao_Missao, (1430, 200))
+
+            pygame.draw.rect(screen, (20, 20, 90), [1410, 140, 15, 15])
+            pygame.draw.rect(screen, (0, 0, 0), [1410, 140, 15, 15], 1)
+            pygame.draw.rect(screen, (140, 20, 20), [1410, 170, 15, 15])
+            pygame.draw.rect(screen, (0, 0, 0), [1410, 170, 15, 15], 1)
+            pygame.draw.rect(screen, (180, 180, 20), [1410, 200, 15, 15])
+            pygame.draw.rect(screen, (0, 0, 0), [1410, 200, 15, 15], 1)
+
+
+
 
             for item in itens:
                 if not (item.type == "defesa") or item.nome not in (equipamento[0] for equipamento in dados["inventario"]["equipado"]):
@@ -1516,7 +1560,43 @@ if __name__ == "__main__":
             item_hover = None  # <- guarda qual item o mouse está em cima
             pos_x, pos_y = item.x, item.y
 
+            if estrucao == 8:
+                screen.blit(estrucao_mapa[0], (0, 0))
+                screen.blit(estrucao_mapa[1], (0, 90))
+                screen.blit(estrucao_mapa[2], (1390, 90))
+                screen.blit(estrucao_mapa[3], (0, 990))
+                pygame.draw.line(screen, (200, 200, 200), (1390, 300), (1480, 300), 3)
 
+                pygame.draw.rect(screen, (30, 30, 30), (1480, 250, 420, 250), border_radius=8)
+                pygame.draw.rect(screen, (200, 200, 200), (1480, 250, 420, 250), 3, 8)
+                        
+                texto = font_nome.render(" Aqui é o mapa do", True, (200, 200, 200))
+                texto1 = font_nome.render("jogo, ao clica-lo é", True, (200, 200, 200))
+                texto2 = font_nome.render("marcado a posição", True, (200, 200, 200))
+                texto3 = font_nome.render("que você desejar", True, (200, 200, 200))
+                
+                if timer <= 2:
+                    skip.set_colorkey((200, 130, 130))
+                    timer += 0.25
+                    if timer >= 2:
+                        timer = 4
+                else:
+                    skip.set_colorkey((30, 30, 30))
+                    timer -= 0.25
+                    if timer <= 2:
+                        timer = 0
+
+                screen.blit(texto, (1500, 270))
+                screen.blit(texto1, (1500, 300))
+                screen.blit(texto2, (1500, 330))
+                screen.blit(texto3, (1500, 360))
+                screen.blit(skip, (1515, 450))
+
+                if botoes[0] and not botao_segurado:
+                    estrucao = 9
+                    botao_segurado = True
+                if not botoes[0]:
+                    botao_segurado = False
 
 
 

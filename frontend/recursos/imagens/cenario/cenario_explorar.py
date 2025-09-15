@@ -73,4 +73,4 @@ mapa_img = image.load(fr"{endereço}\mapa.png")
 mapa_img = transform.scale(mapa_img, (880 * LArgura // 1920, 880 * LArgura // 1920))
 
 chao = image.load(fr"{endereço}\mapa.png")
-chao = transform.scale(chao, (10 * LArgura, 10 * Altura))
+chao = transform.scale(chao, (10 * LArgura, 10 * LArgura))

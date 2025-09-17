@@ -1,4 +1,4 @@
-#  backend\sistemas\modelos\habilidades_ativa_combatentes.py
+# backend\sistemas\classes\habilidades_ativa_de_suporte.py
 from dataclasses import dataclass, field
 from random import uniform, randint
 from typing import Callable, Optional, Any
@@ -11,9 +11,10 @@ class HabilidadeAtiva:
     tempo_de_recarga: int
     nivel_minimo: int
     duração: int
-    descrição_do_efeito: str = field(default = "", init = False)
-    descrição: str = field(default = "", init = False)
+
     def __post_init__(self):
+        self.descrição_do_efeito = "nenhuma"
+        self.descrição = "nenhuma"
         self.tempo_de_recarga_restante = 0
         self.duração_restante = 0
         self.uso = None

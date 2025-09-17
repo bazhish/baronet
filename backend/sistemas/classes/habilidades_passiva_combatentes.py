@@ -1,4 +1,4 @@
-# backend\sistemas\modelos\habilidades_passiva_combatentes.py
+# backend\sistemas\classes\habilidades_passiva_combatentes.py
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 

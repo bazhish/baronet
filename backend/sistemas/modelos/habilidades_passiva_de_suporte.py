@@ -44,3 +44,47 @@ def efeito_peso_pena(usuario):
 bloqueio_de_ataque = HabilidadePassiva("bloqueio de ataque", efeito_bloqueio_de_ataque, 12)
 repelir = HabilidadePassiva("repelir", efeito_repelir, 45)
 peso_pena = HabilidadePassiva("peso pena", efeito_peso_pena, 70)
+
+
+# Curandeiro
+def efeito_cura(usuario):
+    cura = usuario.vida_base * 0.2
+    usuario.vida_atual += cura
+
+def efeito_remover_debuff(usuario):
+    usuario.debuffs.clear()
+
+def efeito_remendo(adversario):
+    adversario.dano_final *= 0.5
+
+cura = HabilidadePassiva("cura", efeito_cura, 5)
+remover_debuff = HabilidadePassiva("remover debuff", efeito_remover_debuff, 25)
+remendo = HabilidadePassiva("Remendo",efeito_remendo,50)
+
+# Bardo
+def efeito_buff_grupo(usuario):
+    for aliado in usuario.grupo:
+        aliado.ataque_bonus += aliado.ataque_base * 0.1
+        aliado.defesa_bonus += aliado.defesa_base * 0.1
+
+def efeito_debuff_inimigo(adversario):
+    adversario.defesa_final -= adversario.defesa_base * 0.1
+
+buff_grupo = HabilidadePassiva("buff grupo", efeito_buff_grupo, 15)
+debuff_inimigo = HabilidadePassiva("debuff inimigo", efeito_debuff_inimigo, 25)
+
+# Ilusionista
+def efeito_clones(adversario):
+    adversario.defesa -= 0.5 
+
+def efeito_espelho(usuario):
+    usuario.defesa_bonus += usuario.defesa_base * 0.3  
+
+def efeito_engano(adversario):
+    adversario.ataque_final *= 0.8 
+
+clones = HabilidadePassiva("clones", efeito_clones, 18)
+espelho = HabilidadePassiva("espelho", efeito_espelho, 30)
+engano = HabilidadePassiva("engano", efeito_engano, 40)
+
+

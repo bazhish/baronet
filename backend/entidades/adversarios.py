@@ -3,7 +3,7 @@ while not os.path.isdir(os.path.join(project_root, ".git")) and os.path.dirname(
 sys.path.append(project_root)
 from backend.sistemas.modelos.modelo_adversarios import AdversarioMonstro, AdversarioDemiHumano
 from backend.sistemas.modelos.modelos_armas import criar_arma
-from backend.sistemas.modelos.classes_combatentes import arqueiro, guerreiro, meedusa, batedor, assassino
+from backend.sistemas.classes.classes_combatentes import arqueiro, guerreiro, meedusa, batedor, assassino
 
 # ----------------------------------------------------- MONSTROS ---------------------------------------------------------------------------------
 

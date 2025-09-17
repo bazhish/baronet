@@ -7,8 +7,8 @@ while not os.path.isdir(os.path.join(project_root, ".git")) and os.path.dirname(
 sys.path.append(project_root)
 
 labirinto_mental = LabirintoMental()
-from backend.sistemas.modelos.habilidades_ativa_de_suporte import (ataque_com_escudo, defesa_reforcada,bençao_vital,milagre_da_vida,melodia_da_fraqueza,sinfonia_estatica,miragem_sombria,)
-from backend.sistemas.modelos.habilidades_passiva_de_suporte import (bloqueio_de_ataque, repelir, peso_pena, cura,remover_debuff,remendo,buff_grupo,debuff_inimigo,clones,espelho,engano)
+from backend.sistemas.classes.habilidades_ativa_de_suporte import (ataque_com_escudo, defesa_reforcada,bençao_vital,milagre_da_vida,melodia_da_fraqueza,sinfonia_estatica,miragem_sombria,)
+from backend.sistemas.classes.habilidades_passiva_de_suporte import (bloqueio_de_ataque, repelir, peso_pena, cura,remover_debuff,remendo,buff_grupo,debuff_inimigo,clones,espelho,engano)
 
 @dataclass
 class Classe:

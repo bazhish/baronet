@@ -5,9 +5,6 @@ endereço = path.abspath(path.join(path.abspath(__file__), "..", "..", "..", "..
 with open(rf"{endereço}\usuario.json", "r") as arquivo:
     dados = load(arquivo)
 
-
-
-
 class Usuario:
     def __init__(self):
         # DADOS PESSOAIS

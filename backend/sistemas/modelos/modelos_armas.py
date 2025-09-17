@@ -133,6 +133,7 @@ tabela_armas = {
         "katana": {"comum": (9,4), "rara": (15,4), "épica": (18,3), "lendaria": (20,33)},
         "sabre": {"comum": (7,4), "rara": (10,4), "épica": (15,3), "lendaria": (20,3)},
         "punho": {"comum": (2,1), "rara": (4,1), "épica": (7,1), "lendaria": (10,1)},
+        "clava": {"comum": (7,4), "rara": (12,4), "épica": (17,3), "lendaria": (22,3)},
     }
 
 def criar_arma(tipo: str, nome: str, raridade: str, usuario, durabilidade: int, experiência_máxima_inicial: int, crescimento_de_experiência: float, porcentagem_de_reparo: float, porcentagem_de_evolução: float ):
@@ -156,6 +157,7 @@ def criar_arma(tipo: str, nome: str, raridade: str, usuario, durabilidade: int, 
         "sabre": {"comum": (7,4), "rara": (10,4), "épica": (15,3), "lendaria": (20,3)},
         "punho": {"comum": (2,1), "rara": (4,1), "épica": (7,1), "lendaria": (10,1)},
         "clava": {"comum": (7,4), "rara": (12,4), "épica": (17,3), "lendaria": (22,3)},
+        
     }
 
     dano, peso = tabela_armas[tipo][raridade]

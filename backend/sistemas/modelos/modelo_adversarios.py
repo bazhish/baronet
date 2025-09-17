@@ -161,7 +161,7 @@ class AdversarioDemiHumano:
                 elif self.bloqueio_ativo:
                     dano = 0
                     alvo.vida_atual -= dano
-                elif alvo.estado == "intangível" or "camuflado":
+                elif alvo.estado == "intangível" or "camuflado" or "confuso":
                     dano = 0
                     alvo.vida_atual -= dano
                 else:
@@ -174,7 +174,7 @@ class AdversarioDemiHumano:
             elif self.bloqueio_ativo:
                 dano = 0
                 alvo.vida_atual -= dano
-            elif alvo.estado == "intangível" or "camuflado":
+            elif alvo.estado == "intangível" or "camuflado" or "confuso":
                 dano = 0
                 alvo.vida_atual -= dano
             else:

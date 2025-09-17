@@ -1,12 +1,18 @@
-# backend\sistemas\modelos\habilidades_ativa_de_suporte.py
+# backend\sistemas\classes\habilidades_ativa_de_suporte.py
+from dataclasses import dataclass, field
+from random import uniform, randint
+from typing import Callable, Optional, Any
 import math, time, threading
 
+@dataclass
 class HabilidadeAtiva:
-    def __init__(self, nome, efeito, tempo_de_recarga, tempo_de_duração, nível_minimo, duração):
-        self.nome = nome
-        self.efeito = efeito
-        self.tempo_de_recarga = tempo_de_recarga
-        self.tempo_de_duração = tempo_de_duração
+    nome: str
+    efeito: Callable[[Any, Optional[Any]], None]
+    tempo_de_recarga: int
+    tempo_de_duração: int
+    nível_minimo: int
+
+    def __post_init__(self):
         self.descrição_do_efeito = "nenhuma"
         self.descrição = "nenhuma"
         self.tempo_de_recarga_restante = 0
@@ -20,43 +26,38 @@ class HabilidadeAtiva:
             f"Duração: {self.tempo_de_duração}\n"
             f"Efeito: {self.descrição_do_efeito}\n"
         )
+
+    def verificar_nivel(self, usuario):
+        self.uso = usuario.nível_atual >= self.nível_minimo
+
     def aplicar_habilidade(self, usuario, alvo):
         if self.uso == True and self.tempo_de_recarga_restante == 0:
             self.efeito(usuario, alvo)
-        self.iniciar_contagem()
-        
-        
+            self.duração_restante = self.duração
+            self.tempo_de_recarga_restante = self.tempo_de_recarga
 
-    def iniciar_contagem(self):
-        self.tempo_de_duração_restante = self.tempo_de_duração
-        for segundo in range(self.tempo_de_duração):
-            self.tempo_de_duração_restante -= 1
-            time.sleep(1)
-    
-    def iniciar_tempo_de_recarga(self):
+    def iniciar_cooldown(self):
         self.tempo_de_recarga_restante = self.tempo_de_recarga
-        for segundo in range(self.tempo_de_recarga):
-            self.tempo_de_recarga_restante -= 1
-            time.sleep(1)
 
 # ESCUDEIRO
 class AtaqueComEscudo(HabilidadeAtiva):
-    def __init__(self):
+    def __init__(self, raio_maximo=100):
         super().__init__(
             nome="Ataque com Escudo",
             efeito=self.efeito_ataque_com_escudo,
-            tempo_de_recarga=1,
-            nível_minimo=1,
-            duração=1
+            tempo_de_recarga=3,
+            nível_minimo=16,
+            duração=5
         )
         self.descrição_do_efeito = (
-            "Permite atacar com o escudo, causando dano baseado na defesa."
+            f"Permite atacar com o escudo, causando dano baseado na defesa. Alcance máximo: {raio_maximo} pixels."
         )
         self.atualizar_descrição()
         self.usuario = None
         self.alvo = None
         self.tempo_ativação = None
         self.ativa = False
+        self.raio_maximo = raio_maximo
 
     def ativar(self, usuario, alvo):
         self.usuario = usuario
@@ -74,8 +75,13 @@ class AtaqueComEscudo(HabilidadeAtiva):
             self.ativa = False
             self.usuario.pode_atacar = False
 
+    def dentro_do_raio(self, usuario, alvo):
+        distância_x = alvo.posição_x - usuario.posição_x
+        distância_y = alvo.posição_y - usuario.posição_y
+        return math.sqrt(distância_x*distância_x + distância_y*distância_y) <= self.raio_maximo
+
     def efeito_ataque_com_escudo(self, usuario, alvo):
-        if alvo:
+        if alvo and self.dentro_do_raio(usuario, alvo):
             dano = int(max(0, (usuario.defesa_final * 2) - (alvo.defesa_final * 0.75)))
             alvo.vida -= dano
 
@@ -84,8 +90,8 @@ class DefesaReforçada(HabilidadeAtiva):
         super().__init__(
             nome="Defesa Reforçada",
             efeito=self.efeito_defesa_reforcada,
-            tempo_de_recarga=1,
-            nível_minimo=1,
+            tempo_de_recarga=10,
+            nível_minimo=50,
             duração=duração
         )
         self.descrição_do_efeito = (
@@ -137,7 +143,7 @@ class DefesaReforçada(HabilidadeAtiva):
 
         self.personagens_no_campo = personagens_atuais
 
-    def efeito_defesa_reforcada(self, usuario):
+    def efeito_defesa_reforcada(self):
         pass
 
 # CURANDEIRO
@@ -146,16 +152,16 @@ class BencaoVital(HabilidadeAtiva):
         super().__init__(
             nome="Bênção Vital",
             efeito=self.efeito_bencao,
-            tempo_de_recarga=10,
-            nível_minimo=1,
-            duração=6  # tempo total do efeito
+            tempo_de_recarga=7,
+            nível_minimo=16,
+            duração=6  
         )
         self.thread = None
         self.ativa = False
 
     def efeito_bencao(self, usuario, aliados):
         if self.ativa:
-            return  # evita reativar antes de acabar
+            return 
 
         self.ativa = True
         inicio = time.time()
@@ -163,9 +169,9 @@ class BencaoVital(HabilidadeAtiva):
         def loop_cura():
             while time.time() - inicio < self.duração:
                 for aliado in aliados:
-                    cura = int(usuario.poder_magico * 0.8)
-                    aliado.vida = min(aliado.vida_maxima, aliado.vida + cura)
-                time.sleep(2)  # intervalo entre curas
+                    cura = int(usuario.vida_máxima * 0.8)
+                    aliado.vida_atual = min(aliado.vida_maxima, aliado.vida_atual + cura)
+                threading.Event().wait(2)
             self.ativa = False
             self.iniciar_cooldown()
 
@@ -177,14 +183,14 @@ class MilagreDaVida(HabilidadeAtiva):
         super().__init__(
             nome="Milagre da Vida",
             efeito=self.efeito_milagre,
-            tempo_de_recarga=20,  # maior cooldown porque é muito forte
-            nível_minimo=1,
-            duração=0  # efeito imediato
+            tempo_de_recarga=10,  
+            nível_minimo=50,
+            duração=9
         )
 
-    def efeito_milagre(self, usuario, alvo):
+    def efeito_milagre(self, alvo):
         if alvo:
-            alvo.vida = alvo.vida_maxima
+            alvo.vida_atual = alvo.vida_maxima
             self.iniciar_cooldown()
 
 # BARDO
@@ -193,8 +199,8 @@ class MelodiaDaFraqueza(HabilidadeAtiva):
         super().__init__(
             nome="Melodia da Fraqueza",
             efeito=self.efeito_melodia,
-            tempo_de_recarga=12,
-            nível_minimo=1,
+            tempo_de_recarga=8,
+            nível_minimo=16,
             duração=duracao
         )
         self.usuario = usuario
@@ -203,14 +209,13 @@ class MelodiaDaFraqueza(HabilidadeAtiva):
         self.afetados = []
 
     def esta_no_raio(self, inimigo):
-        dx = inimigo.posição_x - self.usuario.posição_x
-        dy = inimigo.posição_y - self.usuario.posição_y
-        return math.sqrt(dx*dx + dy*dy) <= self.raio
+        distância_x = inimigo.posição_x - self.usuario.posição_x
+        distância_y = inimigo.posição_y - self.usuario.posição_y
+        return math.sqrt(distância_x*distância_x + distância_y*distância_y) <= self.raio
 
     def efeito_melodia(self, usuario, _=None):
         self.afetados = [i for i in self.inimigos if self.esta_no_raio(i)]
 
-        # aplica redução de atributos
         for inimigo in self.afetados:
             inimigo.forca //= 2
             inimigo.defesa //= 2
@@ -234,7 +239,7 @@ class SinfoniaEstatica(HabilidadeAtiva):
             nome="Sinfonia Estática",
             efeito=self.efeito_sinfonia,
             tempo_de_recarga=15,
-            nível_minimo=1,
+            nível_minimo=50,
             duração=duracao
         )
         self.usuario = usuario
@@ -243,19 +248,19 @@ class SinfoniaEstatica(HabilidadeAtiva):
         self.afetados = []
 
     def esta_no_raio(self, inimigo):
-        dx = inimigo.posição_x - self.usuario.posição_x
-        dy = inimigo.posição_y - self.usuario.posição_y
-        return math.sqrt(dx*dx + dy*dy) <= self.raio
+        distância_x = inimigo.posição_x - self.usuario.posição_x
+        distãncia_y = inimigo.posição_y - self.usuario.posição_y
+        return math.sqrt(distância_x*distância_x + distãncia_y*distãncia_y) <= self.raio
 
     def efeito_sinfonia(self, usuario, _=None):
         self.afetados = [i for i in self.inimigos if self.esta_no_raio(i)]
 
         for inimigo in self.afetados:
-            inimigo.estado = "paralisado"
+            inimigo.pode_mover = False
 
         def restaurar():
             for inimigo in self.afetados:
-                inimigo.estado = "normal"
+                inimigo.pode_mover = True
             self.afetados.clear()
             self.iniciar_cooldown()
 
@@ -268,7 +273,7 @@ class MiragemSombria(HabilidadeAtiva):
             nome="Miragem Sombria",
             efeito=self.efeito_miragem,
             tempo_de_recarga=14,
-            nível_minimo=1,
+            nível_minimo=16,
             duração=duracao
         )
         self.usuario = usuario
@@ -277,7 +282,6 @@ class MiragemSombria(HabilidadeAtiva):
         self.ilusoes = []
 
     def efeito_miragem(self, usuario, _=None):
-        # cria ilusões
         for i in range(self.quantidade):
             ilusão = {
                 "posição_x": usuario.posição_x + i * 20,
@@ -286,12 +290,7 @@ class MiragemSombria(HabilidadeAtiva):
             }
             self.ilusoes.append(ilusão)
 
-        # aplica bônus de esquiva
-        usuario.esquiva += 30
-
         def encerrar():
-            self.ilusoes.clear()
-            usuario.esquiva -= 30
             self.iniciar_cooldown()
 
         threading.Timer(self.duração, encerrar).start()
@@ -302,7 +301,7 @@ class LabirintoMental(HabilidadeAtiva):
             nome="Labirinto Mental",
             efeito=self.efeito_labirinto,
             tempo_de_recarga=18,
-            nível_minimo=1,
+            nível_minimo=50,
             duração=duracao
         )
         self.usuario = usuario
@@ -311,9 +310,9 @@ class LabirintoMental(HabilidadeAtiva):
         self.afetados = []
 
     def esta_no_raio(self, inimigo):
-        dx = inimigo.posição_x - self.usuario.posição_x
-        dy = inimigo.posição_y - self.usuario.posição_y
-        return math.sqrt(dx*dx + dy*dy) <= self.raio
+        distância_x = inimigo.posição_x - self.usuario.posição_x
+        distãncia_y = inimigo.posição_y - self.usuario.posição_y
+        return math.sqrt(distância_x*distância_x + distãncia_y*distãncia_y) <= self.raio
 
     def efeito_labirinto(self, usuario, _=None):
         self.afetados = [i for i in self.inimigos if self.esta_no_raio(i)]
@@ -329,11 +328,15 @@ class LabirintoMental(HabilidadeAtiva):
 
         threading.Timer(self.duração, restaurar).start()
 
+# ESCUDEIRO
 ataque_com_escudo = AtaqueComEscudo()
 defesa_reforcada = DefesaReforçada()
+# CURANDEIRO
 bençao_vital = BencaoVital()
 milagre_da_vida = MilagreDaVida()
+# BARDO
 melodia_da_fraqueza = MelodiaDaFraqueza()
 sinfonia_estatica = SinfoniaEstatica()
+# ILUSIONISTA
 miragem_sombria = MiragemSombria()
 labirinto_mental = LabirintoMental()

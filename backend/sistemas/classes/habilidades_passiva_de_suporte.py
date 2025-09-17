@@ -1,3 +1,4 @@
+# backend\sistemas\classes\habilidades_passiva_de_suporte.py
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 
@@ -40,46 +41,73 @@ def efeito_peso_pena(usuario):
     usuario.vida_bonus += usuario.vida_base * 0.5
 
 # CURANDEIRO
-def benção_da_lua(usuario):
-    usuario.vida_bonus
+def efeito_benção_da_lua(usuario):
+    usuario.vida_bonus += usuario.vida_base * 0.5
+    usuario.defesa_bonus += usuario.defesa_base * 0.3
+    usuario.velocidade_bonus += usuario.velocidade_base * 0.2
 
-def efeito_remover_debuff(usuario):
-    usuario.debuffs.clear()
+def efeito_benção_do_sol(usuario):
+    usuario.vida_base += 5
+    usuario.estamina_base += 5
+    usuario.defesa_base += 5
+    usuario.velocidade_base += 5
+    usuario.dano_base += 5
 
-def efeito_remendo(adversario):
-    adversario.dano_final *= 0.5
+def efeito_eclipse(time):
+    for personagen in time:
+        personagen.vida_base *= 1.5
+        personagen.estamina_base *= 1.5
+        personagen.defesa_base *= 1.5
+        personagen.velocidade_base *= 1.5
+        personagen.dano_base *= 1.5
 
-# Bardo
-def efeito_buff_grupo(usuario):
-    for aliado in usuario.grupo:
-        aliado.ataque_bonus += aliado.ataque_base * 0.1
-        aliado.defesa_bonus += aliado.defesa_base * 0.1
+# BARDO
+def efeito_canção_de_suporte(time):
+    for personagen in time:
+        personagen.vida_base *= 1.25
+        personagen.estamina_base *= 1.25
+        personagen.defesa_base *= 1.25
+        personagen.velocidade_base *= 1.25
+        personagen.dano_base *= 1.25
 
-def efeito_debuff_inimigo(adversario):
-    adversario.defesa_final -= adversario.defesa_base * 0.1
+def efeito_canção_da_ferida(adversarios):
+    for adversario in adversarios:
+        adversario.defesa_final = adversario.defesa_base * 0.7
 
-# Ilusionista
-def efeito_clones(adversario):
-    adversario.defesa -= 0.5 
+def efeito_canção_ardente(usuario, time):
+    usuario.dano_final = 0
+    usuario.vida_máxima *= 2
 
-def efeito_espelho(usuario):
-    usuario.defesa_bonus += usuario.defesa_base * 0.3  
+    for personagen in time:
+        personagen.vida_base += usuario.vida_atual * 0.5
+        personagen.estamina_base += usuario.vida_atual * 0.5
+        personagen.defesa_base += usuario.vida_atual * 0.5
+        personagen.velocidade_base += usuario.vida_atual * 0.5
+        personagen.dano_base += usuario.vida_atual * 0.5
+
+# ILUSIONISTA
+def efeito_velocista(usuario):
+    usuario.velocidade_bonus *= 2
+
+def efeito_guardador(usuario):
+    usuario.defesa_bonus *= 2
 
 def efeito_engano(adversario):
-    adversario.ataque_final *= 0.8 
+    adversario.vida_máxima *= 2
 
 # ESCUDEIRO
 bloqueio_de_ataque = HabilidadePassiva("bloqueio de ataque", efeito_bloqueio_de_ataque, 12)
 repelir = HabilidadePassiva("repelir", efeito_repelir, 45)
 peso_pena = HabilidadePassiva("peso pena", efeito_peso_pena, 70)
 # CURANDEIRO
-cura = HabilidadePassiva("cura", efeito_cura, 5)
-remover_debuff = HabilidadePassiva("remover debuff", efeito_remover_debuff, 25)
-remendo = HabilidadePassiva("Remendo",efeito_remendo,50)
+beção_da_lua = HabilidadePassiva("benção da lua", efeito_benção_da_lua, 12)
+benção_do_sol = HabilidadePassiva("benção do sol", efeito_benção_do_sol, 45)
+eclipse = HabilidadePassiva("eclipse",efeito_eclipse,70)
 # ILUSIONISTA
-clones = HabilidadePassiva("clones", efeito_clones, 18)
-espelho = HabilidadePassiva("espelho", efeito_espelho, 30)
-engano = HabilidadePassiva("engano", efeito_engano, 40)
+velocista = HabilidadePassiva("velocista", efeito_velocista, 12)
+guardador = HabilidadePassiva("guardador", efeito_guardador, 45)
+engano = HabilidadePassiva("engano", efeito_engano, 70)
 # BARDO
-buff_grupo = HabilidadePassiva("buff grupo", efeito_buff_grupo, 15)
-debuff_inimigo = HabilidadePassiva("debuff inimigo", efeito_debuff_inimigo, 25)
+canção_de_suporte = HabilidadePassiva("canção de suporte", efeito_canção_de_suporte, 12)
+canção_da_ferida = HabilidadePassiva("canção da ferida", efeito_canção_da_ferida, 45)
+canção_ardente = HabilidadePassiva("canção ardente", efeito_canção_ardente, 70)

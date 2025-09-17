@@ -1,14 +1,16 @@
-from dataclasses import dataclass, field
-import sys, os
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = current_dir
-while not os.path.isdir(os.path.join(project_root, ".git")) and os.path.dirname(project_root) != project_root:
-    project_root = os.path.dirname(project_root)
+# backend\sistemas\classes\classes_de_suporte.py
+from dataclasses import dataclass
+import sys, os; project_root = os.path.abspath(os.path.dirname(__file__)); 
+while not os.path.isdir(os.path.join(project_root, ".git")) and os.path.dirname(project_root) != project_root: project_root = os.path.dirname(project_root); 
 sys.path.append(project_root)
 
-labirinto_mental = LabirintoMental()
-from backend.sistemas.classes.habilidades_ativa_de_suporte import (ataque_com_escudo, defesa_reforcada,bençao_vital,milagre_da_vida,melodia_da_fraqueza,sinfonia_estatica,miragem_sombria,)
-from backend.sistemas.classes.habilidades_passiva_de_suporte import (bloqueio_de_ataque, repelir, peso_pena, cura,remover_debuff,remendo,buff_grupo,debuff_inimigo,clones,espelho,engano)
+from backend.sistemas.classes.habilidades_ativa_de_suporte import (ataque_com_escudo,defesa_reforcada, labirinto_mental,
+                                                                   bençao_vital,milagre_da_vida,melodia_da_fraqueza,
+                                                                   sinfonia_estatica,miragem_sombria,)
+
+from backend.sistemas.classes.habilidades_passiva_de_suporte import (bloqueio_de_ataque, repelir, peso_pena,engano,
+                                                                    beção_da_lua,benção_do_sol,eclipse,canção_de_suporte,
+                                                                    canção_da_ferida,canção_ardente,velocista,guardador,)
 
 @dataclass
 class Classe:
@@ -16,6 +18,7 @@ class Classe:
                 estamina_base, multiplicador_de_experiência, arma, primeira_habilidade_passiva,
                 segunda_habilidade_passiva, terceira_habilidade_passiva,
                 habilidade_ativa, habilidade_especial):
+        
         self.nome = nome
         self.dano_base = dano_base
         self.velocidade_base = velocidade_base
@@ -47,6 +50,7 @@ class Classe:
             f"habilidade especial: {self.habilidade_especial.nome}\n"
         )
 
+# ESCUDEIRO
 class Escudeiro(Classe):
     def __init__(self):
         super().__init__(
@@ -66,8 +70,7 @@ class Escudeiro(Classe):
         )
         self.atualizar_descrição()
 
-escudeiro = Escudeiro()
-#Curandeiro
+# CURANDEIRO
 class Curandeiro(Classe):
     def __init__(self):
         super().__init__(
@@ -79,16 +82,16 @@ class Curandeiro(Classe):
             estamina_base = 120,
             multiplicador_de_experiência = 1.0,
             arma = "Cajado",
-            primeira_habilidade_passiva = cura,
-            segunda_habilidade_passiva =remover_debuff,
-            terceira_habilidade_passiva = remendo,
+            primeira_habilidade_passiva = beção_da_lua,
+            segunda_habilidade_passiva = benção_do_sol,
+            terceira_habilidade_passiva = eclipse,
             habilidade_ativa = bençao_vital,
             habilidade_especial = milagre_da_vida
         )
         self.atualizar_descrição()
 
 
-# Bardo
+# BARDO
 class Bardo(Classe):
     def __init__(self):
         super().__init__(
@@ -100,17 +103,16 @@ class Bardo(Classe):
             estamina_base = 110,
             multiplicador_de_experiência = 1.0,
             arma = "Lira",
-            primeira_habilidade_passiva = buff_grupo,
-            segunda_habilidade_passiva = debuff_inimigo,
-            terceira_habilidade_passiva = peso_pena,  # Pode ser substituído por outra habilidade passiva
+            primeira_habilidade_passiva = canção_de_suporte,
+            segunda_habilidade_passiva = canção_da_ferida,
+            terceira_habilidade_passiva = canção_ardente,
             habilidade_ativa = melodia_da_fraqueza,
             habilidade_especial = sinfonia_estatica
         )
         self.atualizar_descrição()
 
-bardo = Bardo()
 
-# Ilusionista
+# ILUSIONISTA
 class Ilusionista(Classe):
     def __init__(self):
         super().__init__(
@@ -122,12 +124,15 @@ class Ilusionista(Classe):
             estamina_base = 90,
             multiplicador_de_experiência = 1.0,
             arma = "Varinha de Ilusões",
-            primeira_habilidade_passiva = clones,
-            segunda_habilidade_passiva = espelho,
+            primeira_habilidade_passiva = velocista,
+            segunda_habilidade_passiva = guardador,
             terceira_habilidade_passiva = engano,
             habilidade_ativa = miragem_sombria,
-            habilidade_especial = labirinto_mental  # Pode ser substituído por outra habilidade especial
+            habilidade_especial = labirinto_mental
         )
         self.atualizar_descrição()
 
+escudeiro = Escudeiro()
+curandeiro = Curandeiro()
+bardo = Bardo()
 ilusionista = Ilusionista()

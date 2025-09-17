@@ -4,4 +4,4 @@ sys.path.append(project_root)
 
 
 from backend.sistemas.modelos.modelo_personagem_principal import Usuario
-agnes = Usuario()
+jogador = Usuario()

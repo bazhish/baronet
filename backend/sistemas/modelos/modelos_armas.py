@@ -23,6 +23,7 @@ class Arma:
         self.porcentagem_de_reparo = porcentagem_de_reparo
         self.porcentagem_de_evolução = porcentagem_de_evolução
         self.classes_permitidas = tuple
+        self.usuario = None
         self.níveis_raridade = {
             "comum": (0, 25),
             "rara": (25, 50),
@@ -30,55 +31,55 @@ class Arma:
             "lendaria": (75, 100)
         }       
 
-    def pode_usar(self, usuario) -> bool:
+    def pode_usar(self) -> bool:
         nível_minimo, nível_máximo = self.níveis_raridade.get(self.raridade, (0, 100))
-        classe = usuario.nome_da_classe
+        classe = self.usuario.nome_da_classe
         classe = classe is not None and self.classes_permitidas is not None and classe in self.classes_permitidas
-        return nível_minimo <= usuario.nível_atual < nível_máximo and classe
+        return nível_minimo <= self.usuario.nível_atual < nível_máximo and classe
 
-    def nivel_da_arma_com_parametro_do_usuario(self, usuario):
-        self.nível = randint(max(1, usuario.nível_atual - 3), min(usuario.nível_atual + 3, 100))
+    def nivel_da_arma_com_parametro_do_usuario(self):
+        self.nível = randint(max(1, self.usuario.nível_atual - 3), min(self.usuario.nível_atual + 3, 100))
 
     def nivel_com_parametro_manual(self, nível):
         self.nível = nível
 
-    def dano_da_arma(self, usuario):
+    def dano_da_arma(self, ):
         self.dano = self.dano_base * self.nível
-        usuario.dano_bonus =self.dano * {"comum": 1, "rara": 1.5, "épica": 2.3, "lendaria": 2.8}.get(self.raridade, 1)
+        self.usuario.dano_bonus =self.dano * {"comum": 1, "rara": 1.5, "épica": 2.3, "lendaria": 2.8}.get(self.raridade, 1)
 
-    def velocidade_que_o_usuario_ira_perder(self, usuario):
-        usuario.velocidade_bonus -= self.peso
+    def velocidade_que_o_usuario_ira_perder(self):
+        self.usuario.velocidade_bonus -= self.peso
 
     def escolha_de_raridade(self, raridade_escolhida):
         self.raridade = raridade_escolhida
 
-    def aplicar_bonus_atributo(self, usuario, atributo):
+    def aplicar_bonus_atributo(self,atributo):
         valores_base = {"dano": 2, "vida": 10, "velocidade": 3, "defesa": 1}
         multiplicador = {"comum": 1, "rara": 1.5, "épica": 2.3, "lendaria": 2.8}.get(self.raridade, 1)
         valor = valores_base[atributo] * multiplicador * self.nível
         chave = f"{atributo}_bonus"
-        if hasattr(usuario, chave):
-            atual = getattr(usuario, chave)
-            setattr(usuario, chave, atual + valor)
+        if hasattr(self.usuario, chave):
+            atual = getattr(self.usuario, chave)
+            setattr(self.usuario, chave, atual + valor)
         else:
-            setattr(usuario, chave, valor)
+            setattr(self.usuario, chave, valor)
 
-    def atributo_adicional_aleatorio(self, usuario):
+    def atributo_adicional_aleatorio(self):
         self.atributo_escolhido = choice(self.atributos)
         self.atributo = self.atributo_escolhido
-        self.aplicar_bonus_atributo(usuario, self.atributo)
+        self.aplicar_bonus_atributo(self.usuario, self.atributo)
 
-    def atributo_adicional_manual(self, atributo: str, usuario):
+    def atributo_adicional_manual(self, atributo: str):
         self.atributo = atributo
-        self.aplicar_bonus_atributo(usuario, self.atributo)
+        self.aplicar_bonus_atributo(self.usuario, self.atributo)
 
-    def checar_e_remover_se_quebrada(self, usuario):
+    def checar_e_remover_se_quebrada(self):
          if self.durabilidade <= 0:
-            usuario.arma = None
+            self.usuario.arma = None
 
-    def usar(self, usuario):
+    def usar(self):
         self.durabilidade -= 1
-        self.checar_e_remover_se_quebrada(usuario)
+        self.checar_e_remover_se_quebrada(self.usuario)
 
     def receber_xp(self, experiência_dropada):
         ganho = int(experiência_dropada * self.porcentagem_de_evolução)
@@ -94,8 +95,8 @@ class Arma:
             self.nível = "nível máximo"
             self.experiência_atual = 0
 
-    def atualizar_atributos_jogador(self, usuario):
-        usuario.multiplicador_de_experiência += self.bonus
+    def atualizar_atributos_jogador(self):
+        self.usuario.multiplicador_de_experiência += self.bonus
 
     def descrição_da_arma(self):
         raridades = {"comum": 1, "rara": 1.5, "épica": 2.3, "lendaria": 2.8}

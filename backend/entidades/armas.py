@@ -2,7 +2,7 @@ import sys, os; project_root = os.path.abspath(os.path.dirname(__file__));
 while not os.path.isdir(os.path.join(project_root, ".git")) and os.path.dirname(project_root) != project_root: project_root = os.path.dirname(project_root); 
 sys.path.append(project_root)
 
-from backend.sistemas.modelos.modelos_armas import criar_arma
+from backend.sistemas.modelos.modelos_armas import criar_arma, Arma
 
 lamina_amanhecer = criar_arma("espada", "Lâmina do Amanhecer", "comum", None, 140, 167, 1.35, 1.75, 1.5)
 ventos_rapidos = criar_arma("espada", "Espada dos Ventos Rápidos", "rara", None, 250, 252, 0.89, 1.25, 1.0)
@@ -60,3 +60,13 @@ punho_mestre = criar_arma("punho", "Punho do Mestre", "rara", None, 273, 276, 1.
 
 clava_errante = criar_arma("clava", "Clava do Errante", "comum", None, 169, 151, 1.79, 1.6, 1.65)
 clava_tita = criar_arma("clava", "Clava do Titã", "rara", None, 273, 287, 0.91, 0.68, 0.96)
+
+lâmina_do_amanheçer = Arma("espada", "Lâmina do Amanhecer", 6, 3, 140, 167, 1.35, 1.75, 1.5)
+lâmina_do_amanheçer.escolha_de_raridade("comum")
+lâmina_do_amanheçer.nivel_com_parametro_manual(5)
+lâmina_do_amanheçer.dano_da_arma()
+lâmina_do_amanheçer.atributo_adicional_aleatorio()
+lâmina_do_amanheçer.velocidade_que_o_usuario_ira_perder()
+lâmina_do_amanheçer.atualizar_atributos_jogador()
+lâmina_do_amanheçer.descrição = lâmina_do_amanheçer.descrição_da_arma()
+

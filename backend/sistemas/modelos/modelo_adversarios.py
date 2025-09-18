@@ -150,7 +150,6 @@ class AdversarioDemiHumano:
         self.escudo = None
         self.defesa_bonus = 0
 
-
     def atacar(self, alvo):
         if self.precisao_bonus < 0:
             ataque = randint(0, 100)

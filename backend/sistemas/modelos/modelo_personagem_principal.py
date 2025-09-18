@@ -1,6 +1,7 @@
 # backend\sistemas\modelos\personagem_principal.py
 from os import path
 from json import load
+from random import randint
 endereço = path.abspath(path.join(path.abspath(__file__), "..", "..", "..", "..", "frontend", "ui"))
 with open(rf"{endereço}\usuario.json", "r") as arquivo:
     dados = load(arquivo)
@@ -8,74 +9,89 @@ with open(rf"{endereço}\usuario.json", "r") as arquivo:
 class Usuario:
     def __init__(self):
         # DADOS PESSOAIS
-        self.nome = dados["dados_pessoais"]["Nome"]
+        self.nome = "agnes"
+
         # TENTATIVAS
         self.tentativas_restantes = 3
         self.tentativas = 3
+
         # NÍVEL
-        self.nível_atual = dados["status"]["nivel"]
+        self.nível_atual = 1
         self.nível_máximo = 100
+
         #  EXPERIÊNCIA
-        self.experiência_atual = dados["status"]["experiencia"]
+        self.experiência_atual = 0
         self.experiência_máxima = 100
+
         # ATRIBUTOS
-        self.dano_base = dados["status"]["dano"]
-        self.velocidade_base = dados["status"]["velocidade"]
-        self.defesa_base = dados["status"]["defesa"]
-        self.vida_base = dados["status"]["vida"]
-        self.estamina_base = self.dano_base * 2
+        self.dano_base = 0
+        self.velocidade_base = 0
+        self.defesa_base = 0
+        self.vida_base = 0
+        self.estamina_base = 0
         self.multiplicador_de_experiência = 1.0
+
         # ESTADO
         self.estado = "normal"
+
         # CLASSE 
         self.nome_da_classe_do_usuário = "nenhuma"
         self.classe_do_usuário = None
+
         # ATRIBUTOS
-        self.vida_atual = dados["status"]["vida"]
-        self.vida_máxima = dados["status"]["vida"]
-        self.estamina_atual = dados["status"]["dano"] * 2
-        self.estamina_máxima = dados["status"]["dano"] * 2
+        self.vida_atual = int
+        self.vida_máxima = int
+        self.estamina_atual = int
+        self.estamina_máxima = int
+
          # ARMADURA
         self.elmo = None
         self.peitoral = None
         self.calça = None
         self.botas = None
-        # ---------------------------------
+
         self.nome_do_elmo = "nenhum"
         self.nome_do_peitoral = "nenhum"
         self.nome_da_calça = "nenhuma"
         self.nome_das_botas = "nenhuma"
+
         # DESCRIÇÃO
         self.descrição = "nenhuma"
+        
         # HABLIDIDADES
         self.primeira_habilidade_passiva = None
         self.segunda_habilidade_passiva = None
         self.terceira_habilidade_passiva = None
         self.habilidade_ativa = None
         self.habilidade_especial = None
-        # --------------------------------------------
+
         self.nome_da_primeira_habilidade_passiva = "nenhuma"
         self.nome_da_segunda_habilidade_passiva = "nenhuma"
         self.nome_da_terceira_habilidade_passiva = "nenhuma"
         self.nome_da_habilidade_ativa = "nenhuma"
         self.nome_da_habilidade_especial = "nenhuma"
+
         # ARMA
         self.nome_da_arma = "nenhuma"
         self.arma = None
-        # ESCUDO
-        self.nome_do_escudo = "nenhum"
-        self.escudo = None
+
+        # artefato
+        self.nome_do_artefato = "nenhum"
+        self.artefato = None
+
         # BONUS DE ATRIBUTOS
         self.dano_bonus = 0
         self.velocidade_bonus = 0
         self.defesa_bonus = 0
         self.vida_bonus = 0
         self.estamina_bonus = 0
+
         # DEFINIÇÕES
         self.vida_máxima = self.vida_base
         self.vida_atual = self.vida_máxima
         self.estamina_máxima = self.estamina_base
         self.estamina_atual = self.estamina_máxima
+
         # ATRIBUTOS DE POSICIONAMENTO E COMBATE
         self.posição_x = 0
         self.posição_y = 0
@@ -85,6 +101,10 @@ class Usuario:
         self.precisao_bonus = 0
         self.critico_bonus = 0
         self.resistencia_empurrao = False
+
+        # INVENTARIO
+        self.inventario = None
+
     def __post_init__(self):
         # ATUALIZAÇÕES
         self.atualizar_atributos()
@@ -128,7 +148,7 @@ class Usuario:
         self.nome_da_terceira_habilidade_passiva = self.classe_do_usuário.terceira_habilidade_passiva.nome
         self.nome_da_habilidade_ativa = self.classe_do_usuário.habilidade_ativa.nome
         self.nome_da_habilidade_especial = self.classe_do_usuário.habilidade_especial.nome
-        # ---------------------------------------------------------------------
+
         self.primeira_habilidade_passiva = self.classe_do_usuário.primeira_habilidade_passiva
         self.segunda_habilidade_passiva = self.classe_do_usuário.segunda_habilidade_passiva
         self.terceira_habilidade_passiva = self.classe_do_usuário.terceira_habilidade_passiva
@@ -150,13 +170,21 @@ class Usuario:
         self.dano_bonus = 0
         self.velocidade_bonus = 0
 
-    def equipar_escudo(self, escudo):
-        self.escudo = escudo.nome 
-        self.defesa_bonus = escudo.defesa_final if escudo else 0
+    def equipar_artefato(self, artefato):
+        self.artefato = f"{artefato.nome} {artefato.raridade} nível {artefato.nível}"
+        self.defesa_bonus += getattr(artefato, "defesa_bonus", 0) if artefato else 0
+        self.dano_bonus += getattr(artefato, "dano_bonus", 0) if artefato else 0
+        self.velocidade_bonus += getattr(artefato, "velocidade_bonus", 0) if artefato else 0
+        self.vida_bonus += getattr(artefato, "vida_bonus", 0) if artefato else 0
+        self.estamina_bonus += getattr(artefato, "estamina_bonus", 0) if artefato else 0
 
-    def remover_escudo(self):
-        self.escudo = None
-        self.defesa_bonus = 0
+    def remover_artefato(artefato,self):
+        self.artefato = None
+        self.defesa_bonus -= getattr(artefato, "defesa_bonus", 0) if artefato else 0
+        self.dano_bonus -= getattr(artefato, "dano_bonus", 0) if artefato else 0
+        self.velocidade_bonus -= getattr(artefato, "velocidade_bonus", 0) if artefato else 0
+        self.vida_bonus -= getattr(artefato, "vida_bonus", 0) if artefato else 0
+        self.estamina_bonus -= getattr(artefato, "estamina_bonus", 0) if artefato else 0
 
     def receber_experiencia(self, experiência: int):
         experiência *= self.multiplicador_de_experiência
@@ -213,11 +241,34 @@ class Usuario:
             raise SystemExit("suas tentativas acabaram, você perdeu o jogo")
 
     def atacar(self, alvo):
-        if alvo.defesa_final >= self.dano_final:
-            dano = 0
+        if self.precisao_bonus < 0:
+            ataque = randint(0, 100)
+            if ataque >= 90:
+                if alvo.defesa_final >= self.dano_final:
+                    dano = 0
+                    alvo.vida_atual -= dano
+                elif self.bloqueio_ativo:
+                    dano = 0
+                    alvo.vida_atual -= dano
+                elif alvo.estado == "intangível" or "camuflado" or "confuso":
+                    dano = 0
+                    alvo.vida_atual -= dano
+                else:
+                    dano = int(self.dano_final - alvo.defesa_final)
+                    alvo.vida_atual -= dano
         else:
-            dano = int(self.dano_final - alvo.defesa_final)
-            alvo.vida_atual -= dano
+            if alvo.defesa_final >= self.dano_final:
+                dano = 0
+                alvo.vida_atual -= dano
+            elif self.bloqueio_ativo:
+                dano = 0
+                alvo.vida_atual -= dano
+            elif alvo.estado == "intangível" or "camuflado" or "confuso":
+                dano = 0
+                alvo.vida_atual -= dano
+            else:
+                dano = int(self.dano_final - alvo.defesa_final)
+                alvo.vida_atual -= dano
 
     def atualizar_descrição(self) -> None:
         self.descrição = (f"nome: {self.nome}\n"
@@ -231,7 +282,7 @@ class Usuario:
                           f"estamina: {self.estamina_atual}/{self.estamina_máxima}\n"
                           f"estado: {self.estado}\n"
                           f"arma: {self.nome_da_arma}\n"
-                          f"escudo: {self.nome_do_escudo}\n"
+                          f"artefato: {self.nome_do_artefato}\n"
                           f"tentativas: {self.tentativas_restantes}\n"
                           f"classe: {self.nome_da_classe_do_usuário}\n"
                           f"primeira habilidade passiva: {self.nome_da_primeira_habilidade_passiva}\n"

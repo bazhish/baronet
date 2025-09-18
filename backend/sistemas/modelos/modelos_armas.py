@@ -4,6 +4,7 @@ from random import choice, randint, uniform
 class Arma:
     def __init__(self, tipo, nome, dano, peso, durabilidade, experiência_máxima_inicial, crescimento_de_experiência, porcentagem_de_reparo, porcentagem_de_evolução):
         self.tipo_da_arma = tipo
+        self.tipo = "arma"
         self.nome = nome
         self.raridades = ["comum", "rara", "épica", "lendaria"]
         self.raridade: str

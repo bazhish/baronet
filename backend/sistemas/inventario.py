@@ -18,7 +18,7 @@ class Inventario:
         return [(type(item).__name__, getattr(item, 'nome', 'Sem nome')) for item in self.itens]
 
     def equipar(self, item):
-        tipo = type(item).__name__.lower()
+        tipo = item.tipo if hasattr(item, 'tipo') else None
         if tipo in self.equipados:
             self.equipados[tipo] = item
             print(f"{tipo} equipado: {getattr(item, 'nome', 'sem nome')}")

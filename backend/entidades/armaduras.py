@@ -6,10 +6,10 @@ from backend.sistemas.modelos.modelos_armaduras import gerar_peça_do_conjunto, 
 
 # Comum
 conjunto_de_malha = ConjuntoArmadura("Armadura de malha", "ataque")
-gerar_peça_do_conjunto(conjunto_comum, "Elmo de malha", 5, "escamas de malha", "comum", None, 50)
-gerar_peça_do_conjunto(conjunto_comum, "Peitoral de malha", 8, "escamas de malha", "comum", None, 125)
-gerar_peça_do_conjunto(conjunto_comum, "Calça de malha", 4, "escamas de malha", "comum", None, 100)
-gerar_peça_do_conjunto(conjunto_comum, "Botas de malha", 3, "escamas de malha", "comum", None, 35)
+gerar_peça_do_conjunto(conjunto_de_malha, "Elmo de malha", 5, "escamas de malha", "comum", None, 50)
+gerar_peça_do_conjunto(conjunto_de_malha, "Peitoral de malha", 8, "escamas de malha", "comum", None, 125)
+gerar_peça_do_conjunto(conjunto_de_malha, "Calça de malha", 4, "escamas de malha", "comum", None, 100)
+gerar_peça_do_conjunto(conjunto_de_malha, "Botas de malha", 3, "escamas de malha", "comum", None, 35)
 conjunto_de_malha.verificar_se_o_conjunto_esta_completo()
 conjunto_de_malha.aplicar_bonus_do_conjunto(None)
 

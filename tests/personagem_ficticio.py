@@ -6,7 +6,6 @@ from  backend.sistemas.modelos.modelo_personagem_principal import Usuario
 
 ayala = Usuario()
 ayala.nome = "ayala"
-ayala.receber_experiencia(1500)
+ayala.receber_experiencia(800)
 ayala.atualizar_atributos()
 ayala.atualizar_descrição()
-print(ayala.descrição)

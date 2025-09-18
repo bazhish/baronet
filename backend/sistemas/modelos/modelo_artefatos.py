@@ -13,7 +13,7 @@ class Escudo:
     nome: str
     defesa_base: int
     peso_base: int
-    raridade: str = field(default  ="nenhuma")
+    raridade: str = field(default = "nenhuma")
     nivel: int = field(default = 1)
     defesa_final: float = field(default = 0)
     peso: float = field(default = 0)

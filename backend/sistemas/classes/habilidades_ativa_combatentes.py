@@ -1,6 +1,6 @@
 # backend\sistemas\classes\habilidades_ativa_de_suporte.py
-from dataclasses import dataclass, field
-from random import uniform, randint
+from dataclasses import dataclass
+from random import uniform
 from typing import Callable, Optional, Any
 import math, time, threading
 
@@ -26,6 +26,7 @@ class HabilidadeAtiva:
             f"Nível mínimo para uso: {self.nivel_minimo}\n"
             f"Duração: {self.duração}\n"
             f"Efeito: {self.efeito}\n"
+            f"Descrição do efeito: {self.descrição_do_efeito}\n"
         )
 
     def verificar_nivel(self, usuario):
@@ -553,7 +554,7 @@ class FugaRapida(HabilidadeAtiva):
     def ativar(self, usuario, inimigos):
         self.efeito_fuga_rapida(usuario, inimigos)
 
-# ANDARILHO
+# ARTILHEIRO
 class PassoFantasma(HabilidadeAtiva):
     def __init__(self, distancia=300):
         super().__init__(
@@ -834,22 +835,30 @@ class OlharParalisante(HabilidadeAtiva):
     def efeito_olhar_paralisante(self, usuario, inimigos):
         self.ativar(usuario, inimigos)
 
-# ISTÂNCIAS DAS HABILIDADES
+# GUERREIRO
 grito_de_guerra = GritoDeGuerra()
 investida_brutal = InvestidaBrutal()
+# ASSISSINO
 golpe_mortal = GolpeMortal()
 intangibilidade = Intangibilidade()
+# ESPADACHIN
 impacto_cruzado = ImpactoCruzado()
 bloqueio_de_espada = BloqueioDeEspada()
+# LANCEIRO
 giro_de_lanca = GiroDeLanca()
 arremesso_de_lanca = ArremessoDeLanca()
+# ARQUEIRO
 disparo_perfurante = DisparoPerfurante()
 camuflagem = Camuflagem()
+# BATEDOR
 ataque_surpresa = AtaqueSurpresa()
 fuga_rapida = FugaRapida()
+# ARTILHEIRO
 passo_fantasma = PassoFantasma()
 areia = Areia()
+# ARTISTA MARCIAL
 combo_relampago = ComboRelampago()
 postura_de_ferro = PosturaDeFerro()
+# MEDUSA
 aura_venenosa = AuraVenenosa()
 olhar_paralisante = OlharParalisante()

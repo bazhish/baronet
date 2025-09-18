@@ -4,13 +4,17 @@ import sys, os; project_root = os.path.abspath(os.path.dirname(__file__));
 while not os.path.isdir(os.path.join(project_root, ".git")) and os.path.dirname(project_root) != project_root: project_root = os.path.dirname(project_root); 
 sys.path.append(project_root)
 
-from backend.sistemas.classes.habilidades_ativa_de_suporte import (ataque_com_escudo,defesa_reforcada, labirinto_mental,
-                                                                   bençao_vital,milagre_da_vida,melodia_da_fraqueza,
-                                                                   sinfonia_estatica,miragem_sombria,)
+from backend.sistemas.classes.habilidades_ativa_de_suporte import (
+    ataque_com_escudo,defesa_reforcada, labirinto_mental,
+    bençao_vital,milagre_da_vida,melodia_da_fraqueza,
+    sinfonia_estatica,miragem_sombria
+    )
 
-from backend.sistemas.classes.habilidades_passiva_de_suporte import (bloqueio_de_ataque, repelir, peso_pena,engano,
-                                                                    beção_da_lua,benção_do_sol,eclipse,canção_de_suporte,
-                                                                    canção_da_ferida,canção_ardente,velocista,guardador,)
+from backend.sistemas.classes.habilidades_passiva_de_suporte import (
+    bloqueio_de_ataque, repelir, peso_pena,engano,
+    beção_da_lua,benção_do_sol,eclipse,canção_de_suporte,
+    canção_da_ferida,canção_ardente,velocista,guardador
+    )
 
 @dataclass
 class Classe:
@@ -18,7 +22,6 @@ class Classe:
                 estamina_base, multiplicador_de_experiência, artefato, primeira_habilidade_passiva,
                 segunda_habilidade_passiva, terceira_habilidade_passiva,
                 habilidade_ativa, habilidade_especial):
-        
         self.nome = nome
         self.dano_base = dano_base
         self.velocidade_base = velocidade_base
@@ -50,7 +53,6 @@ class Classe:
             f"habilidade especial: {self.habilidade_especial.nome}\n"
         )
 
-# ESCUDEIRO
 class Escudeiro(Classe):
     def __init__(self):
         super().__init__(
@@ -70,7 +72,6 @@ class Escudeiro(Classe):
         )
         self.atualizar_descrição()
 
-# CURANDEIRO
 class Curandeiro(Classe):
     def __init__(self):
         super().__init__(
@@ -90,8 +91,6 @@ class Curandeiro(Classe):
         )
         self.atualizar_descrição()
 
-
-# BARDO
 class Bardo(Classe):
     def __init__(self):
         super().__init__(
@@ -111,8 +110,6 @@ class Bardo(Classe):
         )
         self.atualizar_descrição()
 
-
-# ILUSIONISTA
 class Ilusionista(Classe):
     def __init__(self):
         super().__init__(

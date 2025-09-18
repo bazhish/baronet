@@ -8,7 +8,7 @@ class HabilidadePassiva:
     efeito: Callable[[dict], None]
     nivel_minimo: int
     aplicar: Optional[bool] = field(default = None, init = False)
-    descrição: str = field(default = "", init = False)
+    descrição: str = field(default = "nenhuma", init = False)
 
     def verificar_nivel(self, usuario):
         self.aplicar = usuario.nível_atual >= self.nivel_minimo

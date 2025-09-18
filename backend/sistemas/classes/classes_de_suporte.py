@@ -15,7 +15,7 @@ from backend.sistemas.classes.habilidades_passiva_de_suporte import (bloqueio_de
 @dataclass
 class Classe:
     def __init__(self, nome, dano_base, velocidade_base, defesa_base, vida_base,
-                estamina_base, multiplicador_de_experiência, arma, primeira_habilidade_passiva,
+                estamina_base, multiplicador_de_experiência, artefato, primeira_habilidade_passiva,
                 segunda_habilidade_passiva, terceira_habilidade_passiva,
                 habilidade_ativa, habilidade_especial):
         
@@ -26,7 +26,7 @@ class Classe:
         self.vida_base = vida_base
         self.estamina_base = estamina_base
         self.multiplicador_de_experiência = multiplicador_de_experiência
-        self.arma = arma
+        self.artefato = artefato
         self.primeira_habilidade_passiva = primeira_habilidade_passiva
         self.segunda_habilidade_passiva = segunda_habilidade_passiva
         self.terceira_habilidade_passiva = terceira_habilidade_passiva
@@ -41,7 +41,7 @@ class Classe:
             f"velocidade base: {self.velocidade_base}\n"
             f"defesa base: {self.defesa_base}\n"
             f"vida máxima base: {self.vida_base}\n"
-            f"arma inicial: {self.arma}\n"
+            f"artefato inicial: {self.artefato}\n"
             f"multiplicador de experiência: {self.multiplicador_de_experiência}\n"
             f"primeira habilidade passiva: {self.primeira_habilidade_passiva.nome}\n"
             f"segunda habilidade passiva: {self.segunda_habilidade_passiva.nome}\n"
@@ -59,9 +59,9 @@ class Escudeiro(Classe):
             velocidade_base = 3,
             defesa_base = 5,
             vida_base = 150,
-            estamina_base = 100,
-            multiplicador_de_experiência = 1.0,
-            arma = "Escudo",
+            estamina_base = 120,
+            multiplicador_de_experiência = 1.2,
+            artefato = "Escudo",
             primeira_habilidade_passiva = bloqueio_de_ataque,
             segunda_habilidade_passiva = repelir,
             terceira_habilidade_passiva = peso_pena,
@@ -80,8 +80,8 @@ class Curandeiro(Classe):
             defesa_base = 6,
             vida_base = 130,
             estamina_base = 120,
-            multiplicador_de_experiência = 1.0,
-            arma = "Cajado",
+            multiplicador_de_experiência = 0.9,
+            artefato = "Cajado",
             primeira_habilidade_passiva = beção_da_lua,
             segunda_habilidade_passiva = benção_do_sol,
             terceira_habilidade_passiva = eclipse,
@@ -102,7 +102,7 @@ class Bardo(Classe):
             vida_base = 120,
             estamina_base = 110,
             multiplicador_de_experiência = 1.0,
-            arma = "Lira",
+            artefato = "Lira",
             primeira_habilidade_passiva = canção_de_suporte,
             segunda_habilidade_passiva = canção_da_ferida,
             terceira_habilidade_passiva = canção_ardente,
@@ -122,8 +122,8 @@ class Ilusionista(Classe):
             defesa_base = 2,
             vida_base = 100,
             estamina_base = 90,
-            multiplicador_de_experiência = 1.0,
-            arma = "Varinha de Ilusões",
+            multiplicador_de_experiência = 1.5,
+            artefato = "Varinha de Ilusões",
             primeira_habilidade_passiva = velocista,
             segunda_habilidade_passiva = guardador,
             terceira_habilidade_passiva = engano,

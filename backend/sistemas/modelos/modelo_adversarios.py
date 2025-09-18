@@ -280,13 +280,38 @@ class AdversarioMonstro:
             self.dano_final = self.dano_base * self.nível + self.dano_bonus
             self.defesa_final = self.defesa_base * self.nível + self.defesa_bonus
             self.velocidade_final = self.velocidade_base * self.nível + self.velocidade_bonus
+            self.vida_atual = self.vida_máxima
+            self.estamina_atual = self.estamina_máxima
 
         def atacar(self, alvo):
-            if alvo.defesa_final >= self.dano_final:
-                dano = 0
+            if self.precisao_bonus < 0:
+                ataque = randint(0, 100)
+                if ataque >= 90:
+                    if alvo.defesa_final >= self.dano_final:
+                        dano = 0
+                        alvo.vida_atual -= dano
+                    elif self.bloqueio_ativo:
+                        dano = 0
+                        alvo.vida_atual -= dano
+                    elif alvo.estado == "intangível" or "camuflado" or "confuso":
+                        dano = 0
+                        alvo.vida_atual -= dano
+                    else:
+                        dano = int(self.dano_final - alvo.defesa_final)
+                        alvo.vida_atual -= dano
             else:
-                dano = int(self.dano_final - alvo.defesa_final)
-                alvo.vida_atual -= dano
+                if alvo.defesa_final >= self.dano_final:
+                    dano = 0
+                    alvo.vida_atual -= dano
+                elif self.bloqueio_ativo:
+                    dano = 0
+                    alvo.vida_atual -= dano
+                elif alvo.estado == "intangível" or "camuflado" or "confuso":
+                    dano = 0
+                    alvo.vida_atual -= dano
+                else:
+                    dano = int(self.dano_final - alvo.defesa_final)
+                    alvo.vida_atual -= dano
 
         def estar_vivo(self):
             return self.vida_atual > 0

@@ -13,15 +13,15 @@ class Escudo:
     nome: str
     defesa_base: int
     peso_base: int
-    raridade: str = field(default="")
-    nivel: int = field(default=1)
-    defesa_final: float = field(default=0)
-    peso: float = field(default=0)
-    atributo_adicional: str = field(default="")
-    dano_acumulado: int = field(default=0)
-    em_cooldown: bool = field(default=False)
-    cooldown_fim: float = field(default=0)
-    descrição: str = field(default="", init=False)
+    raridade: str = field(default  ="nenhuma")
+    nivel: int = field(default = 1)
+    defesa_final: float = field(default = 0)
+    peso: float = field(default = 0)
+    atributo_adicional: str = field(default = "nenhum")
+    dano_acumulado: int = field(default = 0)
+    em_cooldown: bool = field(default = False)
+    cooldown_fim: float = field(default =0)
+    descrição: str = field(default = "nenhuma", init = False)
 
     raridades = {
         "comum": 1.0,
@@ -39,7 +39,6 @@ class Escudo:
     atributos_possiveis = ["defesa", "vida", "velocidade"]
 
     def pode_usar(self, usuario) -> bool:
-        # Exemplo: pode adicionar lógica de classe ou nível aqui
         return True
 
     def definir_nivel_com_base_no_usuario(self, usuario):
@@ -122,11 +121,11 @@ def criar_escudo(nome: str, raridade: str, usuario):
 class Cajado:
     nome: str
     poder_base: int
-    raridade: str = field(default="")
-    nivel: int = field(default=1)
-    poder_final: float = field(default=0)
-    atributo_adicional: str = field(default="")
-    descrição: str = field(default="", init=False)
+    raridade: str = field(default = "nenhuma")
+    nivel: int = field(default = 1)
+    poder_final: float = field(default = 0)
+    atributo_adicional: str = field(default = "nenhum")
+    descrição: str = field(default = "nenhuma", init = False)
 
     raridades = {
         "comum": 1.0,
@@ -151,7 +150,7 @@ class Cajado:
         self.atributo_adicional = choice(self.atributos_possiveis)
 
     def aplicar_bonus_no_usuario(self, usuario):
-        valores_base = {"cura": 15, "defesa": 5, "estamina": 10}
+        valores_base = {"defesa": 5, "estamina": 10}
         fator = self.raridades.get(self.raridade, 1.0)
         valor = valores_base[self.atributo_adicional] * self.nivel * fator
         chave = f"{self.atributo_adicional}_bonus"
@@ -191,11 +190,11 @@ def criar_cajado(nome: str, raridade: str, usuario):
 class Lira:
     nome: str
     melodia_base: int
-    raridade: str = field(default="")
-    nivel: int = field(default=1)
-    melodia_final: float = field(default=0)
-    atributo_adicional: str = field(default="")
-    descrição: str = field(default="", init=False)
+    raridade: str = field(default = "nenhuma")
+    nivel: int = field(default = 1)
+    melodia_final: float = field(default = 0)
+    atributo_adicional: str = field(default = "nenhum")
+    descrição: str = field(default = "nenhuma", init = False)
 
     raridades = {
         "comum": 1.0,
@@ -260,11 +259,11 @@ def criar_lira(nome: str, raridade: str, usuario):
 class VarinhaDeIlusoes:
     nome: str
     magia_base: int
-    raridade: str = field(default="")
-    nivel: int = field(default=1)
-    magia_final: float = field(default=0)
-    atributo_adicional: str = field(default="")
-    descrição: str = field(default="", init=False)
+    raridade: str = field(default = "nenhuma")
+    nivel: int = field(default = 1)
+    magia_final: float = field(default = 0)
+    atributo_adicional: str = field(default = "nenhum")
+    descrição: str = field(default = "nenhuma", init = False)
 
     raridades = {
         "comum": 1.0,

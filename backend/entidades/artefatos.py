@@ -7,5 +7,17 @@ from tests.personagem_ficticio import ayala
 # Escudos
 
 escudo_velho = criar_escudo("Escudo Velho","comum", ayala)
+escudo_do_amanhecer = criar_escudo("Escudo do Amanhecer","rara", ayala)
 
-print(escudo_velho.descrição)
+# Varinhas Ilusorias
+
+espirito_raposa = criar_varinha_de_ilusoes("Espirito da Raposa", "comum", ayala)
+varinha_dos_sussurros = criar_varinha_de_ilusoes("Varinha dos Sussurros", "rara", ayala)
+
+# Liras
+lira_das_estrelas = criar_lira("Lira das Estrelas", "comum", ayala)
+lira_dos_sonhos = criar_lira("Lira dos Sonhos", "rara", ayala)
+
+# Cajados
+cajado_da_floresta = criar_cajado("Cajado da Floresta", "comum", ayala)
+cajado_do_arcano = criar_cajado("Cajado do Arcano", "rara", ayala)

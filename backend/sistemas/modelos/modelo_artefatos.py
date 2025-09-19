@@ -133,7 +133,7 @@ class Cajado:
         "epico": 2.3,
         "lendario": 2.8
     }
-    atributos_possiveis = ["cura", "defesa", "estamina"]
+    atributos_possiveis = ["defesa", "estamina"]
 
     def definir_nivel_com_base_no_usuario(self, usuario):
         nivel_usuario = usuario.nível_atual

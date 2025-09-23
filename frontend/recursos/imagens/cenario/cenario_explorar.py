@@ -72,5 +72,5 @@ inventario_icon = transform.scale(inventario_icon, (100 * LArgura // 1920, 100 *
 mapa_img = image.load(fr"{endereço}\mapa.png")
 mapa_img = transform.scale(mapa_img, (880 * LArgura // 1920, 880 * LArgura // 1920))
 
-chao = image.load(fr"{endereço}\mapa.png")
+chao = image.load(fr"{endereço}\mapa_exploração.png")
 chao = transform.scale(chao, (10 * LArgura, 10 * LArgura))

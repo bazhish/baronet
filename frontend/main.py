@@ -13,7 +13,7 @@ import json
 from recursos.imagens.personagem_principal import personagem_parado, personagem_andando_D, personagem_soco_d, personagem_morto, personagem_dano
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from backend.entidades.adversarios import slime
-from backend.entidades.jogador import jogador
+from backend.entidades.jogador import agnes
 from backend.sistemas.itens import itens, itens_icons
 #from backend.app.models.sistema.habilidades_ativa_combatentes import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
 #from backend.app.models.sistema.habilidades_passivas_combatentes import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
@@ -147,7 +147,8 @@ botao_segurado_m = False
 
 
 
-usuario = jogador
+usuario = agnes
+precionado = False
 
 # Estados
 JOGO = "jogo"
@@ -617,8 +618,8 @@ if __name__ == "__main__":
                 frame_inimigo_esquerda = [0, 0, 0]
                 frame_inimigo_morto = [0, 0, 0]
             if contador <= 0:
-                vida_inicial = jogador.vida_máxima
-                vida_atual = jogador.vida_atual
+                vida_inicial = agnes.vida_máxima
+                vida_atual = agnes.vida_atual
                 contador += 1
             if morto:
                 quadrado_4.fill((*(0, 0, 0), 150))
@@ -815,7 +816,7 @@ if __name__ == "__main__":
                             screen.blit(inimigos_pachs_direita[int(frame_inimigo_direita[i])], (posicao_x, 735 - 180))
                             frame_inimigo_direita[i] += len(inimigos_pachs_direita) * 0.08
                             if cooldown_dano <= contador_cooldown:
-                                vida_atual -= status_inimigo[i][0] - jogador.defesa_base if status_inimigo[i][0] - jogador.defesa_base > 0 else 1
+                                vida_atual -= status_inimigo[i][0] - agnes.defesa_base if status_inimigo[i][0] - agnes.defesa_base > 0 else 1
                                 diresao = "dano"
                                 contador_cooldown = 0
                             else:
@@ -1491,7 +1492,7 @@ if __name__ == "__main__":
                 botao_segurado_m = True
                 if not marcado:
                     pos_atual_mouse = pygame.mouse.get_pos()
-                    print(pos_atual_mouse)
+                    print(f"({pos_atual_mouse[0]}, {pos_atual_mouse[1]}, \"arvore_pequena\")")
                     marcado = True
                 else:
                     marcado = False

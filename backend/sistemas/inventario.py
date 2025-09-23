@@ -21,13 +21,10 @@ class Inventario:
         tipo = item.tipo if hasattr(item, 'tipo') else None
         if tipo in self.equipados:
             self.equipados[tipo] = item
-            print(f"{tipo} equipado: {getattr(item, 'nome', 'sem nome')}")
-        else:
-            print("Este item não pode ser equipado.")
+
 
     def desequipar(self, tipo):
         if tipo in self.equipados and self.equipados[tipo]:
-            print(f"{tipo} desequipado: {getattr(self.equipados[tipo], 'nome', 'sem nome')}")
             self.equipados[tipo] = None
 
     def usar_item(self, item):

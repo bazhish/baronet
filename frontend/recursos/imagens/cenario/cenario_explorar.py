@@ -13,7 +13,7 @@ arvore_pequena_1 = image.load(fr"{endereço}\arvore_P_1.png")
 arvore_pequena_1 = transform.scale(arvore_pequena_1, (128 * LArgura // 1920, 180 * LArgura // 1920))
 
 arvore_pequena_2 = image.load(fr"{endereço}\arvore_P_2.png")
-arvore_pequena_2 = transform.scale(arvore_pequena_2, (128 * LArgura // 1920, 180 * LArgura // 1920))
+arvore_pequena_2 = transform.scale(arvore_pequena_2, (158 * LArgura // 1920, 210 * LArgura // 1920))
 
 arvore_pequena_3 = image.load(fr"{endereço}\arvore_P_3.png")
 arvore_pequena_3 = transform.scale(arvore_pequena_3, (128 * LArgura // 1920, 180 * LArgura // 1920))

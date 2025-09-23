@@ -357,6 +357,9 @@ if __name__ == "__main__":
             for obj in pach_objects:
                 screen.blit(obj.imagem_pach, (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
                                              ((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y))
+            
+            for obj in pach_objects:
+                pygame.draw.rect(screen, (0,0,0), obj.rect(), 2)
                     
             # Desenha o retângulo cinza atrás do nome
             pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)

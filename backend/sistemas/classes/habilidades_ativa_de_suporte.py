@@ -1,4 +1,6 @@
 # backend\sistemas\classes\habilidades_ativa_de_suporte.py
+# from friendly import install
+# install(lang="pt")
 from dataclasses import dataclass, field
 from random import uniform, randint
 from typing import Callable, Optional, Any
@@ -46,8 +48,8 @@ class AtaqueComEscudo(HabilidadeAtiva):
             nome="Ataque com Escudo",
             efeito=self.efeito_ataque_com_escudo,
             tempo_de_recarga=3,
-            nível_minimo=16,
-            duração=5
+            tempo_de_duração=5,
+            nível_minimo=16
         )
         self.descrição_do_efeito = (
             f"Permite atacar com o escudo, causando dano baseado na defesa. Alcance máximo: {raio_maximo} pixels."
@@ -86,13 +88,13 @@ class AtaqueComEscudo(HabilidadeAtiva):
             alvo.vida -= dano
 
 class DefesaReforçada(HabilidadeAtiva):
-    def __init__(self, raio, duração=5):
+    def __init__(self, raio = 300, duração=5):
         super().__init__(
             nome="Defesa Reforçada",
             efeito=self.efeito_defesa_reforcada,
             tempo_de_recarga=10,
-            nível_minimo=50,
-            duração=duração
+            tempo_de_duração=duração,
+            nível_minimo=50
         )
         self.descrição_do_efeito = (
             f"Aumenta a defesa dos aliados dentro de um raio de {raio} por {duração} segundos."
@@ -153,8 +155,8 @@ class BencaoVital(HabilidadeAtiva):
             nome="Bênção Vital",
             efeito=self.efeito_bencao,
             tempo_de_recarga=7,
+            tempo_de_duração=6,
             nível_minimo=16,
-            duração=6  
         )
         self.thread = None
         self.ativa = False
@@ -184,8 +186,8 @@ class MilagreDaVida(HabilidadeAtiva):
             nome="Milagre da Vida",
             efeito=self.efeito_milagre,
             tempo_de_recarga=10,  
+            tempo_de_duração=9,
             nível_minimo=50,
-            duração=9
         )
 
     def efeito_milagre(self, alvo):
@@ -195,13 +197,13 @@ class MilagreDaVida(HabilidadeAtiva):
 
 # BARDO
 class MelodiaDaFraqueza(HabilidadeAtiva):
-    def __init__(self, usuario, inimigos, raio=150, duracao=6):
+    def __init__(self, usuario=None, inimigos=None, raio=150, duracao=6):
         super().__init__(
             nome="Melodia da Fraqueza",
             efeito=self.efeito_melodia,
             tempo_de_recarga=8,
+            tempo_de_duração=duracao,
             nível_minimo=16,
-            duração=duracao
         )
         self.usuario = usuario
         self.inimigos = inimigos
@@ -234,13 +236,13 @@ class MelodiaDaFraqueza(HabilidadeAtiva):
         threading.Timer(self.duração, restaurar).start()
 
 class SinfoniaEstatica(HabilidadeAtiva):
-    def __init__(self, usuario, inimigos, raio=150, duracao=4):
+    def __init__(self, usuario=None, inimigos=None, raio=150, duracao=4):
         super().__init__(
             nome="Sinfonia Estática",
             efeito=self.efeito_sinfonia,
             tempo_de_recarga=15,
+            tempo_de_duração=duracao,
             nível_minimo=50,
-            duração=duracao
         )
         self.usuario = usuario
         self.inimigos = inimigos
@@ -268,13 +270,13 @@ class SinfoniaEstatica(HabilidadeAtiva):
 
 # ILUSIONISTA
 class MiragemSombria(HabilidadeAtiva):
-    def __init__(self, usuario, inimigos, quantidade=3, duracao=6):
+    def __init__(self, usuario=None, inimigos=None, quantidade=3, duracao=6):
         super().__init__(
             nome="Miragem Sombria",
             efeito=self.efeito_miragem,
             tempo_de_recarga=14,
+            tempo_de_duração=duracao,
             nível_minimo=16,
-            duração=duracao
         )
         self.usuario = usuario
         self.inimigos = inimigos
@@ -296,13 +298,13 @@ class MiragemSombria(HabilidadeAtiva):
         threading.Timer(self.duração, encerrar).start()
 
 class LabirintoMental(HabilidadeAtiva):
-    def __init__(self, usuario, inimigos, raio=200, duracao=5):
+    def __init__(self, usuario=None, inimigos=None, raio=200, duracao=5):
         super().__init__(
             nome="Labirinto Mental",
             efeito=self.efeito_labirinto,
             tempo_de_recarga=18,
+            tempo_de_duração=duracao,
             nível_minimo=50,
-            duração=duracao
         )
         self.usuario = usuario
         self.inimigos = inimigos

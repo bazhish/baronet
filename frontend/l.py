@@ -2,13 +2,13 @@ from random import randint
 
 i = []
 l = []
-o = [100, 109, 118]
+o = [145]
 k = []
 
-for p in range(500, 575, 9):
+for p in range(500, 559, 9):
     i.append(p)
 
-for p in range(625, 1380, 9):
+for p in range(673, 1380, 9):
     l.append(p)
 
 l = i + l

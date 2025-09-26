@@ -357,7 +357,6 @@ if __name__ == "__main__":
             for obj in pach_objects:
                 if (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x) + obj.largura_real > 0 and (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x) < LARGURA:
                     if (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y) + obj.altura_real > 0 and (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y) < ALTURA:
-                        print("ok")
                         screen.blit(obj.imagem_pach, (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
                                                     ((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y))
                     
@@ -1001,7 +1000,6 @@ if __name__ == "__main__":
             for obj in pach_objects:
                 if (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x) + obj.largura_real > 0 and (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x) < LARGURA:
                     if (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y) + obj.altura_real > 0 and (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y) < ALTURA:
-                        print("ok")
                         screen.blit(obj.imagem_pach, (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
                                                     ((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y))
                     

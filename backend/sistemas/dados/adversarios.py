@@ -7,25 +7,20 @@ from backend.entidades.adversarios import (
     slime, zumbi, gárgula, lobisomem, quimera, banshee, fenrir, ghoul,
     goblin, ogro, esqueleto, oni, medusa, troll)
 
-def salvar_adversarios_json(adversarios, arquivo="adversarioss.json"):
-    """
-    Recebe uma lista de adversários (monstros e demi-humanos)
-    e salva os atributos principais em JSON.
-    """
+def salvar_adversarios_json(adversarios, arquivo = "adversarioss.json"):
     dados = []
 
     for adv in adversarios:
-        # Coleta atributos comuns
         registro = {
-            "tipo": adv.__class__.__name__,  # AdversarioMonstro ou AdversarioDemiHumano
+            "tipo": adv.__class__.__name__,
             "nome": adv.nome,
-            "nível": getattr(adv, "nível", getattr(adv, "nível_atual", None)),
+            "nível": adv.nível_atual,
             "experiência": adv.experiência,
-            "dano_base": getattr(adv, "dano_base", None),
-            "defesa_base": getattr(adv, "defesa_base", None),
-            "vida_base": getattr(adv, "vida_base", None),
-            "estamina_base": getattr(adv, "estamina_base", None),
-            "velocidade_base": getattr(adv, "velocidade_base", None),
+            "dano": adv.dano_final,
+            "defesa": adv.defesa_final,
+            "vida": f"{adv.vida_atual}/{adv.vida_máxima}",
+            "estamina": f"{adv.estamina_atual}/{adv.estamina_máxima}",
+            "velocidade": adv.velocidade_final,
             "queda": adv.queda,
             "taxa_de_queda": adv.taxa_de_queda,
             "posição_x": adv.posição_x,
@@ -33,7 +28,6 @@ def salvar_adversarios_json(adversarios, arquivo="adversarioss.json"):
             "estado": adv.estado
         }
 
-        # Campos extras só de demi-humanos
         if hasattr(adv, "nome_da_classe"):
             registro.update({
                 "classe": adv.nome_da_classe,
@@ -54,16 +48,15 @@ def salvar_adversarios_json(adversarios, arquivo="adversarioss.json"):
 
         dados.append(registro)
 
-    with open(arquivo, "w", encoding="utf-8") as f:
-        json.dump(dados, f, indent=2, ensure_ascii=False)
+    with open(arquivo, "w", encoding = "utf-8") as f:
+        json.dump(dados, f, indent = 2, ensure_ascii = False)
 
     print(f"Arquivo '{arquivo}' salvo com {len(dados)} adversários.")
 
-# Lista com todos os adversários instanciados
-todos_adversarios = [
+lista_de_adversarios = [
     slime, zumbi, gárgula, lobisomem, quimera, banshee, fenrir, ghoul,
     goblin, ogro, esqueleto, oni, medusa, troll
 ]
 
-# Exporta para JSON
-salvar_adversarios_json(todos_adversarios, "adversarioss.json")
+arquivo = "backend\dados\json\adversarios.json"
+salvar_adversarios_json(lista_de_adversarios, arquivo)

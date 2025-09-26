@@ -217,7 +217,7 @@ class AdversarioMonstro:
             self.nome = nome
 
             # NÍVEL
-            self.nível = nível
+            self.nível_atual = nível
 
             # EXPERIÊNCIA QUEDADA
             self.experiência = experiência
@@ -274,11 +274,11 @@ class AdversarioMonstro:
                 return None
 
         def atualizar_atributos(self):
-            self.vida_máxima = self.vida_base * self.nível + self.vida_bonus
-            self.estamina_máxima = self.estamina_base * self.nível + self.estamina_bonus
-            self.dano_final = self.dano_base * self.nível + self.dano_bonus
-            self.defesa_final = self.defesa_base * self.nível + self.defesa_bonus
-            self.velocidade_final = self.velocidade_base * self.nível + self.velocidade_bonus
+            self.vida_máxima = self.vida_base * self.nível_atual + self.vida_bonus
+            self.estamina_máxima = self.estamina_base * self.nível_atual + self.estamina_bonus
+            self.dano_final = self.dano_base * self.nível_atual + self.dano_bonus
+            self.defesa_final = self.defesa_base * self.nível_atual + self.defesa_bonus
+            self.velocidade_final = self.velocidade_base * self.nível_atual + self.velocidade_bonus
             self.vida_atual = self.vida_máxima
             self.estamina_atual = self.estamina_máxima
 
@@ -318,7 +318,7 @@ class AdversarioMonstro:
         def atualizar_descrição(self) -> None:
             self.descrição = (
                 f"nome: {self.nome}\n"
-                f"nível: {self.nível}\n"
+                f"nível: {self.nível_atual}\n"
                 f"dano: {self.dano_final}\n"
                 f"velocidade: {self.velocidade_final}\n"
                 f"defesa: {self.defesa_final}\n"

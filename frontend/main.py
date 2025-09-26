@@ -14,7 +14,8 @@ from recursos.imagens.personagem_principal import personagem_parado, personagem_
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from backend.entidades.adversarios import slime
 from backend.entidades.jogador import agnes
-from backend.sistemas.dados.itens import itens, itens_icons
+# from backend.sistemas.itens import itens, itens_icons
+# from backend.sistemas.colisao import pach_objects, pach_objects_colision, pach_objects_rects_colision, gerenciador_colisao, pach_objects_intamgible
 #from backend.app.models.sistema.habilidades_ativa_combatentes import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
 #from backend.app.models.sistema.habilidades_passivas_combatentes import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
 LARGURA, ALTURA = pyautogui.size()
@@ -332,7 +333,6 @@ if __name__ == "__main__":
         font_estrucao = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", int(tamanho_estrucao))
 
         if estado == JOGO:
-            from backend.sistemas.dados.colisao import pach_objects, pach_objects_colision, pach_objects_rects_colision, gerenciador_colisao, pach_objects_intamgible
             anterior = JOGO
             dados_do_alvo_recebidos = False
             screen.blit(chao, (pos_chao_x, pos_chao_y))
@@ -355,11 +355,11 @@ if __name__ == "__main__":
             screen.blit(quadrado_7, (personagem_x, personagem_y))
             
             for obj in pach_objects:
-                screen.blit(obj.imagem_pach, (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
-                                             ((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y))
-            
-            for obj in pach_objects:
-                pygame.draw.rect(screen, (0,0,0), obj.rect(), 2)
+                if (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x) + obj.largura_real > 0 and (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x) < LARGURA:
+                    if (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y) + obj.altura_real > 0 and (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y) < ALTURA:
+                        print("ok")
+                        screen.blit(obj.imagem_pach, (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
+                                                    ((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y))
                     
             # Desenha o retângulo cinza atrás do nome
             pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
@@ -979,13 +979,31 @@ if __name__ == "__main__":
             buff_dano = 0
             buff_defesa = 0
 
+            screen.blit(chao, (pos_chao_x, pos_chao_y))
+            rect = pygame.Rect(
+                personagem_x - (len(list(primeiro_nome)) * 7),
+                personagem_y - 45,
+                nome_rect.width,
+                nome_rect.height
+                )
+            rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 3
+            nome_rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 9
+            nome_rect.y = personagem_y - 40
+
+
             quadrado_7.fill((0, 200, 0))
             personagem = pygame.Rect(personagem_x, personagem_y, 50, 50)
             for obj in pach_objects_intamgible:
-                screen.blit(obj.imagem_pach, (obj.x, obj.y))
+                screen.blit(obj.imagem_pach, (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
+                                             ((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y))
             screen.blit(quadrado_7, (personagem_x, personagem_y))
+            
             for obj in pach_objects:
-                screen.blit(obj.imagem_pach, (obj.x, obj.y))
+                if (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x) + obj.largura_real > 0 and (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x) < LARGURA:
+                    if (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y) + obj.altura_real > 0 and (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y) < ALTURA:
+                        print("ok")
+                        screen.blit(obj.imagem_pach, (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
+                                                    ((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y))
                     
             # Desenha o retângulo cinza atrás do nome
             pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
@@ -1454,13 +1472,30 @@ if __name__ == "__main__":
             buff_dano = 0
             buff_defesa = 0
 
+            screen.blit(chao, (pos_chao_x, pos_chao_y))
+            rect = pygame.Rect(
+                personagem_x - (len(list(primeiro_nome)) * 7),
+                personagem_y - 45,
+                nome_rect.width,
+                nome_rect.height
+                )
+            rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 3
+            nome_rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 9
+            nome_rect.y = personagem_y - 40
+
+
             quadrado_7.fill((0, 200, 0))
             personagem = pygame.Rect(personagem_x, personagem_y, 50, 50)
             for obj in pach_objects_intamgible:
-                screen.blit(obj.imagem_pach, (obj.x, obj.y))
+                screen.blit(obj.imagem_pach, (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
+                                             ((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y))
             screen.blit(quadrado_7, (personagem_x, personagem_y))
+            
             for obj in pach_objects:
-                screen.blit(obj.imagem_pach, (obj.x, obj.y))
+                if (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x) + obj.largura_real > 0 and (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x) < LARGURA:
+                    if (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y) + obj.altura_real > 0 and (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y) < ALTURA:
+                        screen.blit(obj.imagem_pach, (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
+                                                    ((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y))
                     
             # Desenha o retângulo cinza atrás do nome
             pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)

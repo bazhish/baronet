@@ -5,7 +5,7 @@ sys.path.append(project_root)
 from backend.sistemas.modelos.modelo_personagem_principal import Usuario
 from backend.sistemas.classes.classes_combatentes import artista_marcial
 from backend.sistemas.modelos.modelos_armas import criar_arma
-from backend.sistemas.inventario import Inventario
+from backend.sistemas.dados.inventario import Inventario
 
 agnes = Usuario()
 agnes.inventario = Inventario()

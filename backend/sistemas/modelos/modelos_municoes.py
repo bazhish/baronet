@@ -3,7 +3,7 @@ from random import choice, randint
 from typing import Any, Optional
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..')))
-from backend.sistemas.efeitos_de_combates import (
+from backend.sistemas.dados.efeitos_de_combates import (
     Queimadura, Veneno, Sangramento, Atordoamento, Silencio, Lentidao, Explosivo
 )
 

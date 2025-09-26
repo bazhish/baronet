@@ -1,8 +1,8 @@
 [
   {
-    "id": "missao_1",
+    "id": "missão_1",
     "titulo": "Coletar Frutos",
-    "descricao": "O fazendeiro precisa de ajuda para coletar 10 frutos na floresta.",
+    "descricao": "O fazendeiro precisa de ajuda para coletar 10 frutos na floresta",
     "tipo": "coleta",
     "objetivo": {
       "item_id": "fruto",
@@ -16,6 +16,8 @@
     "npc_geradora": "fazendeiro",
     "requisito_previo": null
   },
+  {"id": "submissão_1",
+}
   {
     "id": "missao_2",
     "titulo": "Caçar Slimes",

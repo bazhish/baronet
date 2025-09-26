@@ -1,0 +1,30 @@
+[
+  {
+    "id": "fazendeiro",
+    "nome": "O Fazendeiro",
+    "mapa": 1,
+    "missao_id": "missao_1",
+    "dialogo": "Obrigado por pegar meus frutos. Isso vai ajudar muito!"
+  },
+  {
+    "id": "ralph",
+    "nome": "Ralph o Caçador",
+    "mapa": 2,
+    "missao_id": "missao_2",
+    "dialogo": "Esses slimes estão ficando perigosos, preciso que você os derrote."
+  },
+  {
+    "id": "alquimista",
+    "nome": "Alquimista",
+    "mapa": 3,
+    "missao_id": "missao_3",
+    "dialogo": "Preciso de cogumelos raros para minha poção. Pode me ajudar?"
+  },
+  {
+    "id": "arthur",
+    "nome": "Arthur",
+    "mapa": 4,
+    "missao_id": null,
+    "dialogo": "Vou lutar ao seu lado daqui em diante!"
+  }
+]

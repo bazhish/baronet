@@ -1,0 +1,32 @@
+[
+  {
+    "id": "vilarejo",
+    "nome": "Vilarejo Inicial",
+    "descricao": "O ponto de partida da aventura.",
+    "requisito_missao": null
+  },
+  {
+    "id": "floresta",
+    "nome": "Floresta dos Frutos",
+    "descricao": "Aqui crescem os frutos pedidos pelo fazendeiro.",
+    "requisito_missao": "missao_1"
+  },
+  {
+    "id": "caverna",
+    "nome": "Caverna dos Slimes",
+    "descricao": "Lar de criaturas gosmentas.",
+    "requisito_missao": "missao_2"
+  },
+  {
+    "id": "laboratorio",
+    "nome": "Laboratório do Alquimista",
+    "descricao": "Um alquimista misterioso vive aqui.",
+    "requisito_missao": "missao_3"
+  },
+  {
+    "id": "montanha_troll",
+    "nome": "Montanha do Rei Troll",
+    "descricao": "O covil do poderoso Rei Troll.",
+    "requisito_missao": "missao_3"
+  }
+]

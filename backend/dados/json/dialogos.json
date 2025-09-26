@@ -1,0 +1,26 @@
+{
+  "fazendeiro": [
+    {
+      "fala": "Oi viajante! Preciso de ajuda para coletar frutos.",
+      "escolhas": [
+        {"resposta": "Claro, posso ajudar!", "acao": "aceitar_missao", "missao_id": "missao_1"},
+        {"resposta": "Desculpe, não tenho tempo agora.", "acao": "recusar_missao"}
+      ]
+    },
+    {
+      "fala": "Obrigado por me ajudar! Volte quando tiver os frutos."
+    },
+    {
+      "fala": "Você trouxe os frutos? Excelente! Aqui está sua recompensa."
+    }
+  ],
+  "ralph": [
+    {
+      "fala": "Os slimes estão atacando viajantes. Pode derrotar alguns?",
+      "escolhas": [
+        {"resposta": "Sim, vou cuidar disso.", "acao": "aceitar_missao", "missao_id": "missao_2"},
+        {"resposta": "Prefiro não me envolver.", "acao": "recusar_missao"}
+      ]
+    }
+  ]
+}

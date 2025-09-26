@@ -1,0 +1,58 @@
+{
+    "usuario": "admimin",
+    "dados_pessoais": {
+        "Nome": "agnes",
+        "Classe": "Artista Marcial",
+        "Tentativas": 3,
+        "1° passiva": "mira aprimorada",
+        "2° passiva": "arsenal tático",
+        "3° passiva": "fogo sucessivo",
+        "Habilidade ativa": "Combo Relâmpago",
+        "Habilidade especial": "Postura de Ferro"
+    },
+    "inventario": {
+        "itens": [
+            "Punho do Aprendiz"
+        ],
+        "equipado": {
+            "arma": "Punho do Aprendiz",
+            "armadura": "nenhum",
+            "escudo": "nenhum"
+        },
+        "dinheiro": 4000
+    },
+    "atributos": {
+        "nivel": 14,
+        "experiencia": 691.0,
+        "dano": 6979140537712,
+        "velocidade": 9420132691255,
+        "defesa": 6979140537656,
+        "vida": 310,
+        "estamina": 220,
+        "multiplicador_de_experiencia": 1.6888716688258987
+    },
+    "armadura": {
+        "elmo": "nenhum",
+        "peitoral": "nenhum",
+        "calça": "nenhuma",
+        "botas": "nenhuma"
+    },
+    "status": {
+        "estado": "normal",
+        "pode se mover": true,
+        "pode atacar": true,
+        "bloqueio ativo": false
+    },
+    "progresso": {
+        "capitulo": 0,
+        "missao": 1
+    },
+    "keys": {
+        "inventario": "E",
+        "correr": "Lctrl",
+        "habilidade": "R",
+        "habilidade_1": "Z",
+        "habilidade_2": "X",
+        "mapa": "M"
+    }
+}

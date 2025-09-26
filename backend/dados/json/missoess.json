@@ -1,0 +1,53 @@
+[
+  {
+    "id": "missao_1",
+    "titulo": "Coletar Frutos",
+    "descricao": "O fazendeiro precisa de ajuda para coletar 10 frutos na floresta.",
+    "tipo": "coleta",
+    "objetivo": {
+      "item_id": "fruto",
+      "quantidade": 10
+    },
+    "recompensa": {
+      "xp": 50,
+      "moeda": 20,
+      "item": null
+    },
+    "npc_geradora": "fazendeiro",
+    "requisito_previo": null
+  },
+  {
+    "id": "missao_2",
+    "titulo": "Caçar Slimes",
+    "descricao": "Ralph pediu para derrotar 5 slimes e coletar suas gosmas.",
+    "tipo": "derrota",
+    "objetivo": {
+      "monstro_id": "slime",
+      "quantidade": 5
+    },
+    "recompensa": {
+      "xp": 100,
+      "moeda": 50,
+      "item": "pista_mapa"
+    },
+    "npc_geradora": "ralph",
+    "requisito_previo": "missao_1"
+  },
+  {
+    "id": "missao_3",
+    "titulo": "Ingredientes do Alquimista",
+    "descricao": "Coletar 3 cogumelos mágicos para o alquimista.",
+    "tipo": "coleta",
+    "objetivo": {
+      "item_id": "cogumelo_magico",
+      "quantidade": 3
+    },
+    "recompensa": {
+      "xp": 150,
+      "moeda": 30,
+      "item": "poção_curativa"
+    },
+    "npc_geradora": "alquimista",
+    "requisito_previo": "missao_2"
+  }
+]

@@ -61,7 +61,10 @@ pedras_3 = image.load(fr"{endereço}\pedras 3.png")
 pedras_3 = transform.scale(pedras_3, (52 * LArgura // 1920, 120 * LArgura // 1920))
 
 casa_pequena0 = image.load(fr"{endereço}\casa_pequena0.png")
-casa_pequena0 = transform.scale(casa_pequena0, (288 * LArgura // 1920, 450 * LArgura // 1920))
+casa_pequena0 = transform.scale(casa_pequena0, (572 * LArgura // 1920, 900 * LArgura // 1920))
+
+casa_pequena1 = image.load(fr"{endereço}\casa_pequena1.png")
+casa_pequena1 = transform.scale(casa_pequena1, (572 * LArgura // 1920, 900 * LArgura // 1920))
 
 inventario_pach = image.load(fr"{endereço}\inventario_final.png")
 inventario_pach = transform.scale(inventario_pach, (1344 * LArgura // 1920, 966 * LArgura // 1920))

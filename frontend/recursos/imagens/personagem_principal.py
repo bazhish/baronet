@@ -42,11 +42,6 @@ personagem_andando5 = pygame.transform.scale(personagem_andando5, (200 * LARGURA
 personagem_andando6 = pygame.image.load(f"{endereço}/personagem_principal/personagem_principal6.png")
 personagem_andando6 = pygame.transform.scale(personagem_andando6, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
 
-personagem_andando7 = pygame.image.load(f"{endereço}/personagem_principal/personagem_principal7.png")
-personagem_andando7 = pygame.transform.scale(personagem_andando7, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
-
-personagem_andando8 = pygame.image.load(f"{endereço}/personagem_principal/personagem_principal8.png")
-personagem_andando8 = pygame.transform.scale(personagem_andando8, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
 
 personagem_andando_D = [
     personagem_andando0,
@@ -55,9 +50,38 @@ personagem_andando_D = [
     personagem_andando3,
     personagem_andando4,
     personagem_andando5,
-    personagem_andando6,
-    personagem_andando7,
-    personagem_andando8]
+    personagem_andando6]
+
+personagem_andando0E = pygame.image.load(f"{endereço}/personagem_principal/personagem_principal0E.png")
+personagem_andando0E = pygame.transform.scale(personagem_andando0E, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_andando1E = pygame.image.load(f"{endereço}/personagem_principal/personagem_principal1E.png")
+personagem_andando1E = pygame.transform.scale(personagem_andando1E, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_andando2E = pygame.image.load(f"{endereço}/personagem_principal/personagem_principal2E.png")
+personagem_andando2E = pygame.transform.scale(personagem_andando2E, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_andando3E = pygame.image.load(f"{endereço}/personagem_principal/personagem_principal3E.png")
+personagem_andando3E = pygame.transform.scale(personagem_andando3E, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_andando4E = pygame.image.load(f"{endereço}/personagem_principal/personagem_principal4E.png")
+personagem_andando4E = pygame.transform.scale(personagem_andando4E, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_andando5E = pygame.image.load(f"{endereço}/personagem_principal/personagem_principal5E.png")
+personagem_andando5E = pygame.transform.scale(personagem_andando5E, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+personagem_andando6E = pygame.image.load(f"{endereço}/personagem_principal/personagem_principal6E.png")
+personagem_andando6E = pygame.transform.scale(personagem_andando6E, (200 * LARGURA // 1920, 200 * LARGURA // 1920))
+
+
+personagem_andando_E = [
+    personagem_andando0E,
+    personagem_andando1E,
+    personagem_andando2E,
+    personagem_andando3E,
+    personagem_andando4E,
+    personagem_andando5E,
+    personagem_andando6E]
 
 personagem_soco_d2 =pygame.image.load(f"{endereço}/personagem_principal/personagem_ataque1.png")
 personagem_soco_d2 = pygame.transform.scale(personagem_soco_d2, (200 * LARGURA // 1920, 200 * LARGURA // 1920))

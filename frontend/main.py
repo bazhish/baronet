@@ -6,11 +6,12 @@ from ui.menus import desenhar_botao, TEXTO_S, COR_TEXTO, COR_INATIVA, COR_ATIVA
 from ui.lobby import input_boxes, salvar, fonte_input, font_title, nome_rect, primeiro_nome
 from recursos.imagens.missao.missao1.slime import slime_parado, slime_direita, slime_morto
 from recursos.imagens.cenario.cenario_explorar import inventario_pach, inventario_icon, mapa_img, chao
+from recursos.imagens.hud.hud_combate import vida_hud, vida_inimigo_hud, estamina_hud, xp_hud
 import sqlite3
 import pyautogui
 from subprocess import Popen
 import json
-from recursos.imagens.personagem_principal import personagem_parado, personagem_andando_D, personagem_soco_d, personagem_morto, personagem_dano
+from recursos.imagens.personagem_principal import personagem_parado, personagem_andando_D, personagem_soco_d, personagem_morto, personagem_dano, personagem_andando_E
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from backend.entidades.adversarios import slime
 from backend.entidades.jogador import agnes
@@ -20,8 +21,6 @@ from backend.sistemas.colisao import pach_objects, pach_objects_colision, pach_o
 #from backend.app.models.sistema.habilidades_passivas_combatentes import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
 LARGURA, ALTURA = pyautogui.size()
 endereço = os.path.dirname(os.path.abspath(__file__))
-
-
 
 font_vida = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", 30)
 
@@ -158,7 +157,7 @@ MENU = "menu"
 INVENTARIO = "inventario"
 MAPA = "mapa"
 COMBATE = "combate"
-estado = JOGO
+estado = COMBATE
 
 tranparencia = 150
 sombra = pygame.Surface((100 * LARGURA // 1920, 20 * LARGURA // 1920), pygame.SRCALPHA)
@@ -237,9 +236,6 @@ capacete_E = []
 peitoral_E = []
 botas_E = []
 normal = []
-
-dados["inventario"]["item"].append([[itens[0].nome, "comum"], 1])
-dados["inventario"]["item"].append([[itens[-1].nome, itens[-1].raridade], 1])
 
 if __name__ == "__main__":
     screen = pygame.display.set_mode((LARGURA, ALTURA), pygame.FULLSCREEN)
@@ -602,6 +598,7 @@ if __name__ == "__main__":
             anterior = COMBATE
             screen.blit(cenario_combate, (posição, 0))
             if dados["progresso"]["missao"] == 1 and not dados_obtidos:
+                inimigo = slime
                 inimigo_local = [("parado", slime.posição_x), ("parado", slime.posição_x + 1200), ("parado", slime.posição_x + 1200 * 2)]
                 status_inimigo = [[slime.dano_base, slime.velocidade_base, slime.defesa_base, slime.vida_base],
                                   [slime.dano_base, slime.velocidade_base, slime.defesa_base, slime.vida_base],
@@ -622,15 +619,33 @@ if __name__ == "__main__":
             if contador <= 0:
                 vida_inicial = agnes.vida_máxima
                 vida_atual = agnes.vida_atual
+                estamina_inicial = agnes.estamina_atual
+                estamina_atual = agnes.estamina_atual
+                XP_necessario = usuario.estamina_máxima
+                XP_atual = dados["status"]["experiencia"]
                 contador += 1
             if morto:
                 quadrado_4.fill((*(0, 0, 0), 150))
                 screen.blit(quadrado_4, (0, 0))
                 screen.blit(game_over, (LARGURA // 2 - 800, ALTURA // 2 - 300))
             else:
-                if vida_atual > 0:
-                    porcentagem_vida = font_vida.render(str(vida_atual * 100 // vida_inicial) + "%", True, cor_usada)
-                    screen.blit(porcentagem_vida, (posição_personagem_X + 45, posição_personagem_Y - 20))
+                vida_porcentagem = (vida_atual * 100) // vida_inicial
+                estamina_porcentagem = (estamina_atual * 100) // estamina_inicial
+                XP_porcentagem = (XP_atual * 100) // XP_necessario
+
+                for i, m in enumerate(vida_hud):
+                    if int(vida_porcentagem // 10) == i:
+                        screen.blit(vida_hud[i], (72, 101))
+
+                for i, m in enumerate(estamina_hud):
+                    if int(estamina_porcentagem // 10) == i:
+                        screen.blit(estamina_hud[i], (72, 101))
+
+                for i, m in enumerate(xp_hud):
+                    if int(XP_porcentagem // 10) == i:
+                        screen.blit(xp_hud[i], (72, 101))
+
+
 
                 alpha = int(min(255, max(0, contador_cooldown_jogador * 4)))
                 quadrado_5.fill((220, 220, 220, alpha))
@@ -690,18 +705,6 @@ if __name__ == "__main__":
                     if not morto:
                         cor_usada_adiversario = cor_normal_adiversario
                         contador_cooldown_jogador -= 1
-
-
-                if key[pygame.K_SPACE] and colisao_chao and limite_de_pulo > qnt_de_pulo and not morto and diresao != "dano":
-                    qnt_de_pulo += 1
-                    pulo_detectado = True
-                    vel_y = forca_pulo
-                    sombra.set_alpha(tranparencia - (qnt_de_pulo * 25))
-                    
-                    if qnt_de_pulo == limite_de_pulo:
-                        colisao_chao = False
-
-
                 
                 
                 vel_y += gravidade
@@ -765,11 +768,19 @@ if __name__ == "__main__":
                     
 
 
-                else:
+                elif diresao == "direita":
                     screen.blit(sombra, (posição_personagem_X + 40 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
-                    screen.blit(personagem_andando_D[frame_personagem], (posição_personagem_X, posição_personagem_Y))
-                    frame_personagem += 1
+                    screen.blit(personagem_andando_D[int(frame_personagem)], (posição_personagem_X, posição_personagem_Y))
+                    frame_personagem += 0.5
                     if frame_personagem >= len(personagem_andando_D):
+                        frame_personagem = 0
+
+                
+                elif diresao == "esquerda":
+                    screen.blit(sombra, (posição_personagem_X + 40 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
+                    screen.blit(personagem_andando_E[int(frame_personagem)], (posição_personagem_X, posição_personagem_Y))
+                    frame_personagem += 0.5
+                    if frame_personagem >= len(personagem_andando_E):
                         frame_personagem = 0
 
 
@@ -826,8 +837,10 @@ if __name__ == "__main__":
                             if frame_inimigo_direita[i] >= len(inimigos_pachs_direita):
                                 frame_inimigo_direita[i] = 0
 
-                        porcentagem_vida_adiversario = font_vida.render(str(status_inimigo[i][3] * 100 // status_inimigo_inicial[i][3]) + "%", True, cor_usada_adiversario)
-                        screen.blit(porcentagem_vida_adiversario, (posicao_x + 60, 735 - 170))
+                        porcentagem_vida_adiversario = status_inimigo[i][3] * 100 // status_inimigo_inicial[i][3]
+                        for k, m in enumerate(vida_inimigo_hud):
+                            if int(porcentagem_vida_adiversario // 10) == k:
+                                screen.blit(vida_inimigo_hud[k], (posicao_x + 60, 735 - 170))
 
                         inimigo_local[i] = (diresao_adiversario, posicao_x)
 

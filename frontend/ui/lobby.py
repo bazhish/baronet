@@ -84,31 +84,31 @@ input_boxes = [
             ]
 
 id_usuario = obter_id_usuario_por_nome(dados["usuario"])
-def salvar(teclas, dados=dados):
+def salvar(teclas, dado=dados):
     global id_usuario
-    dados["keys"] = teclas
+    dado["keys"] = teclas
 
     # Converte inventário para JSON se for lista
-    if isinstance(dados["inventario"]["item"], list):
-        dados["inventario"]["item"] = json.dumps(dados["inventario"]["item"], ensure_ascii=False)
+    if isinstance(dado["inventario"]["item"], list):
+        dado["inventario"]["item"] = json.dumps(dado["inventario"]["item"], ensure_ascii=False)
         
-    if isinstance(dados["inventario"]["equipado"], list):
-        dados["inventario"]["equipado"] = json.dumps(dados["inventario"]["equipado"], ensure_ascii=False)
+    if isinstance(dado["inventario"]["equipado"], list):
+        dado["inventario"]["equipado"] = json.dumps(dado["inventario"]["equipado"], ensure_ascii=False)
 
     # Salva no arquivo JSON
     with open(rf"{endereço}\usuario.json", "w", encoding="utf-8") as arquivo:
-        json.dump(dados, arquivo, indent=4, ensure_ascii=False)
+        json.dump(dado, arquivo, indent=4, ensure_ascii=False)
 
     # Conecta no SQLite
     conexao = sqlite3.connect(endereco_banco_de_dados)
     cursor = conexao.cursor()
 
-    # Atualiza dados do usuário
+    # Atualiza dado do usuário
     cursor.execute("""
         UPDATE usuarios
         SET nome = ?, classe = ?
         WHERE id = ?
-    """, (dados["usuario"], dados["dados_pessoais"]["Classe"], id_usuario))
+    """, (dado["usuario"], dado["dados_pessoais"]["Classe"], id_usuario))
 
     # Atualiza status
     cursor.execute("""
@@ -116,12 +116,12 @@ def salvar(teclas, dados=dados):
         SET nivel = ?, dano = ?, velocidade = ?, defesa = ?, vida = ?, experiencia = ?
         WHERE usuario_id = ?
     """, (
-        dados["status"]["nivel"],
-        dados["status"]["dano"],
-        dados["status"]["velocidade"],
-        dados["status"]["defesa"],
-        dados["status"]["vida"],
-        dados["status"]["experiencia"],
+        dado["status"]["nivel"],
+        dado["status"]["dano"],
+        dado["status"]["velocidade"],
+        dado["status"]["defesa"],
+        dado["status"]["vida"],
+        dado["status"]["experiencia"],
         id_usuario
     ))
 
@@ -130,14 +130,14 @@ def salvar(teclas, dados=dados):
         UPDATE progresso
         SET capitulo = ?, missao = ?
         WHERE usuario_id = ?
-    """, (dados["progresso"]["capitulo"], dados["progresso"]["missao"], id_usuario))
+    """, (dado["progresso"]["capitulo"], dado["progresso"]["missao"], id_usuario))
 
     # Atualiza inventário
     cursor.execute("""
         UPDATE inventario
         SET item = ?, item_equipado = ?, dinheiro = ?
         WHERE usuario_id = ?
-    """, (dados["inventario"]["item"], dados["inventario"]["equipado"], dados["inventario"]["dinheiro"], id_usuario))
+    """, (dado["inventario"]["item"], dado["inventario"]["equipado"], dado["inventario"]["dinheiro"], id_usuario))
 
     # Atualiza teclas
     cursor.execute("""
@@ -156,6 +156,12 @@ def salvar(teclas, dados=dados):
 
     conexao.commit()
     conexao.close()
+
+    if isinstance(dado["inventario"]["item"], str):
+        dado["inventario"]["item"] = json.loads(dado["inventario"]["item"])
+        
+    if isinstance(dado["inventario"]["equipado"], str):
+        dado["inventario"]["equipado"] = json.loads(dado["inventario"]["equipado"])
 
 if __name__ == "__main__":
     screen = pygame.display.set_mode((LARGURA, ALTURA), pygame.FULLSCREEN)

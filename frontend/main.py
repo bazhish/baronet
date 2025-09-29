@@ -6,7 +6,7 @@ from ui.menus import desenhar_botao, TEXTO_S, COR_TEXTO, COR_INATIVA, COR_ATIVA
 from ui.lobby import input_boxes, salvar, fonte_input, font_title, nome_rect, primeiro_nome
 from recursos.imagens.missao.missao1.slime import slime_parado, slime_direita, slime_morto
 from recursos.imagens.cenario.cenario_explorar import inventario_pach, inventario_icon, mapa_img, chao
-from recursos.imagens.hud.hud_combate import vida_hud, vida_inimigo_hud, estamina_hud, xp_hud
+from recursos.imagens.hud.hud_combate import vida_hud, vida_inimigo_hud, estamina_hud, xp_hud, armas_hud, usaveis_hud
 import sqlite3
 import pyautogui
 from subprocess import Popen
@@ -146,7 +146,6 @@ botao_segurado = False
 botao_segurado_m = False
 
 
-
 usuario = agnes
 precionado = False
 
@@ -236,6 +235,9 @@ capacete_E = []
 peitoral_E = []
 botas_E = []
 normal = []
+ataque = []
+
+dados["inventario"]["item"].append([[itens[22].nome, itens[22].raridade], 1])
 
 if __name__ == "__main__":
     screen = pygame.display.set_mode((LARGURA, ALTURA), pygame.FULLSCREEN)
@@ -282,16 +284,11 @@ if __name__ == "__main__":
         tempo_salvar += 1
         mouse_pos = pygame.mouse.get_pos()
 
-        if (tempo_salvar % 32) >= 10 * 60:
+        if (tempo_salvar % 32) >= 5 * 60:
             tempo_salvar = 0
             salvar(teclas, dados)
 
         teclas = dados["keys"]
-
-        capacete_E.clear()
-        peitoral_E.clear()
-        botas_E.clear()
-        normal.clear()
         
         tecla = [teclas["inventario"].lower(), teclas["correr"].lower(), teclas["habilidade"].lower(), teclas["habilidade_1"].lower(), teclas["habilidade_2"].lower(), teclas["mapa"].lower()]
         for nome_tecla in tecla:
@@ -319,12 +316,17 @@ if __name__ == "__main__":
         if not parede:
             travar = False
 
-        for i, item in enumerate(dados["inventario"]["item"]):
-            for i2, item2 in enumerate(dados["inventario"]["item"]):
-                if i != i2:
-                    if item[0] == item2[0]:
-                        item[1] += item2[1]
-                        dados["inventario"]["item"].pop(i2)          
+        # junta itens repetidos em um dicionário
+        resultado = {}
+        for nome, qtd in dados["inventario"]["item"]:
+            chave = tuple(nome)  # transforma ['Arco e flexa', 'comum'] em ('Arco e flexa','comum')
+            if chave in resultado:
+                resultado[chave] += qtd
+            else:
+                resultado[chave] = qtd
+
+        # transforma de volta para a lista no mesmo formato
+        dados["inventario"]["item"] = [[list(k), v] for k, v in resultado.items()]        
 
         font_estrucao = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", int(tamanho_estrucao))
 
@@ -360,6 +362,7 @@ if __name__ == "__main__":
             pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
 
             # Desenha o texto do nome por cima do retângulo
+            nome = font_nome.render(f"{primeiro_nome}", True, (190, 190, 230))
             screen.blit(nome, nome_rect)
 
             # atualiza todos os objetos do gerenciador de colisão
@@ -396,7 +399,7 @@ if __name__ == "__main__":
 
             for equipamento in dados["inventario"]["equipado"]:
                 for i, item in enumerate(itens):
-                    if item.nome == equipamento[0] and item.raridade == equipamento[1] and item.type != "comum" and item.type != "defesa":
+                    if item.nome == equipamento[0] and item.raridade == equipamento[1] and item.type != "comum" and item.type != "defesa" and item.type != "ataque":
                         screen.blit(itens_icons[i], (1800, item_y))
                         item_y += 120
 
@@ -633,21 +636,8 @@ if __name__ == "__main__":
                 estamina_porcentagem = (estamina_atual * 100) // estamina_inicial
                 XP_porcentagem = (XP_atual * 100) // XP_necessario
 
-                for i, m in enumerate(vida_hud):
-                    if int(vida_porcentagem // 10) == i:
-                        screen.blit(vida_hud[i], (72, 101))
 
-                for i, m in enumerate(estamina_hud):
-                    if int(estamina_porcentagem // 10) == i:
-                        screen.blit(estamina_hud[i], (72, 101))
-
-                for i, m in enumerate(xp_hud):
-                    if int(XP_porcentagem // 10) == i:
-                        screen.blit(xp_hud[i], (72, 101))
-
-
-
-                alpha = int(min(255, max(0, contador_cooldown_jogador * 4)))
+                alpha = int(min(255, max(0, contador_cooldown_jogador * 7)))
                 quadrado_5.fill((220, 220, 220, alpha))
                 screen.blit(quadrado_5, (posição_personagem_X + 45, posição_personagem_Y - 40))
 
@@ -858,6 +848,7 @@ if __name__ == "__main__":
                 if derrotados >= len(inimigo_local):
                     dados["progresso"]["missao"] += 1
                     salvar(teclas, dados)
+
                     dados_obtidos = False
                     estado = JOGO
                 
@@ -873,6 +864,22 @@ if __name__ == "__main__":
                 if key[habilidade_2]:
                     None
                     #habilidade_2_usavel(usuario, alvo)
+
+
+                for i, m in enumerate(vida_hud):
+                    if int(vida_porcentagem // 10) == i:
+                        screen.blit(vida_hud[i], (72, 101))
+
+                for i, m in enumerate(estamina_hud):
+                    if int(estamina_porcentagem // 10) == i:
+                        screen.blit(estamina_hud[i], (72, 101))
+
+                for i, m in enumerate(xp_hud):
+                    if int(XP_porcentagem // 10) == i:
+                        screen.blit(xp_hud[i], (72, 101))
+
+                screen.blit(armas_hud, (1736, 275))
+                screen.blit(usaveis_hud, (417, 875))
 
             
 
@@ -1020,6 +1027,7 @@ if __name__ == "__main__":
             pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
 
             # Desenha o texto do nome por cima do retângulo
+            nome = font_nome.render(f"{primeiro_nome}", True, (190, 190, 230))
             screen.blit(nome, nome_rect)
 
             item_x = 1800
@@ -1033,7 +1041,7 @@ if __name__ == "__main__":
 
             for equipamento in dados["inventario"]["equipado"]:
                 for i, item in enumerate(itens):
-                    if item.nome == equipamento[0] and item.raridade == equipamento[1] and item.type != "comum" and item.type != "defesa":
+                    if item.nome == equipamento[0] and item.raridade == equipamento[1] and item.type != "comum" and item.type != "defesa" and item.type != "ataque":
                         screen.blit(itens_icons[i], (1800, item_y))
                         item_y += 120
 
@@ -1049,6 +1057,7 @@ if __name__ == "__main__":
             item_hover = None  # <- guarda qual item o mouse está em cima
             pos_x, pos_y = item.x, item.y
 
+            indentificador = 0
             for recurso in dados["inventario"]["item"]:
                 for i, item in enumerate(itens):
                     if recurso[0][0] == item.nome and recurso[0][1] == (item.raridade if item.type != "comum" else recurso[0][1]):
@@ -1084,6 +1093,8 @@ if __name__ == "__main__":
                                 objeto_rect = pygame.Rect((624, 351, 84, 84))
                                 pygame.draw.rect(screen, (100, 255, 100), objeto_rect, 6)
 
+                        
+
                         # Se o mouse está em cima, marca o item
                         if objeto_rect.collidepoint(mouse_pos):
                             item_hover = item_hover = (item, pos_x, pos_y)
@@ -1095,6 +1106,7 @@ if __name__ == "__main__":
                                     precionado = True
                                     if item.nome not in (equipamento[0] for equipamento in dados["inventario"]["equipado"]) and item.type != "comum":
                                         dados["inventario"]["equipado"].append([item.nome, item.raridade])
+
                                         for p, equipamento in enumerate(dados["inventario"]["equipado"]):
                                             if equipamento[0].split()[0] == "Capacete":
                                                 capacete_E.append(p)
@@ -1102,16 +1114,27 @@ if __name__ == "__main__":
                                                 peitoral_E.append(p)
                                             elif equipamento[0].split()[0] == "Bota":
                                                 botas_E.append(p)
+                                            elif item.nome == equipamento[0] and item.raridade == equipamento[1] and item.type == "ataque":
+                                                ataque.append(p)
                                             else:
                                                 normal.append(p)
-                                            if len(capacete_E) > 1:
-                                                dados["inventario"]["equipado"].pop(p)
-                                            if len(peitoral_E) > 1:
-                                                dados["inventario"]["equipado"].pop(p)
-                                            if len(botas_E) > 1:
-                                                dados["inventario"]["equipado"].pop(p)
-                                            if len(normal) > 5:
-                                                dados["inventario"]["equipado"].pop(p)
+        
+                                        print(ataque)
+                                        if len(capacete_E) > 1:
+                                            dados["inventario"]["equipado"].pop(capacete_E[0])
+                                            capacete_E.pop(0)
+                                        if len(peitoral_E) > 1:
+                                            dados["inventario"]["equipado"].pop(peitoral_E[0])
+                                            peitoral_E.pop(0)
+                                        if len(botas_E) > 1:
+                                            dados["inventario"]["equipado"].pop(botas_E[0])
+                                            botas_E.pop(0)
+                                        if len(ataque) > 1:
+                                            dados["inventario"]["equipado"].pop(ataque[0])
+                                            ataque.pop(0)
+                                        if len(normal) > 10:
+                                            dados["inventario"]["equipado"].pop(normal[0])
+                                            normal.pop(0)
                                             
                                     elif item.type != "comum":
                                         dados["inventario"]["equipado"].remove([item.nome, item.raridade])
@@ -1512,6 +1535,7 @@ if __name__ == "__main__":
             pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
 
             # Desenha o texto do nome por cima do retângulo
+            nome = font_nome.render(f"{primeiro_nome}", True, (190, 190, 230))
             screen.blit(nome, nome_rect)
 
 
@@ -1526,7 +1550,7 @@ if __name__ == "__main__":
 
             for equipamento in dados["inventario"]["equipado"]:
                 for i, item in enumerate(itens):
-                    if item.nome == equipamento[0] and item.raridade == equipamento[1] and item.type != "comum" and item.type != "defesa":
+                    if item.nome == equipamento[0] and item.raridade == equipamento[1] and item.type != "comum" and item.type != "defesa" and item.type != "ataque":
                         screen.blit(itens_icons[i], (1800, item_y))
                         item_y += 120
 

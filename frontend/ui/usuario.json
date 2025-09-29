@@ -5,7 +5,7 @@
         "Classe": "arqueiro"
     },
     "inventario": {
-        "item": "[[[\"Arco e flexa\", \"comum\"], 1]]",
+        "item": "[[[\"Arco e flexa\", \"comum\"], 1], [[\"Espada\", \"rara\"], 1]]",
         "equipado": "[]",
         "dinheiro": 100
     },
@@ -19,7 +19,7 @@
     },
     "progresso": {
         "capitulo": 0,
-        "missao": 1
+        "missao": 2
     },
     "keys": {
         "inventario": "E",

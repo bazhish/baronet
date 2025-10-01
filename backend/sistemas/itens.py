@@ -71,7 +71,7 @@ endereço = path_os.abspath(path_os.join(path_os.dirname(__file__), '..', '..', 
 
 
 itens_path = ["Carne podre.png", "Cauda.png", "cifre de Minotauro -pixilart.png", "couro.png", "dente.png","dente(1).png", "membrana de fantasma.png", "Osso.png", "tentaculo.png", "chave esqueleto.png", "escrritura antiga.png", "espada quebrada.png", "Olho especial.png",
-              "Arco_flexa.png", "Espada.png", "Escudo.png", "luva.png", "lança.png"]
+              "Arco_flexa.png", "Espada.png", "Escudo.png", "luva.png", "lança.png", "Punho.png"]
 itens2 = []
 
 
@@ -119,6 +119,10 @@ itens = [
     item_ataque("Lança", "ataque", "rara", tabela_armas["lança"]["rara"][0], tabela_armas["lança"]["rara"][1], itens_path[17]),
     item_ataque("Lança", "ataque", "épica", tabela_armas["lança"]["épica"][0], tabela_armas["lança"]["épica"][1], itens_path[17]),
     item_ataque("Lança", "ataque", "lendaria", tabela_armas["lança"]["lendaria"][0], tabela_armas["lança"]["lendaria"][1], itens_path[17]),
+    item_ataque("Punho", "ataque", "comum", tabela_armas["punho"]["comum"][0], tabela_armas["punho"]["comum"][1], itens_path[18]),
+    item_ataque("Punho", "ataque", "rara", tabela_armas["punho"]["rara"][0], tabela_armas["punho"]["rara"][1], itens_path[18]),
+    item_ataque("Punho", "ataque", "épica", tabela_armas["punho"]["épica"][0], tabela_armas["punho"]["épica"][1], itens_path[18]),
+    item_ataque("Punho", "ataque", "lendaria", tabela_armas["punho"]["lendaria"][0], tabela_armas["punho"]["lendaria"][1], itens_path[18]),
     item_atk_e_def("Capacete de couro", "defesa", "comum", 0, 5, 1, itens_path[12])
 ]
 

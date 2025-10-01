@@ -3,10 +3,11 @@ import sys
 import os
 from random import choice
 from ui.menus import desenhar_botao, TEXTO_S, COR_TEXTO, COR_INATIVA, COR_ATIVA
-from ui.lobby import input_boxes, salvar, fonte_input, font_title, nome_rect, primeiro_nome
+from ui.lobby import input_boxes, salvar, fonte_input, font_title, nome_rect, primeiro_nome, fonte_T_input
 from recursos.imagens.missao.missao1.slime import slime_parado, slime_direita, slime_morto
 from recursos.imagens.cenario.cenario_explorar import inventario_pach, inventario_icon, mapa_img, chao
-from recursos.imagens.hud.hud_combate import vida_hud, vida_inimigo_hud, estamina_hud, xp_hud, armas_hud, usaveis_hud
+from recursos.imagens.hud.hud_combate import vida_hud, vida_inimigo_hud, estamina_hud, xp_hud, armas_hud, usaveis_hud, vitoria_tela, derrota_tela
+from recursos.imagens.telas.telas import telas
 import sqlite3
 import pyautogui
 from subprocess import Popen
@@ -63,6 +64,13 @@ morto = False
 frame_morto = 0
 time_morrer = 0
 mesma_linha = 0
+frame_derrota = 0
+vel_derrota = 1
+frame_vitoria = 0
+vel_vitoria = 0.7
+vel_botao = 10
+contador_botao = 255
+mostrar_itens = False
 
 estrucao = 0
 vel_letra = 0.5
@@ -156,7 +164,7 @@ MENU = "menu"
 INVENTARIO = "inventario"
 MAPA = "mapa"
 COMBATE = "combate"
-estado = COMBATE
+estado = JOGO
 
 tranparencia = 150
 sombra = pygame.Surface((100 * LARGURA // 1920, 20 * LARGURA // 1920), pygame.SRCALPHA)
@@ -171,6 +179,13 @@ quadrado_2 = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
 quadrado_3 = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
 quadrado_4 = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
 quadrado_5 = pygame.Surface((100, 15), pygame.SRCALPHA)
+rect_fundo = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
+rect_fundo.fill((*(0, 0, 0), 150))
+rect_botao = pygame.Surface((660, 116), pygame.SRCALPHA)
+rect_vitoria = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
+rect_derrota = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
+rect_vitoria.fill((*(30, 30, 110), 170))
+rect_derrota.fill((*(110, 30, 30), 170))
 contador = 0
 rect_opcoes = pygame.Rect(LARGURA // 2.5, LARGURA // 1.5, ALTURA // 1.6, ALTURA // 2)
 click = False
@@ -237,7 +252,7 @@ botas_E = []
 normal = []
 ataque = []
 
-dados["inventario"]["item"].append([[itens[22].nome, itens[22].raridade], 1])
+
 
 if __name__ == "__main__":
     screen = pygame.display.set_mode((LARGURA, ALTURA), pygame.FULLSCREEN)
@@ -256,13 +271,13 @@ if __name__ == "__main__":
                 mods = evento.mod
                 for box in input_boxes:
                     if box["active"]:
-                        
+                        box["text"] = ""
                         if evento.key == pygame.K_BACKSPACE:
                             box["text"] = box["text"][:-1]
                         elif evento.key == pygame.K_RETURN:
                             box["active"] = False
                         else:
-                            box["text"] = ""
+                            box["active"] = False
                             if evento.unicode in box["peritido"]:
                                 box["text"] += evento.unicode
                             if mods & pygame.KMOD_ALT:
@@ -340,6 +355,10 @@ if __name__ == "__main__":
                 nome_rect.width,
                 nome_rect.height
                 )
+            
+            if key[pygame.K_DELETE]:
+                contador = 0
+                estado = COMBATE
             rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 3
             nome_rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 9
             nome_rect.y = personagem_y - 40
@@ -406,7 +425,7 @@ if __name__ == "__main__":
 
 
             # velocidade
-            vel = dados["status"]["velocidade"] * 2
+            vel = dados["status"]["velocidade"] * 5
 
             # limites do mapa (10x a largura/altura da tela)
             MAPA_LARGURA = LARGURA * 10
@@ -620,17 +639,43 @@ if __name__ == "__main__":
                 frame_inimigo_esquerda = [0, 0, 0]
                 frame_inimigo_morto = [0, 0, 0]
             if contador <= 0:
-                vida_inicial = agnes.vida_máxima
+                vida_inicial = agnes.vida_atual
                 vida_atual = agnes.vida_atual
                 estamina_inicial = agnes.estamina_atual
                 estamina_atual = agnes.estamina_atual
                 XP_necessario = usuario.estamina_máxima
                 XP_atual = dados["status"]["experiencia"]
                 contador += 1
+                vel_derrota = 1
+                vel_vitoria = 0.7
+                vel_botao = 7
+                contador_botao = 255
+                morto = False
+                derrotados = 0
+                posição_personagem_X = 500 * LARGURA // 1920
+                posição_personagem_Y = 520 * LARGURA // 1920
             if morto:
-                quadrado_4.fill((*(0, 0, 0), 150))
-                screen.blit(quadrado_4, (0, 0))
-                screen.blit(game_over, (LARGURA // 2 - 800, ALTURA // 2 - 300))
+                screen.blit(rect_derrota, (0, 0))
+                screen.blit(derrota_tela[int(frame_derrota)], (420, 0))
+                if frame_derrota + vel_derrota < len(derrota_tela) and vel_derrota != 0:
+                    frame_derrota += vel_derrota
+                else:
+                    screen.blit(telas[27], (630, 920))
+                    screen.blit(telas[28], (960, 920))
+                    rect_botao.fill((*(255, 0, 0), contador_botao))
+                    screen.blit(rect_botao, (630, 920))
+                    contador_botao -= vel_botao
+                    if contador_botao <= 20:
+                        vel_botao = 0
+                        if desenhar_botao(630, 920, 320, 116):
+                            contador = 0
+                            dados_obtidos = False
+                        if desenhar_botao(960, 920, 320, 116):
+                            Popen([sys.executable, rf'{endereço}\ui\lobby.py'])
+                            pygame.quit()
+                            sys.exit()
+
+                    vel_derrota = 0
             else:
                 vida_porcentagem = (vida_atual * 100) // vida_inicial
                 estamina_porcentagem = (estamina_atual * 100) // estamina_inicial
@@ -844,13 +889,6 @@ if __name__ == "__main__":
 
                 if diresao != "dano":
                     cor_usada = cor_normal
-                    
-                if derrotados >= len(inimigo_local):
-                    dados["progresso"]["missao"] += 1
-                    salvar(teclas, dados)
-
-                    dados_obtidos = False
-                    estado = JOGO
                 
                 if key[pygame.K_ESCAPE] and not click:
                     click = True
@@ -878,11 +916,59 @@ if __name__ == "__main__":
                     if int(XP_porcentagem // 10) == i:
                         screen.blit(xp_hud[i], (72, 101))
 
-                screen.blit(armas_hud, (1736, 275))
-                screen.blit(usaveis_hud, (417, 875))
+                screen.blit(armas_hud, (1718, 362))
+                screen.blit(usaveis_hud, (550, 903))
 
-            
+                armaduras_equipadas = []
+                usaveis_equipados = []
+                arma_equipada = None
+                for equipamento in dados["inventario"]["equipado"]:
+                    for item in itens:
+                        if equipamento[0] == item.nome and item.type == "ataque":
+                            arma_equipada = pygame.transform.scale(item.imagem_pach, (79 * LARGURA // 1920, 79 * LARGURA // 1920))
+                        if equipamento[0].split()[0] == item.nome.split()[0] and item.type == "defesa":
+                            armaduras_equipadas.append((pygame.transform.scale(item.imagem_pach, (81 * LARGURA // 1920, 81 * LARGURA // 1920)), item.nome.split()[0]))
+                        if equipamento[0] == item.nome and item.type == "usavel":
+                            usaveis_equipados.append((pygame.transform.scale(item.imagem_pach, (70 * LARGURA // 1920, 70 * LARGURA // 1920)), item.nome.split()[0]))
 
+                if arma_equipada != None:
+                    screen.blit(arma_equipada, (1722, 357))
+
+                for armadura in armaduras_equipadas:
+                    if armadura[1] == "Capacete":
+                        screen.blit(armadura[0], (1721, 459))
+                    if armadura[1] == "Peitoral":
+                        screen.blit(armadura[0], (1721, 552))
+                    if armadura[1] == "Bota":
+                        screen.blit(armadura[0], (1721, 640))
+
+                if derrotados >= len(inimigo_local):
+
+                    # dados_obtidos = False
+                    # estado = JOGO
+
+                    screen.blit(rect_vitoria, (0, 0))
+                    screen.blit(vitoria_tela[int(frame_vitoria)], (420, 0))
+                    if frame_vitoria + vel_vitoria < len(vitoria_tela) and vel_vitoria != 0:
+                        frame_vitoria += vel_vitoria
+                    else:
+                        screen.blit(telas[27], (800, 920))
+                        rect_botao.fill((*(44, 111, 175), contador_botao))
+                        screen.blit(rect_botao, (630, 920))
+                        contador_botao -= vel_botao
+                        if contador_botao <= 20:
+                            vel_botao = 0
+                            if desenhar_botao(800, 920, 320, 116) or mostrar_itens:
+                                screen.blit(rect_fundo, (0, 0))
+                                mostrar_itens = True
+                                screen.blit(telas[27], (800, 920))
+                                if desenhar_botao(800, 920, 320, 116):
+                                    estado = JOGO
+                                    mostrar_itens = False
+                                    dados["progresso"]["missao"] += 0.2
+                                    salvar(teclas, dados)
+
+                        vel_vitoria = 0
 
             
 
@@ -898,18 +984,17 @@ if __name__ == "__main__":
             if contador == 0:
                 quadrado.fill((*(0, 0, 0), 150))
                 screen.blit(quadrado, (0, 0))
+            screen.blit(telas[21], (0, 0))
             contador += 1
-            rect_box = pygame.Rect(LARGURA // 3, ALTURA // 6, LARGURA // 3, ALTURA // 1.4)
-            pygame.draw.rect(screen, (180, 180, 180), rect_box, border_radius=15)
 
-            if desenhar_botao("Continuar", LARGURA // 2.86, ALTURA // 4.7, LARGURA // 3.3, ALTURA // 8, ALTURA // 18, (150, 150, 150), (120, 120, 120), ALTURA // 30, fonte= ALTURA // 18):
+            if desenhar_botao(640, 226, 583, 212):
                 estado = anterior
 
-            if desenhar_botao("Opçoes", LARGURA // 2.86, ALTURA // 2.2, LARGURA // 3.3, ALTURA // 8, ALTURA // 18, (150, 150, 150), (120, 120, 120), ALTURA // 30, fonte= ALTURA // 18):
+            if desenhar_botao(640, 510, 583, 209):
                 contador = 0
                 estado = MENU
 
-            if desenhar_botao("Sair", LARGURA // 2.86, ALTURA // 1.4, LARGURA // 3.3, ALTURA // 8, ALTURA // 18, (150, 150, 150), (120, 120, 120), ALTURA // 30, fonte= ALTURA // 18):
+            if desenhar_botao(640, 796, 583, 210):
                 Popen([sys.executable, rf'{endereço}\ui\lobby.py'])
                 sys.exit()
 
@@ -917,25 +1002,7 @@ if __name__ == "__main__":
             if contador == 0:
                 quadrado_2.fill((*(0, 0, 0), 150))
                 screen.blit(quadrado_2, (0, 0))
-            contador += 1
-            texto_surface = font_title.render("RPG", True, (190, 190, 230))
-            texto_rect = texto_surface.get_rect(center=(LARGURA // 2, ALTURA // 7))
-            screen.blit(texto_surface, texto_rect)
-            
-
-            if desenhar_botao("<", LARGURA // 18, ALTURA // 13, LARGURA // 14, ALTURA // 8, ALTURA // 19, (140, 140, 140), (110, 110, 110), 75, fonte= ALTURA // 13):
-                input_boxes = [
-                                {"label": "Inventario", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["inventario"]}", "active": False, "peritido": TEXTO_S},
-                                {"label": "Correr", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["correr"]}", "active": False, "peritido": TEXTO_S},
-                                {"label": "Habilidades", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade"]}", "active": False, "peritido": TEXTO_S},
-                                {"label": "Habilidade 1", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade_1"]}", "active": False, "peritido": TEXTO_S},
-                                {"label": "Habilidade 2", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade_2"]}", "active": False, "peritido": TEXTO_S},
-                                {"label": "Mapa", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["mapa"]}", "active": False, "peritido": TEXTO_S}]
-                estado = anterior
-            
-            rect_box = pygame.Rect(LARGURA // 2.7, ALTURA // 4.5, LARGURA // 3.9, ALTURA // 1.6)
-            pygame.draw.rect(screen, (210, 210, 210), rect_box, border_radius=15)
-            
+                contador += 1
             # Verifica se todos os campos estão preenchidos
             todos_preenchidos = all(box["text"] != "" for box in input_boxes)
 
@@ -951,15 +1018,26 @@ if __name__ == "__main__":
 
             # Aplica as cores dependendo das condições
             if todos_preenchidos and alguma_tecla_alterada:
-                cor_atualizar = (200, 200, 220)
-                cor_atualizar_ativo = (180, 180, 200)
+                telas_opicao = telas[26]
             else:
-                cor_atualizar = (100, 100, 120)
-                cor_atualizar_ativo = (80, 80, 100)
+                telas_opicao = telas[22]
+
+            screen.blit(telas_opicao, (0, 0))
+
+            if desenhar_botao(25, 996, 299, 74):
+                input_boxes = [
+                                {"label": "Inventario", "rect": pygame.Rect(446, 414, 472, 135), "text": f"{dados["keys"]["inventario"]}", "active": False, "peritido": TEXTO_S},
+                                {"label": "Correr", "rect": pygame.Rect(446, 599, 473, 139), "text": f"{dados["keys"]["correr"]}", "active": False, "peritido": TEXTO_S},
+                                {"label": "Habilidades", "rect": pygame.Rect(446, 794, 473, 136), "text": f"{dados["keys"]["habilidade"]}", "active": False, "peritido": TEXTO_S},
+                                {"label": "Habilidade 1", "rect": pygame.Rect(1002, 414, 471, 135), "text": f"{dados["keys"]["habilidade_1"]}", "active": False, "peritido": TEXTO_S},
+                                {"label": "Habilidade 2", "rect": pygame.Rect(1002, 597, 478, 138), "text": f"{dados["keys"]["habilidade_2"]}", "active": False, "peritido": TEXTO_S},
+                                {"label": "Mapa", "rect": pygame.Rect(1002, 794, 472, 136), "text": f"{dados["keys"]["mapa"]}", "active": False, "peritido": TEXTO_S},
+                            ]
+                estado = anterior
 
 
-            if desenhar_botao("Salvar", LARGURA // 1.4, ALTURA // 1.35, LARGURA // 4.7, ALTURA // 10, ALTURA // 20, cor_atualizar, cor_atualizar_ativo, ALTURA // 19, fonte= ALTURA // 18):
-                if cor_atualizar == (200, 200, 220):
+            if desenhar_botao(1603, 990, 300, 74):
+                if telas_opicao == telas[26]:
                     teclas["inventario"] = input_boxes[0]["text"]
                     teclas["correr"] = input_boxes[1]["text"]
                     teclas["habilidade"] = input_boxes[2]["text"]
@@ -967,21 +1045,25 @@ if __name__ == "__main__":
                     teclas["habilidade_2"] = input_boxes[4]["text"]
                     teclas["mapa"] = input_boxes[5]["text"]
                     salvar(teclas)
-                    estado = anterior
+                    estado = MENU
 
             
-            for box in input_boxes:
+            for i, box in enumerate(input_boxes):
                 box["text"] = box["text"].title()
-                cor_borda = COR_ATIVA if box["active"] else COR_INATIVA
-                pygame.draw.rect(screen, cor_borda, box["rect"], 2, border_radius=15)
                 
                 # Label
-                label_surface = fonte_input.render(box["label"] + ":", True, COR_TEXTO)
-                screen.blit(label_surface, (box["rect"].x - LARGURA // 6, box["rect"].y + 5))
+                label_surface = fonte_T_input.render(box["label"] + ":" if i <= 2 else ":" + box["label"], True, (230, 230, 230))
+                screen.blit(label_surface, (box["rect"].x + 20 if i <= 2 else box["rect"].x + 120, box["rect"].y + 40))
 
                 # Texto
-                texto_surface = fonte_input.render(box["text"], True, COR_TEXTO)
-                screen.blit(texto_surface, (box["rect"].x + 5, box["rect"].y + 5))
+                if len(box["text"]) == 4 and not box["active"]:
+                    fonte_input = pygame.font.Font(f"{endereço}/recursos/fontes/Minha fonte.ttf", 22)
+                elif len(box["text"]) == 5 and not box["active"]:
+                    fonte_input = pygame.font.Font(f"{endereço}/recursos/fontes/Minha fonte.ttf", 18)
+                else:
+                    fonte_input = pygame.font.Font(f"{endereço}/recursos/fontes/Minha fonte.ttf", 25)
+                texto_surface = fonte_input.render(box["text"] if not box["active"] else "_", True, (230, 230, 230))
+                screen.blit(texto_surface, (box["rect"].x + 360 if i <= 2 else box["rect"].x + 30, box["rect"].y + 40))
 
 
 
@@ -1119,7 +1201,6 @@ if __name__ == "__main__":
                                             else:
                                                 normal.append(p)
         
-                                        print(ataque)
                                         if len(capacete_E) > 1:
                                             dados["inventario"]["equipado"].pop(capacete_E[0])
                                             capacete_E.pop(0)
@@ -1138,6 +1219,16 @@ if __name__ == "__main__":
                                             
                                     elif item.type != "comum":
                                         dados["inventario"]["equipado"].remove([item.nome, item.raridade])
+                                        if equipamento[0].split()[0] == "Capacete":
+                                            capacete_E.pop(0)
+                                        elif equipamento[0].split()[0] == "Peitoral":
+                                            peitoral_E.pop(0)
+                                        elif equipamento[0].split()[0] == "Bota":
+                                            botas_E.pop(0)
+                                        elif item.nome == equipamento[0] and item.raridade == equipamento[1] and item.type == "ataque":
+                                            ataque.pop(0)
+                                        else:
+                                            normal.pop(0)
                                         buff_vida -= item.vida
                                         buff_estamina -= item.peso
                                         buff_dano -= item.ataque

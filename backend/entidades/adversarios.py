@@ -7,7 +7,7 @@ from backend.sistemas.classes.classes_combatentes import arqueiro, guerreiro, me
 
 # ----------------------------------------------------- MONSTROS ---------------------------------------------------------------------------------
 
-slime = AdversarioMonstro("slime", 2, 50, 4, 3, 12, 10, 1, "gosma azul", 90)
+slime = AdversarioMonstro("slime", 2, 50, 10, 3, 12, 10, 1, "gosma azul", 90)
 slime.posição_x = 1200
 slime.post_init()
 

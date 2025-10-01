@@ -1,25 +1,25 @@
 {
-    "usuario": "ggg",
+    "usuario": "ppp",
     "dados_pessoais": {
-        "Nome": "ggg",
-        "Classe": "arqueiro"
+        "Nome": "ppp",
+        "Classe": "Curandeiro"
     },
     "inventario": {
-        "item": "[[[\"Arco e flexa\", \"comum\"], 1], [[\"Espada\", \"rara\"], 1]]",
+        "item": "[[[\"Punho\", \"comum\"], 1]]",
         "equipado": "[]",
         "dinheiro": 100
     },
     "status": {
         "nivel": 1,
-        "dano": 9,
-        "velocidade": 20,
-        "defesa": 2,
-        "vida": 11,
+        "dano": 1,
+        "velocidade": 3,
+        "defesa": 6,
+        "vida": 13,
         "experiencia": 0
     },
     "progresso": {
         "capitulo": 0,
-        "missao": 2
+        "missao": 1
     },
     "keys": {
         "inventario": "E",

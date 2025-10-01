@@ -7,6 +7,8 @@ import sqlite3
 import pyautogui
 from subprocess import Popen
 import json
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from recursos.imagens.telas.telas import telas
 
 
 LARGURA, ALTURA = pyautogui.size()
@@ -23,10 +25,10 @@ endereco_banco_de_dados = rf"{endereco_frontend}\ui\banco_de_dados.db"
 imagem_personagem = pygame.image.load(rf"{endereco_frontend}\recursos\Imagens\classes\personagem_parado1.png")
 imagem_personagem = pygame.transform.scale(imagem_personagem, (LARGURA // 4, ALTURA // 3))
 
-imagem_fundo_secundario = pygame.image.load(rf"{endereco_frontend}\recursos\Imagens\classes\fundo_secundario.png")
-imagem_fundo_secundario = pygame.transform.scale(imagem_fundo_secundario, (LARGURA, ALTURA))
+imagem_fundo = pygame.image.load(rf"{endereco_frontend}\recursos\Imagens\classes\fundo.png")
+imagem_fundo = pygame.transform.scale(imagem_fundo, (LARGURA, ALTURA))
 font_title = pygame.font.Font(rf"{endereco_frontend}\recursos\fontes\Minha fonte.ttf", 100)
-font_nome = pygame.font.Font(rf"{endereco_frontend}\recursos\fontes\Minha fonte.ttf", 30)
+font_nome = pygame.font.Font(rf"{endereco_frontend}\recursos\fontes\Minha fonte.ttf", 27)
 
 with open(rf"{endereco_frontend}\ui\usuario.json", "r") as arquivo:
     dados = json.load(arquivo)
@@ -52,9 +54,10 @@ COR_TEXTO = (0, 0, 0)
 COR_BG = (255, 255, 255)
 
 # Fontes
-fonte_input = pygame.font.SysFont("arial", LARGURA // 40)
+fonte_input = pygame.font.Font(f"{endereco_frontend}/recursos/fontes/Minha fonte.ttf", 25)
+fonte_T_input = pygame.font.Font(f"{endereco_frontend}/recursos/fontes/Minha fonte.ttf", 27)
 
-nome = font_nome.render(f"{primeiro_nome}", True, (0, 0, 0))
+nome = font_nome.render(f"{primeiro_nome}", True, (230, 230, 230))
 
 # Centraliza o nome em determinada posição
 nome_rect = nome.get_rect(center=(LARGURA - LARGURA // 8, ALTURA // 2.1))
@@ -75,13 +78,13 @@ rect = pygame.Rect(
 pygame.display.set_caption("Meu RPG")
 
 input_boxes = [
-                {"label": "Inventario", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["inventario"]}", "active": False, "peritido": TEXTO_S},
-                {"label": "Correr", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["correr"]}", "active": False, "peritido": TEXTO_S},
-                {"label": "Habilidades", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade"]}", "active": False, "peritido": TEXTO_S},
-                {"label": "Habilidade 1", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade_1"]}", "active": False, "peritido": TEXTO_S},
-                {"label": "Habilidade 2", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade_2"]}", "active": False, "peritido": TEXTO_S},
-                {"label": "Mapa", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["mapa"]}", "active": False, "peritido": TEXTO_S},
-            ]
+                                {"label": "Inventario", "rect": pygame.Rect(446, 414, 472, 135), "text": f"{dados["keys"]["inventario"]}", "active": False, "peritido": TEXTO_S},
+                                {"label": "Correr", "rect": pygame.Rect(446, 599, 473, 139), "text": f"{dados["keys"]["correr"]}", "active": False, "peritido": TEXTO_S},
+                                {"label": "Habilidades", "rect": pygame.Rect(446, 794, 473, 136), "text": f"{dados["keys"]["habilidade"]}", "active": False, "peritido": TEXTO_S},
+                                {"label": "Habilidade 1", "rect": pygame.Rect(1002, 414, 471, 135), "text": f"{dados["keys"]["habilidade_1"]}", "active": False, "peritido": TEXTO_S},
+                                {"label": "Habilidade 2", "rect": pygame.Rect(1002, 597, 478, 138), "text": f"{dados["keys"]["habilidade_2"]}", "active": False, "peritido": TEXTO_S},
+                                {"label": "Mapa", "rect": pygame.Rect(1002, 794, 472, 136), "text": f"{dados["keys"]["mapa"]}", "active": False, "peritido": TEXTO_S},
+                            ]
 
 id_usuario = obter_id_usuario_por_nome(dados["usuario"])
 def salvar(teclas, dado=dados):
@@ -163,6 +166,36 @@ def salvar(teclas, dado=dados):
     if isinstance(dado["inventario"]["equipado"], str):
         dado["inventario"]["equipado"] = json.loads(dado["inventario"]["equipado"])
 
+
+rect_fundo = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
+rect_fundo.fill((*(30, 30, 30), 120))
+
+rect_fundo2 = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
+rect_fundo2.fill((*(30, 30, 30), 180))
+
+def confirmar_sair():
+    while True:
+        screen.blit(imagem_fundo, (0, 0))
+        screen.blit(rect_fundo2, (0, 0))
+        screen.blit(telas[13], (0, 0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.mixer.music.play(0)
+                pygame.quit()
+                sys.exit()
+
+        if desenhar_botao(1043, 776, 368, 92):
+            pygame.event.clear()
+            return True
+
+        if desenhar_botao(467, 776, 368, 92):
+            pygame.event.clear()
+            return False
+        
+        pygame.display.update()
+
+travar = False
+
 if __name__ == "__main__":
     screen = pygame.display.set_mode((LARGURA, ALTURA), pygame.FULLSCREEN)
     while True:
@@ -174,7 +207,8 @@ if __name__ == "__main__":
             # Caixas de texto
             elif evento.type == pygame.MOUSEBUTTONDOWN:
                 for box in input_boxes:
-                    box["active"] = box["rect"].collidepoint(evento.pos)
+                    if not travar:
+                        box["active"] = box["rect"].collidepoint(evento.pos)
 
             elif evento.type == pygame.KEYDOWN:
                 mods = evento.mod
@@ -186,6 +220,7 @@ if __name__ == "__main__":
                         elif evento.key == pygame.K_RETURN:
                             box["active"] = False
                         else:
+                            box["active"] = False
                             if evento.unicode in box["peritido"]:
                                 box["text"] += evento.unicode
                             if mods & pygame.KMOD_ALT:
@@ -198,100 +233,41 @@ if __name__ == "__main__":
                                 box["text"] = "Lshift"
                             if evento.key == pygame.K_TAB:
                                 box["text"] = "Tab"
+
+            elif not (evento.type ==  pygame.MOUSEBUTTONDOWN):
+                travar = False
                             
         
         if estado == MENU:
-            screen.blit(imagem_fundo_secundario, (0, 0))
+            screen.blit(imagem_fundo, (0, 0))
+            screen.blit(rect_fundo, (0, 0))
+            screen.blit(telas[11], (0, 0))
 
-            texto_surface = font_title.render("RPG", True, (190, 190, 230))
-            texto_rect = texto_surface.get_rect(center=(LARGURA // 2, ALTURA // 5))
-            screen.blit(texto_surface, texto_rect)
 
-            screen.blit(imagem_personagem, (LARGURA - LARGURA // 4, ALTURA // 2))
-
-            # Desenha o retângulo cinza atrás do nome
-            pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
-
+            
             # Desenha o texto do nome por cima do retângulo
-            screen.blit(nome, nome_rect)
+            screen.blit(nome, ((1715 - 1379) // 2 - nome.get_size()[0] // 2 + 1379, (801 - 741) // 2 - nome.get_size()[1] // 2 + 750))
 
-
-            nome_classe = font_nome.render(f"{classe}", True, (190, 190, 230))
-            nome_classe_rect = nome_classe.get_rect(center=(LARGURA - LARGURA // 8, ALTURA // 1.17))
+            if desenhar_botao(830, 560, 394, 106):
+                if confirmar_sair():
+                    pygame.quit()
+                    if os.path.exists(rf"{endereço}\usuario.json"):
+                        os.remove(rf"{endereço}\usuario.json")
+                    Popen([sys.executable, rf'{endereço}\menus.py'])
+                    sys.exit()
             
-
-            pygame.draw.rect(screen, (100, 100, 100), (nome_classe_rect.x - padding_x, nome_classe_rect.y - padding_y, nome_classe_rect.width + 2 * padding_x, nome_classe_rect.height + 2 * padding_y), border_radius=5)
-            screen.blit(nome_classe, nome_classe_rect)
-
-            if desenhar_botao("Sair",
-                            LARGURA // 2 - LARGURA // 4,
-                            ALTURA // 2 + ALTURA // 4,
-                            LARGURA // 2,
-                            ALTURA // 9,
-                            ALTURA // 20,
-                            (150, 150, 230),
-                            (130, 130, 210),
-                            20,
-                            fonte = ALTURA // 18):
-                pygame.quit()
-                if os.path.exists(rf"{endereço}\usuario.json"):
-                    os.remove(rf"{endereço}\usuario.json")
-                Popen([sys.executable, rf'{endereço}\menus.py'])
-                sys.exit()
-            
-            if desenhar_botao("Opções",
-                            LARGURA // 2 - LARGURA // 4,
-                            ALTURA // 2 + ALTURA // 10,
-                            LARGURA // 2,
-                            ALTURA // 9,
-                            ALTURA // 20,
-                            (150, 150, 230),
-                            (130, 130, 210),
-                            20,
-                            fonte = ALTURA // 18):
+            if desenhar_botao(676, 560, 145, 106):
                 estado = OPCOES
-                screen.blit(imagem_fundo_secundario, (0, 0))
+                travar = True
 
-                texto_surface = font_title.render("RPG", True, (190, 190, 230))
-                texto_rect = texto_surface.get_rect(center=(LARGURA // 2, ALTURA // 5))
-                screen.blit(texto_surface, texto_rect)
-
-
-            if desenhar_botao("Jogar",
-                            LARGURA // 2 - LARGURA // 4,
-                            ALTURA // 2 - ALTURA // 20,
-                            LARGURA // 2,
-                            ALTURA // 9,
-                            ALTURA // 20,
-                            (150, 150, 230),
-                            (130, 130, 210),
-                            20,
-                            fonte = ALTURA // 18):
+            if desenhar_botao(676, 419, 548, 99):
                 pygame.quit()
                 Popen([sys.executable, rf'{endereco_frontend}\main.py'])
                 sys.exit()
             
         if estado == OPCOES:
-            screen.blit(imagem_fundo_secundario, (0, 0))
-
-            texto_surface = font_title.render("RPG", True, (190, 190, 230))
-            texto_rect = texto_surface.get_rect(center=(LARGURA // 2, ALTURA // 7))
-            screen.blit(texto_surface, texto_rect)
-            
-
-            if desenhar_botao("<", LARGURA // 18, ALTURA // 13, LARGURA // 14, ALTURA // 8, ALTURA // 19, (140, 140, 140), (110, 110, 110), 75, fonte= ALTURA // 13):
-                input_boxes = [
-                                {"label": "Inventario", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["inventario"]}", "active": False, "peritido": TEXTO_S},
-                                {"label": "Correr", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["correr"]}", "active": False, "peritido": TEXTO_S},
-                                {"label": "Habilidades", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade"]}", "active": False, "peritido": TEXTO_S},
-                                {"label": "Habilidade 1", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade_1"]}", "active": False, "peritido": TEXTO_S},
-                                {"label": "Habilidade 2", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["habilidade_2"]}", "active": False, "peritido": TEXTO_S},
-                                {"label": "Mapa", "rect": pygame.Rect(LARGURA // 1.8, ALTURA // 4 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10 + ALTURA // 10, LARGURA // 18, ALTURA // 16), "text": f"{dados["keys"]["mapa"]}", "active": False, "peritido": TEXTO_S},
-                            ]
-                estado = MENU
-            
-            rect_box = pygame.Rect(LARGURA // 2.7, ALTURA // 4.5, LARGURA // 3.9, ALTURA // 1.6)
-            pygame.draw.rect(screen, (210, 210, 210), rect_box, border_radius=15)
+            screen.blit(imagem_fundo, (0, 0))
+            screen.blit(rect_fundo, (0, 0))
 
             # Verifica se todos os campos estão preenchidos
             todos_preenchidos = all(box["text"] != "" for box in input_boxes)
@@ -308,15 +284,26 @@ if __name__ == "__main__":
 
             # Aplica as cores dependendo das condições
             if todos_preenchidos and alguma_tecla_alterada:
-                cor_atualizar = (200, 200, 220)
-                cor_atualizar_ativo = (180, 180, 200)
+                telas_opicao = telas[26]
             else:
-                cor_atualizar = (100, 100, 120)
-                cor_atualizar_ativo = (80, 80, 100)
+                telas_opicao = telas[22]
+
+            screen.blit(telas_opicao, (0, 0))
+
+            if desenhar_botao(25, 996, 299, 74):
+                input_boxes = [
+                                {"label": "Inventario", "rect": pygame.Rect(446, 414, 472, 135), "text": f"{dados["keys"]["inventario"]}", "active": False, "peritido": TEXTO_S},
+                                {"label": "Correr", "rect": pygame.Rect(446, 599, 473, 139), "text": f"{dados["keys"]["correr"]}", "active": False, "peritido": TEXTO_S},
+                                {"label": "Habilidades", "rect": pygame.Rect(446, 794, 473, 136), "text": f"{dados["keys"]["habilidade"]}", "active": False, "peritido": TEXTO_S},
+                                {"label": "Habilidade 1", "rect": pygame.Rect(1002, 414, 471, 135), "text": f"{dados["keys"]["habilidade_1"]}", "active": False, "peritido": TEXTO_S},
+                                {"label": "Habilidade 2", "rect": pygame.Rect(1002, 597, 478, 138), "text": f"{dados["keys"]["habilidade_2"]}", "active": False, "peritido": TEXTO_S},
+                                {"label": "Mapa", "rect": pygame.Rect(1002, 794, 472, 136), "text": f"{dados["keys"]["mapa"]}", "active": False, "peritido": TEXTO_S},
+                            ]
+                estado = MENU
 
 
-            if desenhar_botao("Salvar", LARGURA // 1.4, ALTURA // 1.35, LARGURA // 4.7, ALTURA // 10, ALTURA // 20, cor_atualizar, cor_atualizar_ativo, ALTURA // 19, fonte= ALTURA // 18):
-                if cor_atualizar == (200, 200, 220):
+            if desenhar_botao(1603, 990, 300, 74):
+                if telas_opicao == telas[26]:
                     teclas["inventario"] = input_boxes[0]["text"]
                     teclas["correr"] = input_boxes[1]["text"]
                     teclas["habilidade"] = input_boxes[2]["text"]
@@ -327,21 +314,22 @@ if __name__ == "__main__":
                     estado = MENU
 
             
-            for box in input_boxes:
+            for i, box in enumerate(input_boxes):
                 box["text"] = box["text"].title()
-                cor_borda = COR_ATIVA if box["active"] else COR_INATIVA
-                pygame.draw.rect(screen, cor_borda, box["rect"], 2, border_radius=15)
                 
                 # Label
-                label_surface = fonte_input.render(box["label"] + ":", True, COR_TEXTO)
-                screen.blit(label_surface, (box["rect"].x - LARGURA // 6, box["rect"].y + 5))
+                label_surface = fonte_T_input.render(box["label"] + ":" if i <= 2 else ":" + box["label"], True, (230, 230, 230))
+                screen.blit(label_surface, (box["rect"].x + 20 if i <= 2 else box["rect"].x + 120, box["rect"].y + 40))
 
                 # Texto
-                texto_surface = fonte_input.render(box["text"], True, COR_TEXTO)
-                screen.blit(texto_surface, (box["rect"].x + 5, box["rect"].y + 5))
-
-                
-        
+                if len(box["text"]) == 4 and not box["active"]:
+                    fonte_input = pygame.font.Font(f"{endereco_frontend}/recursos/fontes/Minha fonte.ttf", 22)
+                elif len(box["text"]) == 5 and not box["active"]:
+                    fonte_input = pygame.font.Font(f"{endereco_frontend}/recursos/fontes/Minha fonte.ttf", 18)
+                else:
+                    fonte_input = pygame.font.Font(f"{endereco_frontend}/recursos/fontes/Minha fonte.ttf", 25)
+                texto_surface = fonte_input.render(box["text"] if not box["active"] else "_", True, (230, 230, 230))
+                screen.blit(texto_surface, (box["rect"].x + 360 if i <= 2 else box["rect"].x + 30, box["rect"].y + 40))
 
 
         pygame.display.flip()

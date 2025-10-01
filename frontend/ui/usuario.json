@@ -1,8 +1,8 @@
 {
-    "usuario": "ppp",
+    "usuario": "Pedro",
     "dados_pessoais": {
-        "Nome": "ppp",
-        "Classe": "Curandeiro"
+        "Nome": "Pedro",
+        "Classe": "Arqueiro"
     },
     "inventario": {
         "item": "[[[\"Punho\", \"comum\"], 1]]",
@@ -11,10 +11,10 @@
     },
     "status": {
         "nivel": 1,
-        "dano": 1,
-        "velocidade": 3,
-        "defesa": 6,
-        "vida": 13,
+        "dano": 2,
+        "velocidade": 6,
+        "defesa": 2,
+        "vida": 11,
         "experiencia": 0
     },
     "progresso": {

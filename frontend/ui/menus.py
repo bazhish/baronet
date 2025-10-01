@@ -1048,7 +1048,8 @@ if __name__ == "__main__":
                 screen.blit(texto_surface, (input_usuario["rect"].x + 5, input_usuario["rect"].y + 30))
                 usuario = input_usuario["text"]
 
-                
+                if desenhar_botao(330, 372, 249, 56):
+                    estado = DADOS_CLASSE
 
                 if desenhar_botao(720, 372, 249, 56) or key[pygame.K_KP_ENTER]: 
                     erros = []

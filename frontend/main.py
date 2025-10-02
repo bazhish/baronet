@@ -1,7 +1,7 @@
 import pygame
 import sys
 import os
-from random import choice
+from random import choice, randint
 from ui.menus import desenhar_botao, TEXTO_S, COR_TEXTO, COR_INATIVA, COR_ATIVA
 from ui.lobby import input_boxes, salvar, fonte_input, font_title, nome_rect, primeiro_nome, fonte_T_input
 from recursos.imagens.missao.missao1.slime import slime_parado, slime_direita, slime_morto
@@ -71,6 +71,8 @@ vel_vitoria = 0.7
 vel_botao = 10
 contador_botao = 255
 mostrar_itens = False
+drops = []
+contador_drop = 0
 
 estrucao = 0
 vel_letra = 0.5
@@ -340,8 +342,17 @@ if __name__ == "__main__":
             else:
                 resultado[chave] = qtd
 
+        resultado2 = {}
+        for nome, qtd in drops:
+            chave = tuple(nome)  # transforma ['Arco e flexa', 'comum'] em ('Arco e flexa','comum')
+            if chave in resultado:
+                resultado2[chave] += qtd
+            else:
+                resultado2[chave] = qtd
+
         # transforma de volta para a lista no mesmo formato
         dados["inventario"]["item"] = [[list(k), v] for k, v in resultado.items()]        
+        drops = [[list(k), v] for k, v in resultado2.items()]  
 
         font_estrucao = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", int(tamanho_estrucao))
 
@@ -628,6 +639,7 @@ if __name__ == "__main__":
                 status_inimigo_inicial = [[slime.dano_base, slime.velocidade_base, slime.defesa_base, slime.vida_base],
                                          [slime.dano_base, slime.velocidade_base, slime.defesa_base, slime.vida_base],
                                          [slime.dano_base, slime.velocidade_base, slime.defesa_base, slime.vida_base]]
+                posiveis_drops = [(slime.queda, slime.taxa_de_queda), (slime.queda, slime.taxa_de_queda), (slime.queda, slime.taxa_de_queda)]
                 inimigos_pachs_parado = slime_parado
                 inimigos_pachs_direita = slime_direita
                 inimigos_pachs_morto = slime_morto
@@ -652,6 +664,7 @@ if __name__ == "__main__":
                 contador_botao = 255
                 morto = False
                 derrotados = 0
+                contador_drop = 0
                 posição_personagem_X = 500 * LARGURA // 1920
                 posição_personagem_Y = 520 * LARGURA // 1920
             if morto:
@@ -957,11 +970,24 @@ if __name__ == "__main__":
                         screen.blit(rect_botao, (630, 920))
                         contador_botao -= vel_botao
                         if contador_botao <= 20:
+                            if contador_drop <= len(posiveis_drops):
+                                for posiv_drop, chance_drop in posiveis_drops:
+                                    contador_drop += 1
+                                    chance = randint(1, 100)
+                                    if chance < chance_drop:
+                                        print(chance, chance_drop, drops)
+                                        drops.append([(posiv_drop, "comum"), 1])
                             vel_botao = 0
                             if desenhar_botao(800, 920, 320, 116) or mostrar_itens:
                                 screen.blit(rect_fundo, (0, 0))
                                 mostrar_itens = True
                                 screen.blit(telas[27], (800, 920))
+
+                                for drop, quantidade in drops:
+                                    screen.blit(inventario_icon, (1800, 250))
+                                    quantidade_drop = font_nome.render(str(quantidade), True, (30, 30, 30))
+                                    screen.blit(quantidade_drop, (1100, 600))
+                                
                                 if desenhar_botao(800, 920, 320, 116):
                                     estado = JOGO
                                     mostrar_itens = False

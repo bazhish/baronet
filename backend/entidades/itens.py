@@ -4,7 +4,11 @@ from sys import path
 from os import path as path_os
 path.append(path_os.abspath(path_os.join(path_os.dirname(__file__), '..', '..')))
 from frontend.recursos.imagens.itens.normal import *
-from backend.sistemas.modelos.modelos_armas import criar_arma
+from backend.sistemas.modelos.modelos_armas import criar_arma, tabela_armas
+
+LARGURA, ALTURA = size()
+screen = pygame.display.set_mode((1, 1))
+pygame.display.iconify()
 
 class item_ataque:
     def __init__(self, nome, type, raridade, ataque, peso, imagem_path):

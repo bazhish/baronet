@@ -6,6 +6,8 @@ path.append(path_os.abspath(path_os.join(path_os.dirname(__file__), '..', '..'))
 from backend.sistemas.modelos.modelos_armas import tabela_armas
 
 LARGURA, ALTURA = size()
+screen = pygame.display.set_mode((1, 1))
+pygame.display.iconify()
 
 
 class item_ataque:
@@ -71,7 +73,7 @@ endereço = path_os.abspath(path_os.join(path_os.dirname(__file__), '..', '..', 
 
 
 itens_path = ["Carne podre.png", "Cauda.png", "cifre de Minotauro -pixilart.png", "couro.png", "dente.png","dente(1).png", "membrana de fantasma.png", "Osso.png", "tentaculo.png", "chave esqueleto.png", "escrritura antiga.png", "espada quebrada.png", "Olho especial.png",
-              "Arco_flexa.png", "Espada.png", "Escudo.png", "luva.png", "lança.png", "Punho.png"]
+              "Arco_flexa.png", "Espada.png", "Escudo.png", "luva.png", "lança.png", "Punho.png", "Gosma azul.png"]
 itens2 = []
 
 
@@ -80,7 +82,7 @@ for item2 in itens_path:
 itens_path.clear()
 
 for i, item_ in enumerate(itens2):
-    itens_path.append(pygame.image.load(f"{item_}"))
+    itens_path.append(pygame.image.load(f"{item_}").convert_alpha())
     itens_path[i] = pygame.transform.scale(itens_path[i], (144 * LARGURA // 1920, 144 * LARGURA // 1920))
 
 del(itens2)
@@ -99,6 +101,7 @@ itens = [
     item("Escritura Antiga", "Um pergaminho antigo, escrito em uma língua esquecida.", itens_path[10]),
     item("Espada Quebrada", "Uma espada partida ao meio, mas ainda com um leve brilho.", itens_path[11]),
     item("Olho Especial", "Um olho mágico que parece observar tudo ao redor.", itens_path[12]),
+    item("Gosma azul", "Uma substância viscosa e azulada, fria ao toque e levemente brilhante.", itens_path[19]),
     item_ataque("Arco e flexa", "ataque", "comum", tabela_armas["arco"]["comum"][0], tabela_armas["arco"]["comum"][1], itens_path[13]),
     item_ataque("Arco e flexa", "ataque", "rara", tabela_armas["arco"]["rara"][0], tabela_armas["arco"]["rara"][1], itens_path[13]),
     item_ataque("Arco e flexa", "ataque", "épica", tabela_armas["arco"]["épica"][0], tabela_armas["arco"]["épica"][1], itens_path[13]),

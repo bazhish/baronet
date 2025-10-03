@@ -5,6 +5,11 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from frontend.recursos.imagens.cenario.cenario_explorar import arbusto_0, arbusto_2, arbusto_1, arbusto_3, arvore_grande_0, arvore_grande_1, arvore_pequena_0, arvore_pequena_1, arvore_pequena_2, arvore_pequena_3, barril_0, barril_1, barril_2, cogumelo_0, pedras_0, pedras_1, pedras_2, pedras_3, LArgura, casa_pequena0, casa_pequena1
 
+
+screen = pygame.display.set_mode((1, 1))
+pygame.display.iconify()
+
+
 class arvore_pequena:
     def __init__(self, x, y, largura, altura, imagem_pach, pos_chao_x, pos_chao_y):
         self.x = x * LArgura // 1920

@@ -1,8 +1,8 @@
 {
-    "usuario": "Pedro",
+    "usuario": "joao v",
     "dados_pessoais": {
-        "Nome": "Pedro",
-        "Classe": "Arqueiro"
+        "Nome": "joao v",
+        "Classe": "Artista Marcial"
     },
     "inventario": {
         "item": "[[[\"Punho\", \"comum\"], 1]]",
@@ -11,10 +11,10 @@
     },
     "status": {
         "nivel": 1,
-        "dano": 2,
+        "dano": 4,
         "velocidade": 6,
-        "defesa": 2,
-        "vida": 11,
+        "defesa": 4,
+        "vida": 18,
         "experiencia": 0
     },
     "progresso": {

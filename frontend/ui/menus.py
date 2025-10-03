@@ -112,39 +112,36 @@ rect_fundo2 = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
 rect_fundo2.fill((*(30, 30, 30), 180))
 
 
-# Função para desenhar botão
 def desenhar_botao(posicao_x, posicao_y, largura, altura):
     global clicou
     
-    # Detecta a posição do clique do usuario
     mouse = pygame.mouse.get_pos()
     clique = pygame.mouse.get_pressed()
     quadrado_botao = pygame.Surface((largura, altura), pygame.SRCALPHA)
     quadrado_botao2 = pygame.Surface((largura, altura), pygame.SRCALPHA)
-    quadrado_botao.fill((*(250, 250, 250), 50))
-    quadrado_botao2.fill((*(50, 50, 50), 50))
+    quadrado_botao.fill((250, 250, 250, 50))
+    quadrado_botao2.fill((20, 20, 20, 50))
     
-    
-    # Checa se o mouse está em cima
+    # Verifica se o mouse está em cima
     if posicao_x < mouse[0] < posicao_x + largura and posicao_y < mouse[1] < posicao_y + altura:
-        if clique[0] and not clicou:  # Clique com o botão esquerdo
-            # Diminue e retorna verdadeiro no if
+        if clique[0] and not clicou:  
+            # Pressionou pela primeira vez
             screen.blit(quadrado_botao2, (posicao_x, posicao_y))
-            pygame.time.delay(50)
             botao.set_volume(0.1)
             botao.play()
-            clicou = True
-            return True
+            clicou = True  # marca que já clicou
+            return True    # só retorna nesse momento
         
-        else:
-            # Aumenta e troca sua cor em quanto o mause estiver em cima
+        elif not clique[0]:
+            # Mouse sobre o botão mas sem pressionar
             screen.blit(quadrado_botao, (posicao_x, posicao_y))
-
-    # Se o usuario não clicar define o clicou em false, evitando com que funcione mais de uma vez se segurado
+    
+    # Soltou o clique → libera para clicar novamente
     if not clique[0]:
         clicou = False
 
     return False
+
 
         
 # Dados do texto sendo digitado na hora

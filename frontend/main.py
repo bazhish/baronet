@@ -5,11 +5,12 @@ from random import choice, randint
 from ui.menus import desenhar_botao, TEXTO_S, COR_TEXTO, COR_INATIVA, COR_ATIVA
 from ui.lobby import input_boxes, salvar, fonte_input, font_title, nome_rect, primeiro_nome, fonte_T_input
 from recursos.imagens.missao.missao1.slime import slime_parado, slime_direita, slime_morto
-from recursos.imagens.cenario.cenario_explorar import inventario_pach, inventario_icon, mapa_img, chao
+from recursos.imagens.cenario.cenario_explorar import inventario_pach, inventario_icon, mapa_img
 from recursos.imagens.hud.hud_combate import vida_hud, vida_inimigo_hud, estamina_hud, xp_hud, armas_hud, usaveis_hud, vitoria_tela, derrota_tela
 from recursos.imagens.telas.telas import telas
 import sqlite3
 import pyautogui
+from PIL import Image
 from subprocess import Popen
 import json
 from recursos.imagens.personagem_principal import personagem_parado, personagem_andando_D, personagem_soco_d, personagem_morto, personagem_dano, personagem_andando_E
@@ -254,10 +255,29 @@ botas_E = []
 normal = []
 ataque = []
 
-
-
 if __name__ == "__main__":
-    screen = pygame.display.set_mode((LARGURA, ALTURA), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+
+        # --- CONFIGURAÇÃO DO MAPA ---
+    MAP_WIDTH, MAP_HEIGHT = 19200, 19200   # tamanho real do mapa
+    CHUNK_SIZE = 1024                      # tamanho de cada tile/chunk
+    chunks = {}                             # dicionário de chunks
+
+    # Carregar chunks com PIL (não sobrecarrega a RAM)
+    mapa = Image.open(f"{endereço}/recursos/imagens/cenario/mapa_exploração.png")
+
+    
+    for x in range(0, MAP_WIDTH, CHUNK_SIZE):
+        for y in range(0, MAP_HEIGHT, CHUNK_SIZE):
+            crop = mapa.crop((
+                x // 2, y // 2,        # divide por 2 porque a imagem base é menor
+                (x + CHUNK_SIZE) // 2,
+                (y + CHUNK_SIZE) // 2
+            ))
+            # redimensiona esse pedaço pro dobro
+            crop = crop.resize((crop.size[0]*2, crop.size[1]*2), Image.NEAREST)
+            chunks[(x, y)] = pygame.image.fromstring(crop.tobytes(), crop.size, crop.mode).convert()
+
     while True:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
@@ -342,24 +362,33 @@ if __name__ == "__main__":
             else:
                 resultado[chave] = qtd
 
+        
         resultado2 = {}
         for nome, qtd in drops:
-            chave = tuple(nome)  # transforma ['Arco e flexa', 'comum'] em ('Arco e flexa','comum')
-            if chave in resultado:
-                resultado2[chave] += qtd
-            else:
-                resultado2[chave] = qtd
+            chave = tuple(nome)  # agora SEMPRE tupla
+            resultado2[chave] = resultado2.get(chave, 0) + qtd
 
         # transforma de volta para a lista no mesmo formato
         dados["inventario"]["item"] = [[list(k), v] for k, v in resultado.items()]        
-        drops = [[list(k), v] for k, v in resultado2.items()]  
+        drops = [[k, v] for k, v in resultado2.items()]
 
         font_estrucao = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", int(tamanho_estrucao))
 
         if estado == JOGO:
             anterior = JOGO
             dados_do_alvo_recebidos = False
-            screen.blit(chao, (pos_chao_x, pos_chao_y))
+            screen.fill((0, 0, 0))  # limpa a tela
+            for (x, y), chunk in chunks.items():
+                draw_x = x + pos_chao_x
+                draw_y = y + pos_chao_y
+
+                cw, ch = chunk.get_size()
+
+                # Só desenha se o pedaço aparece na tela
+                if draw_x + cw > 0 and draw_x < LARGURA and draw_y + ch > 0 and draw_y < ALTURA:
+                    screen.blit(chunk, (draw_x, draw_y))
+
+
             rect = pygame.Rect(
                 personagem_x - (len(list(primeiro_nome)) * 7),
                 personagem_y - 45,
@@ -436,7 +465,7 @@ if __name__ == "__main__":
 
 
             # velocidade
-            vel = dados["status"]["velocidade"] * 5
+            vel = dados["status"]["velocidade"] * 2
 
             # limites do mapa (10x a largura/altura da tela)
             MAPA_LARGURA = LARGURA * 10
@@ -662,11 +691,19 @@ if __name__ == "__main__":
                 vel_vitoria = 0.7
                 vel_botao = 7
                 contador_botao = 255
+                posição = 0
+                index_inimigo = []
+                atacado = False
+                valido = False
                 morto = False
                 derrotados = 0
                 contador_drop = 0
                 posição_personagem_X = 500 * LARGURA // 1920
                 posição_personagem_Y = 520 * LARGURA // 1920
+                drops = []
+                pachs_drops = []
+                rect_drops = []
+                drop_adicionado = True
             if morto:
                 screen.blit(rect_derrota, (0, 0))
                 screen.blit(derrota_tela[int(frame_derrota)], (420, 0))
@@ -693,6 +730,7 @@ if __name__ == "__main__":
                 vida_porcentagem = (vida_atual * 100) // vida_inicial
                 estamina_porcentagem = (estamina_atual * 100) // estamina_inicial
                 XP_porcentagem = (XP_atual * 100) // XP_necessario
+                index_inimigo = []
 
 
                 alpha = int(min(255, max(0, contador_cooldown_jogador * 7)))
@@ -746,9 +784,14 @@ if __name__ == "__main__":
                     diresao = "soco"
                     for i, (est, distancia) in enumerate(inimigo_local):
                         if distancia - posição_personagem_X - 20 <= 0 and distancia - posição_personagem_X + 40 >= 0:
-                            status_inimigo[i][3] -= usuario.dano_base
                             inimigo_contato[i] = True
+                            for p, k in enumerate(inimigo_contato):
+                                if k:
+                                    index_inimigo.append(p)
+                                
+                            status_inimigo[choice(index_inimigo)][3] -= usuario.dano_base
                             cor_usada_adiversario = cor_dano_adiversario
+                            atacado = False
                 else:
                     if not morto:
                         cor_usada_adiversario = cor_normal_adiversario
@@ -834,8 +877,6 @@ if __name__ == "__main__":
 
 
 
-
-
                 derrotados = 0
                 for i, (diresao_adiversario, posicao_x) in enumerate(inimigo_local):
                     
@@ -894,6 +935,8 @@ if __name__ == "__main__":
 
                     else:
                         derrotados += 1
+                        diresao_adiversario = "morto"
+                        inimigo_contato[i] = False
                         if frame_inimigo_morto[i] <= len(inimigos_pachs_morto) - len(inimigos_pachs_morto) * 0.05:
                             screen.blit(inimigos_pachs_morto[int(frame_inimigo_morto[i])], (posicao_x, 735 - 150))
                             frame_inimigo_morto[i] += len(inimigos_pachs_morto) * 0.05
@@ -970,28 +1013,52 @@ if __name__ == "__main__":
                         screen.blit(rect_botao, (630, 920))
                         contador_botao -= vel_botao
                         if contador_botao <= 20:
-                            if contador_drop <= len(posiveis_drops):
+                            if contador_drop < len(posiveis_drops):
                                 for posiv_drop, chance_drop in posiveis_drops:
                                     contador_drop += 1
                                     chance = randint(1, 100)
                                     if chance < chance_drop:
-                                        print(chance, chance_drop, drops)
                                         drops.append([(posiv_drop, "comum"), 1])
                             vel_botao = 0
                             if desenhar_botao(800, 920, 320, 116) or mostrar_itens:
                                 screen.blit(rect_fundo, (0, 0))
                                 mostrar_itens = True
-                                screen.blit(telas[27], (800, 920))
+                                screen.blit(telas[27], (800, 700))
 
-                                for drop, quantidade in drops:
-                                    screen.blit(inventario_icon, (1800, 250))
-                                    quantidade_drop = font_nome.render(str(quantidade), True, (30, 30, 30))
-                                    screen.blit(quantidade_drop, (1100, 600))
+                                if len(drops) > 0:
+                                    for i, (drop) in enumerate(drops):
+                                        quantidade = drop[1]
+                                        drop = drop[0]
+                                        x_inventario = ((LARGURA - len(drops) * 100 + (len(drops) - 1) * 10) // 2) + i * (100 + 10)
+                                        y_inventario = ALTURA // 2 - 60
+                                        screen.blit(inventario_icon, (x_inventario, y_inventario))
+                                        quantidade_drop = font_nome.render(str(quantidade), True, (30, 30, 30))
+                                        screen.blit(quantidade_drop, (x_inventario + (quantidade_drop.get_size()[0] - 10), y_inventario + (quantidade_drop.get_size()[1] - 5)))
+
+                                        for item in itens:
+                                            if item.nome == drop[0] and drop_adicionado:
+                                                pachs_drops.append(pygame.transform.scale(item.imagem_pach, (100, 100)))
+                                                rect_drops.append(pygame.Rect(x_inventario, y_inventario, 100, 100))
+                                        drop_adicionado = False
+                                        for pachs in pachs_drops:
+                                            screen.blit((pachs), (x_inventario, y_inventario))
+
+                                        for i, rects in enumerate(rect_drops):
+                                            if rects.collidepoint(pygame.mouse.get_pos()):
+                                                nome_item = font_nome.render(f"{drops[i][0][0]}", True, (200, 200, 200))
+                                                largura_texto, altura_texto = font_nome.size(f"{drops[i][0][0]}")
+                                                pygame.draw.rect(screen, (50, 50, 50), (x_inventario + 50 - (largura_texto // 2) - 10, y_inventario - 30 - 10, largura_texto + 20, altura_texto + 20), border_radius=10)
+                                                pygame.draw.rect(screen, (230, 230, 230), (x_inventario + 50 - (largura_texto // 2) - 10, y_inventario - 30 - 10, largura_texto + 20, altura_texto + 20), 2, border_radius=10)
+                                                screen.blit(nome_item, (x_inventario + 50 - (largura_texto // 2), y_inventario - 30))
                                 
-                                if desenhar_botao(800, 920, 320, 116):
+                                if desenhar_botao(800, 700, 320, 116):
                                     estado = JOGO
                                     mostrar_itens = False
                                     dados["progresso"]["missao"] += 0.2
+                                    for drop in drops:
+                                        item = drop[0]
+                                        quantidade = drop[1]
+                                        dados["inventario"]["item"].append([(drop[0][0], drop[0][1]), drop[1]])
                                     salvar(teclas, dados)
 
                         vel_vitoria = 0

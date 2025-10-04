@@ -255,6 +255,10 @@ botas_E = []
 normal = []
 ataque = []
 
+nome = font_nome.render(f"{primeiro_nome}", True, (190, 190, 230))
+
+print(type(nome.get_width()))
+
 if __name__ == "__main__":
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
@@ -388,12 +392,12 @@ if __name__ == "__main__":
                 if draw_x + cw > 0 and draw_x < LARGURA and draw_y + ch > 0 and draw_y < ALTURA:
                     screen.blit(chunk, (draw_x, draw_y))
 
-
+            nome = font_nome.render(f"{primeiro_nome}", True, (190, 190, 230))
             rect = pygame.Rect(
-                personagem_x - (len(list(primeiro_nome)) * 7),
-                personagem_y - 45,
-                nome_rect.width,
-                nome_rect.height
+                personagem_x - nome.get_width() * 4,
+                personagem_y - 20 - nome.get_height(),
+                nome.get_width() + 8,
+                nome.get_height() + 6
                 )
             
             if key[pygame.K_DELETE]:
@@ -421,8 +425,7 @@ if __name__ == "__main__":
             pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
 
             # Desenha o texto do nome por cima do retângulo
-            nome = font_nome.render(f"{primeiro_nome}", True, (190, 190, 230))
-            screen.blit(nome, nome_rect)
+            screen.blit(nome, (rect.x + 3, rect.y + 3))
 
             # atualiza todos os objetos do gerenciador de colisão
             
@@ -680,12 +683,13 @@ if __name__ == "__main__":
                 frame_inimigo_esquerda = [0, 0, 0]
                 frame_inimigo_morto = [0, 0, 0]
             if contador <= 0:
-                vida_inicial = agnes.vida_atual
-                vida_atual = agnes.vida_atual
-                estamina_inicial = agnes.estamina_atual
-                estamina_atual = agnes.estamina_atual
-                XP_necessario = usuario.estamina_máxima
+                vida_inicial = dados["status"]["vida"] * 5 + buff_vida
+                vida_atual = dados["status"]["vida"] * 5 + buff_vida
+                estamina_inicial = dados["status"]["dano"] * 2 - buff_estamina
+                estamina_atual = dados["status"]["dano"] * 2 - buff_estamina
+                XP_necessario = dados["status"]["experiencia"]
                 XP_atual = dados["status"]["experiencia"]
+                defesa = dados["status"]["defesa"] + buff_defesa
                 contador += 1
                 vel_derrota = 1
                 vel_vitoria = 0.7
@@ -729,7 +733,7 @@ if __name__ == "__main__":
             else:
                 vida_porcentagem = (vida_atual * 100) // vida_inicial
                 estamina_porcentagem = (estamina_atual * 100) // estamina_inicial
-                XP_porcentagem = (XP_atual * 100) // XP_necessario
+                XP_porcentagem = ((XP_atual * 100) // XP_necessario) if XP_atual != 0 else 0
                 index_inimigo = []
 
 
@@ -789,7 +793,7 @@ if __name__ == "__main__":
                                 if k:
                                     index_inimigo.append(p)
                                 
-                            status_inimigo[choice(index_inimigo)][3] -= usuario.dano_base
+                            status_inimigo[choice(index_inimigo)][3] -= dados["status"]["dano"] + buff_dano
                             cor_usada_adiversario = cor_dano_adiversario
                             atacado = False
                 else:
@@ -1163,23 +1167,28 @@ if __name__ == "__main__":
 
 
         if estado == INVENTARIO:
-            screen.blit(chao, (pos_chao_x, pos_chao_y))
-            rect.x = personagem_x - (len(list(primeiro_nome)) * 6)
-            nome_rect.x = personagem_x - (len(list(primeiro_nome)) * 2)
-            nome_rect.y = personagem_y - 40
+            screen.fill((0, 0, 0))  # limpa a tela
+            for (x, y), chunk in chunks.items():
+                draw_x = x + pos_chao_x
+                draw_y = y + pos_chao_y
 
-            buff_vida = 0
-            buff_estamina = 0
-            buff_dano = 0
-            buff_defesa = 0
+                cw, ch = chunk.get_size()
 
-            screen.blit(chao, (pos_chao_x, pos_chao_y))
+                # Só desenha se o pedaço aparece na tela
+                if draw_x + cw > 0 and draw_x < LARGURA and draw_y + ch > 0 and draw_y < ALTURA:
+                    screen.blit(chunk, (draw_x, draw_y))
+
+            nome = font_nome.render(f"{primeiro_nome}", True, (190, 190, 230))
             rect = pygame.Rect(
-                personagem_x - (len(list(primeiro_nome)) * 7),
-                personagem_y - 45,
-                nome_rect.width,
-                nome_rect.height
+                personagem_x - nome.get_width() * 4,
+                personagem_y - 20 - nome.get_height(),
+                nome.get_width() + 8,
+                nome.get_height() + 6
                 )
+            
+            if key[pygame.K_DELETE]:
+                contador = 0
+                estado = COMBATE
             rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 3
             nome_rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 9
             nome_rect.y = personagem_y - 40
@@ -1202,8 +1211,7 @@ if __name__ == "__main__":
             pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
 
             # Desenha o texto do nome por cima do retângulo
-            nome = font_nome.render(f"{primeiro_nome}", True, (190, 190, 230))
-            screen.blit(nome, nome_rect)
+            screen.blit(nome, (rect.x + 3, rect.y + 3))
 
             item_x = 1800
             item_y = 250
@@ -1322,6 +1330,7 @@ if __name__ == "__main__":
                                             ataque.pop(0)
                                         else:
                                             normal.pop(0)
+                                        buff_recebido = False
                                         buff_vida -= item.vida
                                         buff_estamina -= item.peso
                                         buff_dano -= item.ataque
@@ -1473,7 +1482,8 @@ if __name__ == "__main__":
 
             for equipamento in dados["inventario"]["equipado"]:
                 for item in itens:
-                    if equipamento[0] == item.nome and equipamento[1] == item.raridade:
+                    if equipamento[0] == item.nome and equipamento[1] == item.raridade and not buff_recebido:
+                        buff_recebido = True
                         buff_vida += item.vida
                         buff_estamina += item.peso
                         buff_dano += item.ataque
@@ -1680,23 +1690,28 @@ if __name__ == "__main__":
                 travar_mapa = False
 
         if estado == MAPA:
-            screen.blit(chao, (pos_chao_x, pos_chao_y))
-            rect.x = personagem_x - (len(list(primeiro_nome)) * 6)
-            nome_rect.x = personagem_x - (len(list(primeiro_nome)) * 2)
-            nome_rect.y = personagem_y - 40
+            screen.fill((0, 0, 0))  # limpa a tela
+            for (x, y), chunk in chunks.items():
+                draw_x = x + pos_chao_x
+                draw_y = y + pos_chao_y
 
-            buff_vida = 0
-            buff_estamina = 0
-            buff_dano = 0
-            buff_defesa = 0
+                cw, ch = chunk.get_size()
 
-            screen.blit(chao, (pos_chao_x, pos_chao_y))
+                # Só desenha se o pedaço aparece na tela
+                if draw_x + cw > 0 and draw_x < LARGURA and draw_y + ch > 0 and draw_y < ALTURA:
+                    screen.blit(chunk, (draw_x, draw_y))
+
+            nome = font_nome.render(f"{primeiro_nome}", True, (190, 190, 230))
             rect = pygame.Rect(
-                personagem_x - (len(list(primeiro_nome)) * 7),
-                personagem_y - 45,
-                nome_rect.width,
-                nome_rect.height
+                personagem_x - nome.get_width() * 4,
+                personagem_y - 20 - nome.get_height(),
+                nome.get_width() + 8,
+                nome.get_height() + 6
                 )
+            
+            if key[pygame.K_DELETE]:
+                contador = 0
+                estado = COMBATE
             rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 3
             nome_rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 9
             nome_rect.y = personagem_y - 40
@@ -1719,8 +1734,7 @@ if __name__ == "__main__":
             pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
 
             # Desenha o texto do nome por cima do retângulo
-            nome = font_nome.render(f"{primeiro_nome}", True, (190, 190, 230))
-            screen.blit(nome, nome_rect)
+            screen.blit(nome, (rect.x + 3, rect.y + 3))
 
 
             item_x = 1800

@@ -5,7 +5,7 @@
         "Classe": "Artista Marcial"
     },
     "inventario": {
-        "item": "[[[\"Punho\", \"comum\"], 1]]",
+        "item": "[[[\"Punho\", \"comum\"], 1], [[\"Gosma azul\", \"comum\"], 3]]",
         "equipado": "[]",
         "dinheiro": 100
     },

@@ -69,6 +69,9 @@ casa_pequena0 = transform.scale(casa_pequena0, (572 * LArgura // 1920, 900 * LAr
 casa_pequena1 = image.load(fr"{endereço}\casa_pequena1.png").convert_alpha()
 casa_pequena1 = transform.scale(casa_pequena1, (572 * LArgura // 1920, 900 * LArgura // 1920))
 
+rocha_0 = image.load(fr"{endereço}\Rocha.png").convert_alpha()
+rocha_0 = transform.scale(rocha_0, (90 * LArgura // 1920, 100 * LArgura // 1920))
+
 inventario_pach = image.load(fr"{endereço}\inventario_final.png").convert_alpha()
 inventario_pach = transform.scale(inventario_pach, (1344 * LArgura // 1920, 966 * LArgura // 1920))
 

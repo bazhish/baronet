@@ -111,6 +111,10 @@ buff_dano = 0
 buff_defesa = 0
 buff_recebido = False
 
+XP_necessarios = [100, 200, 350, 500, 750, 1000, 1200, 1400, 1600, 1800, 2000, 2200, 2400, 2600, 2800, 3000, 3200, 3400, 3600, 3800,
+                  4000, 4200, 4400, 4600, 4800, 5000, 5200, 5400, 5600, 5800, 6000, 6200, 6400, 6600, 6800, 7000, 7200, 7400, 7600, 7800, 8000,
+                  8200, 8400, 8600, 8800, 9000, 9200, 9400, 9600, 9800, 10000]
+
 # if dados["dados_pessoais"]["Classe"] == "arqueiro":
 #     habilidade_1_usavel = disparo_perfurante
 #     habilidade_2_usavel = camuflagem
@@ -377,6 +381,11 @@ if __name__ == "__main__":
         drops = [[k, v] for k, v in resultado2.items()]
 
         font_estrucao = pygame.font.Font(rf"{endereço}\recursos\fontes\Minha fonte.ttf", int(tamanho_estrucao))
+        if dados["status"]["experiencia"] >= XP_necessarios[dados["status"]["nivel"] - 1] and dados["status"]["nivel"] < 50:
+            dados["status"]["experiencia"] -= XP_necessarios[dados["status"]["nivel"] - 1]
+            dados["status"]["nivel"] += 1
+            salvar(teclas, dados)
+
 
         if estado == JOGO:
             anterior = JOGO
@@ -672,6 +681,7 @@ if __name__ == "__main__":
                                          [slime.dano_base, slime.velocidade_base, slime.defesa_base, slime.vida_base],
                                          [slime.dano_base, slime.velocidade_base, slime.defesa_base, slime.vida_base]]
                 posiveis_drops = [(slime.queda, slime.taxa_de_queda), (slime.queda, slime.taxa_de_queda), (slime.queda, slime.taxa_de_queda)]
+                experiencia_dada = [slime.experiência, slime.experiência, slime.experiência]
                 inimigos_pachs_parado = slime_parado
                 inimigos_pachs_direita = slime_direita
                 inimigos_pachs_morto = slime_morto
@@ -687,9 +697,10 @@ if __name__ == "__main__":
                 vida_atual = dados["status"]["vida"] * 5 + buff_vida
                 estamina_inicial = dados["status"]["dano"] * 2 - buff_estamina
                 estamina_atual = dados["status"]["dano"] * 2 - buff_estamina
-                XP_necessario = dados["status"]["experiencia"]
+                XP_necessario = XP_necessarios[dados["status"]["nivel"] - 1]
                 XP_atual = dados["status"]["experiencia"]
                 defesa = dados["status"]["defesa"] + buff_defesa
+                vel_combate = int(dados["status"]["velocidade"] * 1.3)
                 contador += 1
                 vel_derrota = 1
                 vel_vitoria = 0.7
@@ -734,7 +745,7 @@ if __name__ == "__main__":
                 vida_porcentagem = (vida_atual * 100) // vida_inicial
                 estamina_porcentagem = (estamina_atual * 100) // estamina_inicial
                 XP_porcentagem = ((XP_atual * 100) // XP_necessario) if XP_atual != 0 else 0
-                index_inimigo = []
+                index_inimigo.clear()
 
 
                 alpha = int(min(255, max(0, contador_cooldown_jogador * 7)))
@@ -750,14 +761,14 @@ if __name__ == "__main__":
 
                 if posição - 1 >= -LARGURA * 2  and posição_personagem_X >= 500 * LARGURA // 1920 and not travar and not morto:
                     if key[pygame.K_d]:
-                        posição -= 8 * LARGURA // 1920
-                        inimigo_local = [(est, pos - 8 * LARGURA // 1920) for est, pos in inimigo_local]
+                        posição -= vel_combate
+                        inimigo_local = [(est, pos - vel_combate) for est, pos in inimigo_local]
                         if diresao != "soco" and diresao != "dano":
                             diresao = "direita"
                 else:
                     if -posição_personagem_X >= -LARGURA + 150 and not travar and not morto:
                         if key[pygame.K_d]:
-                            posição_personagem_X += 8 * LARGURA // 1920
+                            posição_personagem_X += vel_combate
                             if diresao != "soco" and diresao != "dano":
                                 diresao = "direita"
                     else:
@@ -768,15 +779,15 @@ if __name__ == "__main__":
                     
                 if posição <= -20 * LARGURA // 1920 and posição_personagem_X <= 500 * LARGURA // 1920 and not morto:
                     if key[pygame.K_a]:
-                        posição += 8 * LARGURA // 1920
-                        inimigo_local = [(est, pos + 8 * LARGURA // 1920) for est, pos in inimigo_local]
+                        posição += vel_combate
+                        inimigo_local = [(est, pos + vel_combate) for est, pos in inimigo_local]
                         if diresao != "soco" and diresao != "dano":
                             diresao = "esquerda"
 
                 else:
                     if posição_personagem_X >= -21 * LARGURA // 1920 and not morto:
                         if key[pygame.K_a]:
-                            posição_personagem_X -= 8 * LARGURA // 1920
+                            posição_personagem_X -= vel_combate
                             if diresao != "soco" and diresao != "dano":
                                 diresao = "esquerda"
                     else:
@@ -786,16 +797,24 @@ if __name__ == "__main__":
                 if botoes[0] and contador_cooldown_jogador <= 0 and not morto:
                     contador_cooldown_jogador = cooldown_jogador
                     diresao = "soco"
+
+                    # Atualiza quais inimigos estão em contato
                     for i, (est, distancia) in enumerate(inimigo_local):
                         if distancia - posição_personagem_X - 20 <= 0 and distancia - posição_personagem_X + 40 >= 0:
                             inimigo_contato[i] = True
-                            for p, k in enumerate(inimigo_contato):
-                                if k:
-                                    index_inimigo.append(p)
-                                
-                            status_inimigo[choice(index_inimigo)][3] -= dados["status"]["dano"] + buff_dano
-                            cor_usada_adiversario = cor_dano_adiversario
-                            atacado = False
+                        else:
+                            inimigo_contato[i] = False
+
+                    # Lista de inimigos que estão em contato
+                    index_inimigo = [i for i, contato in enumerate(inimigo_contato) if contato and status_inimigo[i][3] > 0]
+
+                    # Se houver inimigos em contato, aplica dano em um aleatório
+                    if index_inimigo:
+                        alvo = choice(index_inimigo)
+                        print(index_inimigo)
+                        status_inimigo[alvo][3] -= dados["status"]["dano"] + buff_dano
+                        cor_usada_adiversario = cor_dano_adiversario
+                        atacado = False
                 else:
                     if not morto:
                         cor_usada_adiversario = cor_normal_adiversario
@@ -1063,6 +1082,8 @@ if __name__ == "__main__":
                                         item = drop[0]
                                         quantidade = drop[1]
                                         dados["inventario"]["item"].append([(drop[0][0], drop[0][1]), drop[1]])
+                                    for XP in experiencia_dada:
+                                        dados["status"]["experiencia"] += XP
                                     salvar(teclas, dados)
 
                         vel_vitoria = 0

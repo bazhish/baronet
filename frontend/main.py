@@ -261,8 +261,6 @@ ataque = []
 
 nome = font_nome.render(f"{primeiro_nome}", True, (190, 190, 230))
 
-print(type(nome.get_width()))
-
 if __name__ == "__main__":
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 

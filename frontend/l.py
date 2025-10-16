@@ -1,3 +1,7 @@
-x, y = 640, 786
-x2, y2 = 1223, 993
-print (f"{(x * 1920) // 1920}, {(y * 1080) // 1066}, {((x2* 1920) // 1920) - (x * 1920) // 1920}, {((y2 * 1080) // 1066) - (y * 1080) // 1066}")
+import random
+cord = []
+for i in range(500, 1380, 25):
+    for j in range(100, 980, 25):
+        cord.append((i - random.randint(0, 13), j - random.randint(0, 13), random.randint(1, 15)))
+
+print(cord)

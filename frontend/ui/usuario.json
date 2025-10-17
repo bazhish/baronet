@@ -1,16 +1,16 @@
 {
-    "usuario": "joao v",
+    "usuario": "joao",
     "dados_pessoais": {
-        "Nome": "joao v",
+        "Nome": "joao",
         "Classe": "Artista Marcial"
     },
     "inventario": {
-        "item": "[[[\"Punho\", \"comum\"], 1], [[\"Gosma azul\", \"comum\"], 8], [[\"Fruta azul\", \"comum\"], 9], [[\"Fruta azul\", \"comum\"], 1]]",
+        "item": "[[[\"Punho\", \"comum\"], 1]]",
         "equipado": "[]",
         "dinheiro": 100
     },
     "status": {
-        "nivel": 3,
+        "nivel": 1,
         "dano": 4,
         "velocidade": 6,
         "defesa": 4,
@@ -19,11 +19,11 @@
     },
     "progresso": {
         "capitulo": 0,
-        "missao": 1.7
+        "missao": 14.39999999999998
     },
     "keys": {
         "inventario": "E",
-        "correr": "Lctrl",
+        "correr": "lctrl",
         "habilidade": "R",
         "habilidade_1": "Z",
         "habilidade_2": "X",

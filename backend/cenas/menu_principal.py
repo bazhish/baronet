@@ -3,7 +3,7 @@ import sys
 import json
 import sqlite3
 from subprocess import Popen
-from tela_criacao_personagem import obter_id_usuario_por_nome  # só função lógica
+from frontend.main import obter_id_usuario_por_nome
 
 endereco = os.path.dirname(os.path.abspath(__file__))
 endereco_banco_de_dados = rf"{endereco}\banco_de_dados.db"

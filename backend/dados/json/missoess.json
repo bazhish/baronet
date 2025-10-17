@@ -16,8 +16,8 @@
     "npc_geradora": "fazendeiro",
     "requisito_previo": null
   },
-  {"id": "submissão_1",
-}
+  {"id": "submissão_1", "titulo": "Teste de Submissão", "descricao": "Esta é uma submissão de teste.", "tipo": "coleta", "objetivo": {"item_id": "item_teste", "quantidade": 1}, "recompensa": {"xp": 10, "moeda": 5, "item": null}, "npc_geradora": "npc_teste", "requisito_previo": null
+  },
   {
     "id": "missao_2",
     "titulo": "Caçar Slimes",

@@ -3,7 +3,7 @@ import os
 import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from frontend.recursos.imagens.cenario.cenario_explorar import arbusto_0, arbusto_2, arbusto_1, arbusto_3, arvore_grande_0, arvore_grande_1, arvore_pequena_0, arvore_pequena_1, arvore_pequena_2, arvore_pequena_3, barril_0, barril_1, barril_2, cogumelo_0, pedras_0, pedras_1, pedras_2, LArgura, casa_pequena0, casa_pequena1, rocha_0, taverna_P, sem_colisao, castelo_1, castelo_2, barraca_H0, barraca_H1, barraca_H2, barraca_H3, barraca_V0, barraca_V1, barraca_V2, barraca_V3
+from frontend.recursos.imagens.cenario.cenario_explorar import arbusto_0, arbusto_2, arbusto_1, arbusto_3, arvore_grande_0, arvore_grande_1, arvore_pequena_0, arvore_pequena_1, arvore_pequena_2, arvore_pequena_3, barril_0, barril_1, barril_2, cogumelo_0, pedras_0, pedras_1, pedras_2, LArgura, casa_pequena0, casa_pequena1, rocha_0, taverna_P, sem_colisao, castelo_1, castelo_2, barraca_H0, barraca_H1, barraca_H2, barraca_H3, barraca_V0, barraca_V1, barraca_V2, barraca_V3, moita_fruta
 
 
 screen = pygame.display.set_mode((1, 1))
@@ -210,6 +210,26 @@ class barraca_V:
                             77 * LArgura // 1920 + (((self.y - 100) * 19200) // (980 - 100) + self.pos_chao_y),
                               210 * LArgura // 1920, 338 * LArgura // 1920)
 
+class moita_com_fruta:
+    def __init__(self, x, y, largura, altura, imagem_pach, pos_chao_x, pos_chao_y):
+        self.x = x * LArgura // 1920
+        self.y = y * LArgura // 1920
+        self.pos_chao_x = pos_chao_x
+        self.pos_chao_y = pos_chao_y
+        self.largura =  largura * LArgura // 1920
+        self.altura = altura * LArgura // 1920
+        self.imagem_pach = imagem_pach
+        self.bottom_left = 88
+        self.bottom_rith = 22
+        self.altura_real =144
+        self.largura_real =134
+    
+    def rect(self):
+        """Retorna um pygame.Rect para usar na colisão"""
+        return pygame.Rect(22 * LArgura // 1920 + (((self.x - 500) * 19200) // (1380 - 500) + self.pos_chao_x),
+                            88 * LArgura // 1920 + (((self.y - 100) * 19200) // (980 - 100) + self.pos_chao_y),
+                              90 * LArgura // 1920, 48 * LArgura // 1920)
+
 
 coordenadas = [(534, 107, "arvore_grande"), (632, 101, "arvore_grande"), (804, 101, "arvore_grande"), (940, 104, "arvore_grande"), (1042, 101, "arvore_grande"),
                (1080, 102, "arvore_grande"), (1124, 111, "arvore_grande"), (1201, 101, "arvore_grande"), (1247, 106, "arvore_grande"), (1297, 114, "arvore_grande"), (1353, 119, "arvore_grande"),
@@ -320,8 +340,9 @@ coordenadas = [(534, 107, "arvore_grande"), (632, 101, "arvore_grande"), (804, 1
 'rocha'), (1319, 469, 'rocha'), (1320, 470, 'rocha'), (1321, 471, 'rocha'), (1321, 471, 'rocha'), (1322, 472, 'rocha'), (1323, 473, 'rocha'), (1323, 474, 'rocha'), (1324, 475, 'rocha'), (1325, 476, 'rocha'), (1325, 476, 'rocha'), (1326, 477, 'rocha'), (1327, 478, 'rocha'), (1327, 479, 'rocha'), (1328, 480, 'rocha'), (1329, 481, 'rocha'), (1329, 481, 'rocha'), (1330, 482, 'rocha'), (1330, 483, 'rocha'), (1331, 484, 'rocha'), (1332, 485, 'rocha'), (1332, 486, 'rocha'), (1333, 487, 'rocha'), (1333, 488, 'rocha'), (1334, 488, 'rocha'), (1334, 489, 'rocha'), (1335, 490, 'rocha'), (1336, 491, 'rocha'), (1336, 492, 'rocha'), (1337, 493, 'rocha'), (1337, 494, 'rocha'), (1338, 495, 'rocha'), (1338, 496, 'rocha'), (1339, 497, 'rocha'), (1339, 497, 'rocha'), (1340, 498, 'rocha'), (1340, 499, 'rocha'), (1341, 500, 'rocha'), (1342, 501, 'rocha'), (1342, 502, 'rocha'), (1343, 503, 'rocha'), (1343, 504, 'rocha'), (1344, 505, 'rocha'), (1344, 506, 'rocha'), (1344, 507, 'rocha'), (1345, 508, 'rocha'), (1345, 509, 'rocha'), (1346, 510, 'rocha'), (1346, 511, 'rocha'), (1347, 512, 'rocha'), (1347, 512, 'rocha'), (1348, 513, 'rocha'), (1348, 514, 'rocha'), (1349, 515, 'rocha'), (1349, 516, 'rocha'), (1349, 517, 'rocha'), (1350, 518, 'rocha'), (1350, 519, 'rocha'), (1351, 520, 'rocha'), (1351, 521, 'rocha'), (1352, 522, 'rocha'), (1352, 523, 'rocha'), (1352, 524, 'rocha'), (1353, 525, 'rocha'), (1353, 526, 'rocha'), (1353, 527, 'rocha'), (1354, 528, 'rocha'), (1354, 529, 'rocha'), (1355, 530, 'rocha'), (1355, 531, 'rocha'), (1355, 532, 'rocha'), (1356, 533, 'rocha'), (1356, 534, 'rocha'), (1356, 535, 'rocha'), 
 (1357, 536, 'rocha'), (1357, 537, 'rocha'), (1357, 538, 'rocha'), (1358, 539, 'rocha'), (1358, 540, 'rocha'), (1358, 541, 'rocha'), (1358, 542, 'rocha'), (1359, 543, 'rocha'), (1359, 544, 'rocha'), (1359, 545, 'rocha'), (1360, 546, 'rocha'), (1360, 547, 'rocha'), (1360, 548, 'rocha'), (1360, 549, 'rocha'), (1361, 550, 'rocha'), (1361, 551, 'rocha'), (1361, 552, 'rocha'), (1361, 553, 'rocha'), (1362, 554, 'rocha'), (1362, 555, 'rocha'), (1362, 557, 'rocha'), (1362, 558, 'rocha'), (1363, 559, 'rocha'), (1363, 560, 'rocha'), (1363, 561, 'rocha'), (1363, 562, 'rocha'), (1363, 563, 'rocha'), (1363, 564, 
 'rocha'), (1364, 565, 'rocha'), (1364, 566, 'rocha'), (1364, 567, 'rocha'), (1364, 568, 'rocha'), (1364, 569, 'rocha'), (1364, 570, 'rocha'), (1365, 571, 'rocha'), (1365, 572, 'rocha'), (1365, 573, 'rocha'), (1365, 574, 'rocha'), (1365, 575, 'rocha'), (1365, 576, 'rocha'), (1365, 577, 'rocha'), (1366, 578, 'rocha'), (1366, 579, 'rocha'), (1366, 581, 'rocha'), (1366, 582, 'rocha'), (1366, 583, 'rocha'), (1366, 584, 'rocha'), (1366, 585, 'rocha'), (1366, 586, 'rocha'), (1366, 587, 'rocha'), (1366, 588, 'rocha'), (1366, 589, 'rocha'), (1366, 590, 'rocha'), (1366, 591, 'rocha'), (1366, 592, 'rocha'), (1366, 593, 'rocha'), (1366, 594, 'rocha'), (1366, 595, 'rocha'), (1366, 596, 'rocha'), (1366, 597, 'rocha'),
-(1273, 565, "taverna"), (764, 605, "castelo_2"), (1118, 537, "castelo_1"), (1098, 433, "barraca_H1"), (1128, 480, "barraca_H1"), (988, 518, "barraca_H1"), (1078, 511, "barraca_V1"), (1014, 505, "barraca_V2"), (1069, 543, "barraca_V2"), (1116, 415, "barraca_H2"), (993, 496, "barraca_V0"), (1167, 446, "barraca_H0"), (995, 539, "barraca_V3"), (1013, 472, "barraca_V3"), (1146, 420, "barraca_V3"), (1074, 487, "barraca_H3")
-               ]
+(1273, 565, "taverna"), (764, 605, "castelo_2"), (1118, 537, "castelo_1"), (1098, 433, "barraca_H1"), (1128, 480, "barraca_H1"), (988, 518, "barraca_H1"), (1078, 511, "barraca_V1"), (1014, 505, "barraca_V2"), (1069, 543, "barraca_V2"), (1116, 415, "barraca_H2"), (993, 496, "barraca_V0"), (1167, 446, "barraca_H0"), (995, 539, "barraca_V3"), (1013, 472, "barraca_V3"), (1146, 420, "barraca_V3"), (1074, 487, "barraca_H3"),
+
+(1068, 212, "moita com fruta"), (1074, 209, "moita com fruta"), (1078, 203, "moita com fruta"), (1081, 198, "moita com fruta"), (1086, 201, "moita com fruta"), (1094, 205, "moita com fruta"), (1096, 209, "moita com fruta"), (1093, 212, "moita com fruta"), (1087, 216, "moita com fruta"), (1080, 221, "moita com fruta"), (1078, 225, "moita com fruta"),                ]
 
 coordenadas_sem_colisao = [(494, 94, 11), (488, 124, 15), (489, 147, 6), (492, 163, 14), (499, 198, 1), (487, 217, 7), (491, 243, 14), (489, 265, 14), (488, 300, 15), (500, 315, 9), (496, 343, 10), (489, 375, 4), (499, 387, 12), (497, 412, 5), (497, 449, 15), (497, 463, 9), (498, 496, 9), (496, 525, 13), (489, 539, 8), (493, 571, 13), (490, 590, 14), (489, 614, 6), (496, 640, 4), (493, 666, 14), (500, 697, 1), (495, 720, 8), (499, 745, 3), (495, 767, 2), (497, 788, 12), (499, 824, 13), (492, 841, 11), (496, 867, 6), (498, 891, 14), (487, 912, 12), (495, 946, 3), (491, 973, 15), (523, 99, 1), (524, 124, 9), (518, 139, 6), (514, 171, 15), (523, 190, 4), (517, 223, 4), (521, 250, 4), (521, 267, 13), (513, 299, 12), (512, 318, 3), (524, 344, 4), (522, 370, 4), (518, 393, 13), (515, 413, 12), (522, 439, 3), (513, 467, 12), (515, 495, 3), (514, 525, 8), (517, 546, 3), (521, 573, 2), (522, 600, 1), (521, 612, 10), (516, 649, 6), (520, 672, 3), (519, 692, 5), (519, 715, 13), (515, 746, 1), (520, 764, 7), (515, 790, 2), (525, 817, 11), (514, 843, 6), (518, 869, 14), (517, 893, 10), (517, 922, 5), (520, 948, 2), (516, 967, 9), (542, 88, 8), (545, 116, 9), (538, 143, 2), (539, 165, 2), (539, 199, 2), (546, 218, 15), (546, 242, 9), (545, 264, 12), (542, 293, 11), (538, 313, 4), (543, 342, 10), (545, 367, 11), (546, 387, 14), (537, 415, 13), (550, 449, 7), (549, 474, 5), (543, 491, 2), (546, 520, 5), (545, 549, 12), (542, 575, 7), (537, 595, 6), (540, 625, 13), (547, 648, 8), (543, 665, 3), (548, 690, 6), (541, 721, 2), (548, 740, 6), (542, 763, 9), (543, 793, 1), (537, 822, 8), (545, 847, 9), (545, 864, 10), (543, 900, 10), (545, 924, 15), (542, 939, 4), (538, 966, 7), (573, 98, 6), (570, 117, 9), (567, 145, 9), (569, 170, 11), (563, 197, 3), (562, 216, 9), (567, 250, 10), (568, 273, 14), (574, 295, 4), (563, 322, 4), (564, 
 349, 15), (568, 373, 2), (572, 398, 11), (570, 422, 14), (564, 440, 14), (567, 475, 7), (572, 495, 7), (572, 514, 7), (574, 543, 10), (567, 565, 11), (573, 588, 7), (569, 625, 12), (564, 650, 9), (563, 
@@ -431,6 +452,10 @@ for x, y, tipo in coordenadas:
     elif tipo == "barraca_H3":
         barraca.append(barraca_H(x, y, 385 * LArgura // 1920, 138 * LArgura // 1920, barraca_H3, -3500, -3500))
         pach_objects_colision.append(barraca_H(x, y, 385 * LArgura // 1920, 138 * LArgura // 1920, barraca_H3, -3500, -3500))
+
+    elif tipo == "moita com fruta":
+        barraca.append(moita_com_fruta(x, y, 90 * LArgura // 1920, 48 * LArgura // 1920, moita_fruta, -3500, -3500))
+        pach_objects_colision.append(moita_com_fruta(x, y, 90 * LArgura // 1920, 48 * LArgura // 1920, moita_fruta, -3500, -3500))
 
 
 

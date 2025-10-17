@@ -8,16 +8,19 @@ from recursos.imagens.missao.missao1.slime import slime_parado, slime_direita, s
 from recursos.imagens.cenario.cenario_explorar import inventario_pach, inventario_icon, mapa_img
 from recursos.imagens.hud.hud_combate import vida_hud, vida_inimigo_hud, estamina_hud, xp_hud, armas_hud, usaveis_hud, vitoria_tela, derrota_tela
 from recursos.imagens.telas.telas import telas
+import math
 import sqlite3
 import pyautogui
 from PIL import Image
 from subprocess import Popen
 import json
 from recursos.imagens.personagem_principal import personagem_parado, personagem_andando_D, personagem_soco_d, personagem_morto, personagem_dano, personagem_andando_E
+from recursos.imagens.npcs.npcs import npcs, atualizar_npc
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from backend.entidades.adversarios import slime
 from backend.entidades.jogador import agnes
 from backend.sistemas.itens import itens, itens_icons
+from backend.sistemas.Dialogo import mostrar_dialogo, dialogo_agnes, dialogo_fazendeiro, dialogo_slime
 from backend.sistemas.colisao import pach_objects, pach_objects_colision, pach_objects_rects_colision, gerenciador_colisao, pach_objects_intamgible
 #from backend.app.models.sistema.habilidades_ativa_combatentes import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
 #from backend.app.models.sistema.habilidades_passivas_combatentes import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
@@ -74,6 +77,16 @@ contador_botao = 255
 mostrar_itens = False
 drops = []
 contador_drop = 0
+frame_npc_fazendeiro = 0
+range_moita_fruta = []
+coletado = False
+timer_coleta = 0
+missao = "incompleta"
+
+centro_moita = (LARGURA // 2, ALTURA // 2)
+raio_moita = 30
+angulo_moita = 0
+carregando_moita = False
 
 estrucao = 0
 vel_letra = 0.5
@@ -171,6 +184,7 @@ MENU = "menu"
 INVENTARIO = "inventario"
 MAPA = "mapa"
 COMBATE = "combate"
+DIALOGO = "dialogo"
 estado = JOGO
 
 tranparencia = 150
@@ -237,6 +251,9 @@ quadrado_7 = pygame.Surface((50, 50))
 personagem_x = LARGURA // 2
 personagem_y = ALTURA // 2
 personagem = pygame.Rect(personagem_x, personagem_y, 50, 50)
+quadrado_missao = pygame.Surface((400, 300), pygame.SRCALPHA)
+quadrado_missao.fill((*(20, 20, 20), 200))
+
 
 tempo_salvar = 0
 travar_mapa = False
@@ -260,6 +277,22 @@ normal = []
 ataque = []
 
 nome = font_nome.render(f"{primeiro_nome}", True, (190, 190, 230))
+
+def wrap_text(text, font, max_width):
+        words = text.split(' ')
+        lines = []
+        current_line = ""
+        for word in words:
+            test_line = current_line + ("" if current_line == "" else " ") + word
+            if font.size(test_line)[0] <= max_width:
+                current_line = test_line
+            else:
+                if current_line:
+                    lines.append(current_line)
+                current_line = word
+        if current_line:
+            lines.append(current_line)
+        return lines
 
 if __name__ == "__main__":
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -417,16 +450,49 @@ if __name__ == "__main__":
 
             quadrado_7.fill((0, 200, 0))
             personagem = pygame.Rect(personagem_x, personagem_y, 50, 50)
+            personagem_rect = pygame.Rect(personagem_x, personagem_y, 50, 50)
             for obj in pach_objects_intamgible:
                 screen.blit(obj.imagem_pach, (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
                                              ((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y))
             screen.blit(quadrado_7, (personagem_x, personagem_y))
+
+            range_moita_fruta = []
             
             for obj in pach_objects:
                 if (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x) + obj.largura_real > 0 and (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x) < LARGURA:
                     if (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y) + obj.altura_real > 0 and (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y) < ALTURA:
                         screen.blit(obj.imagem_pach, (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
                                                     ((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y))
+                        if obj.largura_real == 134 and obj.altura_real == 144 and obj.bottom_rith == 22 and obj.bottom_left == 88:
+                            range_moita_fruta.append(pygame.Rect((7 + (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x),
+                            73 + (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y),
+                              120, 78)))
+                        
+# Desenha os NPCs
+            for npc in npcs:
+                atualizar_npc(npc, pos_chao_x, pos_chao_y)
+                if npc.tipo != "slime" or dados["progresso"]["missao"] < 1.7:
+                    if personagem.colliderect(npc.rect):
+                        texto = font_estrucao.render(f"precione a tecla V", True, (200, 110, 110))
+                        largura_texto, altura_texto = font_estrucao.size(f"precione a tecla V")
+                        quadrado_estrucao = pygame.Surface((largura_texto + 20, altura_texto + 20), pygame.SRCALPHA)
+                        quadrado_estrucao.fill((*(0, 0, 0), 150))
+                        screen.blit(quadrado_estrucao, ((LARGURA // 2) - (largura_texto // 2) - 10, 1000 - 10))
+                        screen.blit(texto, ((LARGURA // 2) - (largura_texto // 2), 1000))
+                        if tamanho_estrucao <= 36:
+                            vel_letra = 0.5
+                        if tamanho_estrucao >= 40:
+                            vel_letra = -0.5
+                        tamanho_estrucao += vel_letra
+                        if key[pygame.K_v]:
+                            dialogo_npc = npc.tipo
+                            estado = DIALOGO
+                        
+                    npc.frame += 0.1
+                    if npc.frame >= len(npc.imagem):
+                        npc.frame = 0
+                    screen.blit(npc.imagem[int(npc.frame)], (((npc.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
+                                            ((npc.y - 100) * 19200) // (980 - 100) + pos_chao_y))
                     
             # Desenha o retângulo cinza atrás do nome
             pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
@@ -636,8 +702,8 @@ if __name__ == "__main__":
 
         
             if dados["progresso"]["missao"] <= 1 and estrucao == 0:
-                texto = font_estrucao.render(f"pricione a tecla {dados["keys"]["inventario"]}", True, (200, 110, 110))
-                largura_texto, altura_texto = font_estrucao.size(f"pricione a tecla {dados["keys"]["inventario"]}")
+                texto = font_estrucao.render(f"precione a tecla {dados["keys"]["inventario"]}", True, (200, 110, 110))
+                largura_texto, altura_texto = font_estrucao.size(f"precione a tecla {dados["keys"]["inventario"]}")
                 quadrado_estrucao = pygame.Surface((largura_texto + 20, altura_texto + 20), pygame.SRCALPHA)
                 quadrado_estrucao.fill((*(0, 0, 0), 150))
                 screen.blit(quadrado_estrucao, ((LARGURA // 2) - (largura_texto // 2) - 10, 1000 - 10))
@@ -650,8 +716,8 @@ if __name__ == "__main__":
                 if key[inventario]:
                     estrucao = 2
             elif estrucao == 7:
-                texto = font_estrucao.render(f"pricione a tecla {dados["keys"]["mapa"]}", True, (200, 110, 110))
-                largura_texto, altura_texto = font_estrucao.size(f"pricione a tecla {dados["keys"]["inventario"]}")
+                texto = font_estrucao.render(f"precione a tecla {dados["keys"]["mapa"]}", True, (200, 110, 110))
+                largura_texto, altura_texto = font_estrucao.size(f"precione a tecla {dados["keys"]["inventario"]}")
                 quadrado_estrucao = pygame.Surface((largura_texto + 20, altura_texto + 20), pygame.SRCALPHA)
                 quadrado_estrucao.fill((*(0, 0, 0), 150))
                 screen.blit(quadrado_estrucao, ((LARGURA // 2) - (largura_texto // 2) - 10, 1000 - 10))
@@ -664,12 +730,67 @@ if __name__ == "__main__":
                 if key[mapa]:
                     estrucao = 8
 
+            carregando_moita = False
+            for range_moita in range_moita_fruta:
+                if personagem_rect.colliderect(range_moita) and dados["progresso"]["missao"] >= 1.7 and not carregando_moita:
+                    carregando_moita = True
+                    texto = font_estrucao.render(f"precione a tecla V", True, (200, 110, 110))
+                    centro_moita = (range_moita.x + range_moita.width // 2, range_moita.y + range_moita.height // 2)
+                    largura_texto, altura_texto = font_estrucao.size(f"precione a tecla V")
+                    quadrado_estrucao = pygame.Surface((largura_texto + 20, altura_texto + 20), pygame.SRCALPHA)
+                    quadrado_estrucao.fill((*(0, 0, 0), 150))
+                    screen.blit(quadrado_estrucao, ((LARGURA // 2) - (largura_texto // 2) - 10, 1000 - 10))
+                    screen.blit(texto, ((LARGURA // 2) - (largura_texto // 2), 1000))
+                    if tamanho_estrucao <= 36:
+                        vel_letra = 0.5
+                    if tamanho_estrucao >= 40:
+                        vel_letra = -0.5
+                    tamanho_estrucao += vel_letra
+                    if key[pygame.K_v] and coletado == False:
+                        timer_coleta += 1
+                        angulo_moita += 2.25  # velocidade de carregamento
+                        if angulo_moita > 360:
+                            angulo_moita = 360  # limite máximo
+                        pygame.draw.circle(screen, (80, 80, 80), centro_moita, raio_moita, 3)
 
+                        if angulo_moita > 0:
+                            rect_moita = pygame.Rect(centro_moita[0]-raio_moita, centro_moita[1]-raio_moita, raio_moita*2, raio_moita*2)
+                            pygame.draw.arc(screen, (0, 200, 255), rect_moita, -math.pi/2, -math.pi/2 + math.radians(int(angulo_moita)), 3)
+                        
+                        if timer_coleta >= 5 * 32:
+                            coletado = True
+                            dados["inventario"]["item"].append([["Fruta azul", "comum"], 1])
+                            salvar(teclas, dados)
+                    else:
+                        timer_coleta = 0
+                        coletado = False
+                        angulo_moita = 0
+
+
+            if dados["progresso"]["missao"] >= 1 and dados["progresso"]["missao"] < 2:
+                lines = wrap_text("Colete 10 frutas azuis na floresta Wode of Blod.", font_nome, 380)
+                screen.blit(quadrado_missao, (40, 300))
+                pygame.draw.rect(screen, (200, 200, 200), (40, 300, 400, 300), 3)
+                for i, line in enumerate(lines):
+                    text_surface = font_nome.render(line, True, (200, 200, 200))
+                    line_height = font_nome.get_height()
+                    y_missao = 310 + i * (line_height + 15)
+                    screen.blit(text_surface, (50, y_missao))
+                for fruta in dados["inventario"]["item"]:
+                    if fruta[0][0] == "Fruta azul":
+                        texto_missao = font_nome.render(f"{fruta[1]}/10", True, (200, 200, 200))
+                        if fruta[1] >= 10:
+                            missao = "completa"
+                        break
+                    else:
+                        texto_missao = font_nome.render("0/10", True, (200, 200, 200))
+                screen.blit(texto_missao, (50, 560))
+                
 
         if estado == COMBATE:
             anterior = COMBATE
             screen.blit(cenario_combate, (posição, 0))
-            if dados["progresso"]["missao"] == 1 and not dados_obtidos:
+            if dados["progresso"]["missao"] == 1.5 and not dados_obtidos:
                 inimigo = slime
                 inimigo_local = [("parado", slime.posição_x), ("parado", slime.posição_x + 1200), ("parado", slime.posição_x + 1200 * 2)]
                 status_inimigo = [[slime.dano_base, slime.velocidade_base, slime.defesa_base, slime.vida_base],
@@ -1782,7 +1903,7 @@ if __name__ == "__main__":
                 botao_segurado_m = True
                 if not marcado:
                     pos_atual_mouse = pygame.mouse.get_pos()
-                    print(f"({pos_atual_mouse[0]}, {pos_atual_mouse[1]}, \"arvore_pequena\")")
+                    print(f"({pos_atual_mouse[0]}, {pos_atual_mouse[1]}, \"moita com fruta\")")
                     marcado = True
                 else:
                     marcado = False
@@ -1892,6 +2013,43 @@ if __name__ == "__main__":
                 estado = JOGO
             if not key[mapa]:
                 travar_mapa = False
+        
+        elif estado == DIALOGO:
+            quadrado = pygame.Surface((1920, 1080), pygame.SRCALPHA)
+            quadrado.fill((*(0, 0, 0), 150))
+            screen.blit(quadrado, (0, 0))
+            if dados["progresso"]["missao"] == 1:
+                dialogos_missao = ["O! Olá, minha jovem! Você poderia ajudar este velho fazendeiro?", 
+                                   "Claro! Dependendo do favor eu posso ajudar", 
+                                   "Que bom! Gostaria que me ajudasse a colher 10 frutas azuis da floresta Wode of Blod, sabe o meu corpo já não era mais como antigamente haha!",
+                                   "Ha ha! Claro senhor, eu te ajudo a buscar as frutas.",
+                                   "O! Você é muito gentil minha jovem, muito obrigado!" ]
+                mostrar_dialogo(dialogos_missao, screen, dialogo_fazendeiro, dialogo_agnes)
+                dados["progresso"]["missao"] = 1.3
+                salvar(dados["keys"], dados)
+                estado = JOGO
+            elif dados["progresso"]["missao"] < 1.7 and dialogo_npc == "fazendeiro" and missao != "completa":
+                dialogos_missao = ["Volte quedo conseguir as frutas azuis, por favor!"]
+                mostrar_dialogo(dialogos_missao, screen, dialogo_fazendeiro, dialogo_agnes)
+                estado = JOGO
+            elif dados["progresso"]["missao"] == 1.3:
+                dialogos_missao = ["Ei! Quem vem lá?!", "AAA!"]
+                mostrar_dialogo(dialogos_missao, screen, dialogo_slime, dialogo_agnes)
+                dialogos_missao = ["È! Ha ha ha! A comida chegou bem na hora ha ha!", "A janta está servida!"]
+                mostrar_dialogo(dialogos_missao, screen, dialogo_slime, dialogo_slime)
+                mostrar_dialogo(["Hm!?"], screen, dialogo_agnes, dialogo_agnes)
+                dados["progresso"]["missao"] = 1.5
+                salvar(dados["keys"], dados)
+                estado = COMBATE
+            elif dados["progresso"]["missao"] == 1.7 and missao == "completa":
+                dialogos_missao = ["Ora! Muito obrigado minha jovem! Me ajudou muito!", "De nada! Olha você viu alguém diferente passando por aqui? Alguém que nunca viu antes?",
+                            "Hmm... Se me lembro bem, vi alguém encapuzado por essas redondezas com algo nas costas, mas depois disso não o vi mais, parecia com pressa.",
+                            "Ele carregava algum mapa como esse? *Mostra o mapa", "Hmm, não vi ele com um mapa, mas conheço alguém que pode te ajudar com isso, procure por Ralph na taverna Drink till thou fallest no centro da vila",
+                            "Certo, vou procurar ele, muito obrigada!", "De nada jovem! Boa sorte!"]
+                mostrar_dialogo(dialogos_missao, screen, dialogo_fazendeiro, dialogo_agnes)
+                dados["progresso"]["missao"] = 2
+                salvar(dados["keys"], dados)
+                estado = JOGO
                 
             
 

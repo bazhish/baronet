@@ -144,5 +144,8 @@ barraca_V2 = transform.scale(barraca_V2, (240 * LArgura // 1920, 415 * LArgura /
 barraca_V3 = image.load(fr"{endereço}\barraca_V3.png").convert_alpha()
 barraca_V3 = transform.scale(barraca_V3, (240 * LArgura // 1920, 415 * LArgura // 1920))
 
+moita_fruta = image.load(fr"{endereço}\moita_de_fruta.png").convert_alpha()
+moita_fruta = transform.scale(moita_fruta, (134 * LArgura // 1920, 144 * LArgura // 1920))
+
 sem_colisao = [pedras_0, pedras_1, pedras_2, pedras_4, pedras_5, pedras_6, cogumelo_0, cogumelo_1, cogumelo_2, flor_0, flor_1, flor_2, flor_3, flor_4, folhas]
 

@@ -14,7 +14,7 @@ import pyautogui
 from PIL import Image
 from subprocess import Popen
 import json
-from recursos.imagens.personagem_principal import personagem_parado, personagem_andando_D, personagem_soco_d, personagem_morto, personagem_dano, personagem_andando_E
+from recursos.imagens.personagem_principal import personagem_parado, personagem_andando_D, personagem_soco_d, personagem_soco_e, personagem_morto, personagem_dano, personagem_andando_E, personagem_andando_expB, personagem_andando_expC, personagem_andando_expD, personagem_andando_expE, personagem_parado_expB, personagem_parado_expC, personagem_parado_expD, personagem_parado_expE
 from recursos.imagens.npcs.npcs import npcs, atualizar_npc
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from backend.entidades.adversarios import slime
@@ -82,6 +82,9 @@ range_moita_fruta = []
 coletado = False
 timer_coleta = 0
 missao = "incompleta"
+ultima_direcao = "cima"
+pach_usada = []
+frame_explorar = 0
 
 centro_moita = (LARGURA // 2, ALTURA // 2)
 raio_moita = 30
@@ -440,22 +443,166 @@ if __name__ == "__main__":
                 nome.get_height() + 6
                 )
             
-            if key[pygame.K_DELETE]:
-                contador = 0
-                estado = COMBATE
-            rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 3
+            rect.centerx = personagem_x + personagem_parado_expB[0].get_width() // 2
             nome_rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 9
             nome_rect.y = personagem_y - 40
 
 
-            quadrado_7.fill((0, 200, 0))
-            personagem = pygame.Rect(personagem_x, personagem_y, 50, 50)
-            personagem_rect = pygame.Rect(personagem_x, personagem_y, 50, 50)
+            personagem = pygame.Rect(personagem_x, personagem_y, 70, 70)
+            personagem_rect = pygame.Rect(personagem_x, personagem_y, 70, 70)
             for obj in pach_objects_intamgible:
                 screen.blit(obj.imagem_pach, (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
                                              ((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y))
-            screen.blit(quadrado_7, (personagem_x, personagem_y))
 
+            # velocidade
+            vel = dados["status"]["velocidade"] * 3
+
+            # limites do mapa (10x a largura/altura da tela)
+            MAPA_LARGURA = LARGURA * 10
+            MAPA_ALTURA = LARGURA * 10
+
+            # ---------------------------
+            # Movimento diagonal (A + W)
+            if key[pygame.K_a] and key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(-vel, -vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(-vel, -vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "esquerda"
+                    pach_usada = personagem_andando_expE
+                    move_x = False
+                    move_y = False
+
+                    # Controle eixo X (esquerda)
+                    if pos_chao_x < 0 and personagem_x <= LARGURA // 2:
+                        pos_chao_x += vel // 2
+                    elif personagem_x > 0:
+                        personagem_x -= vel // 2
+                    else:
+                        move_x = True
+
+                    # Controle eixo Y (cima)
+                    if pos_chao_y < 0 and personagem_y <= ALTURA // 2:
+                        pos_chao_y += vel // 2
+                    elif personagem_y > 0:
+                        personagem_y -= vel // 2
+                    else:
+                        move_y = True
+
+            # Movimento diagonal (D + W)
+            elif key[pygame.K_d] and key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(vel, -vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(vel, -vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "direita"
+                    pach_usada = personagem_andando_expD
+                    # Controle eixo X (direita)
+                    if pos_chao_x > -(MAPA_LARGURA - LARGURA) and personagem_x >= LARGURA // 2:
+                        pos_chao_x -= vel // 2
+                    elif personagem_x < LARGURA:
+                        personagem_x += vel // 2
+
+                    # Controle eixo Y (cima)
+                    if pos_chao_y < 0 and personagem_y <= ALTURA // 2:
+                        pos_chao_y += vel // 2
+                    elif personagem_y > 0:
+                        personagem_y -= vel // 2
+
+            # Movimento diagonal (A + S)
+            elif key[pygame.K_a] and key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(-vel, vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(-vel, vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "esquerda"
+                    pach_usada = personagem_andando_expE
+                    # Controle eixo X (esquerda)
+                    if pos_chao_x < 0 and personagem_x <= LARGURA // 2:
+                        pos_chao_x += vel // 2
+                    elif personagem_x > 0:
+                        personagem_x -= vel // 2
+
+                    # Controle eixo Y (baixo)
+                    if pos_chao_y > -(MAPA_ALTURA - ALTURA) and personagem_y >= ALTURA // 2:
+                        pos_chao_y -= vel // 2
+                    elif personagem_y < ALTURA:
+                        personagem_y += vel // 2
+
+            # Movimento diagonal (D + S)
+            elif key[pygame.K_d] and key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(vel, vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(vel, vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "direita"
+                    pach_usada = personagem_andando_expD
+                    # Controle eixo X (direita)
+                    if pos_chao_x > -(MAPA_LARGURA - LARGURA) and personagem_x >= LARGURA // 2:
+                        pos_chao_x -= vel // 2
+                    elif personagem_x < LARGURA:
+                        personagem_x += vel // 2
+
+                    # Controle eixo Y (baixo)
+                    if pos_chao_y > -(MAPA_ALTURA - ALTURA) and personagem_y >= ALTURA // 2:
+                        pos_chao_y -= vel // 2
+                    elif personagem_y < ALTURA:
+                        personagem_y += vel // 2
+
+            # ---------------------------
+            # Movimento direita (D)
+            elif key[pygame.K_d] and not gerenciador_colisao.colide(personagem.move(vel, 0), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(vel, 0)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "direita"
+                    pach_usada = personagem_andando_expD
+
+                    if pos_chao_x > -(MAPA_LARGURA - LARGURA) and personagem_x >= LARGURA // 2:
+                        pos_chao_x -= vel // 1.5
+                    elif personagem_x <= LARGURA:
+                        personagem_x += vel // 1.5
+
+            # Movimento esquerda (A)
+            elif key[pygame.K_a] and not gerenciador_colisao.colide(personagem.move(-vel, 0), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(-vel, 0)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "esquerda"
+                    pach_usada = personagem_andando_expE
+
+                    if pos_chao_x < 0 and personagem_x <= LARGURA // 2:
+                        pos_chao_x += vel // 1.5
+                    elif personagem_x >= 0:
+                        personagem_x -= vel // 1.5
+
+            # Movimento cima (W)
+            elif key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(0, -vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(0, -vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "cima"
+                    pach_usada = personagem_andando_expC
+
+                    if pos_chao_y < 0 and personagem_y <= ALTURA // 2:
+                        pos_chao_y += vel // 1.5
+                    elif personagem_y >= 0:
+                        personagem_y -= vel // 1.5
+
+            # Movimento baixo (S)
+            elif key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(0, vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(0, vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "baixo"
+                    pach_usada = personagem_andando_expB
+
+                    if pos_chao_y > -(MAPA_ALTURA - ALTURA) and personagem_y >= ALTURA // 2:
+                        pos_chao_y -= vel // 1.5
+                    elif personagem_y <= ALTURA:
+                        personagem_y += vel // 1.5
+            else:
+                if ultima_direcao == "baixo":
+                    pach_usada = personagem_parado_expB
+                elif ultima_direcao == "cima":
+                    pach_usada = personagem_parado_expC
+                elif ultima_direcao == "esquerda":
+                    pach_usada = personagem_parado_expE
+                elif ultima_direcao == "direita":
+                    pach_usada = personagem_parado_expD
+
+            if frame_explorar >= len(pach_usada):
+                frame_explorar = 0
+            screen.blit(pach_usada[int(frame_explorar)], (personagem_x, personagem_y))
+            frame_explorar += 0.1
             range_moita_fruta = []
             
             for obj in pach_objects:
@@ -526,155 +673,44 @@ if __name__ == "__main__":
             item_x = 1800
             item_y = 250
             # icon do inventario
-            screen.blit(inventario_icon, (1800, 250))
-            screen.blit(inventario_icon, (1800, 370))
-            screen.blit(inventario_icon, (1800, 490))
-            screen.blit(inventario_icon, (1800, 610))
-            screen.blit(inventario_icon, (1800, 730))
+            screen.blit(vida_hud[10], (72, 101))
 
+            screen.blit(estamina_hud[10], (72, 101))
+
+
+            XP_necessario = XP_necessarios[dados["status"]["nivel"] - 1]
+            XP_atual = dados["status"]["experiencia"]
+            XP_porcentagem = ((XP_atual * 100) // XP_necessario) if XP_atual != 0 else 0
+            for i, m in enumerate(xp_hud):
+                if int(XP_porcentagem // 10) == i:
+                    screen.blit(xp_hud[i], (72, 101))
+
+            screen.blit(armas_hud, (1718, 362))
+            screen.blit(usaveis_hud, (550, 903))
+
+            armaduras_equipadas = []
+            usaveis_equipados = []
+            arma_equipada = None
             for equipamento in dados["inventario"]["equipado"]:
-                for i, item in enumerate(itens):
-                    if item.nome == equipamento[0] and item.raridade == equipamento[1] and item.type != "comum" and item.type != "defesa" and item.type != "ataque":
-                        screen.blit(itens_icons[i], (1800, item_y))
-                        item_y += 120
+                for item in itens:
+                    if equipamento[0] == item.nome and item.type == "ataque":
+                        arma_equipada = pygame.transform.scale(item.imagem_pach, (79 * LARGURA // 1920, 79 * LARGURA // 1920))
+                    if equipamento[0].split()[0] == item.nome.split()[0] and item.type == "defesa":
+                        armaduras_equipadas.append((pygame.transform.scale(item.imagem_pach, (81 * LARGURA // 1920, 81 * LARGURA // 1920)), item.nome.split()[0]))
+                    if equipamento[0] == item.nome and item.type == "usavel":
+                        usaveis_equipados.append((pygame.transform.scale(item.imagem_pach, (70 * LARGURA // 1920, 70 * LARGURA // 1920)), item.nome.split()[0]))
 
+            if arma_equipada != None:
+                screen.blit(arma_equipada, (1722, 357))
 
+            for armadura in armaduras_equipadas:
+                if armadura[1] == "Capacete":
+                    screen.blit(armadura[0], (1721, 459))
+                if armadura[1] == "Peitoral":
+                    screen.blit(armadura[0], (1721, 552))
+                if armadura[1] == "Bota":
+                    screen.blit(armadura[0], (1721, 640))
 
-            # velocidade
-            vel = dados["status"]["velocidade"] * 2
-
-            # limites do mapa (10x a largura/altura da tela)
-            MAPA_LARGURA = LARGURA * 10
-            MAPA_ALTURA = LARGURA * 10
-
-            # ---------------------------
-            # Movimento diagonal (A + W)
-            if key[pygame.K_a] and key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(-vel, -vel), pos_chao_x, pos_chao_y):
-                novo_personagem = personagem.move(-vel, -vel)
-                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
-
-                    move_x = False
-                    move_y = False
-
-                    # Controle eixo X (esquerda)
-                    if pos_chao_x < 0 and personagem_x <= LARGURA // 2:
-                        pos_chao_x += vel // 2
-                        personagem = LARGURA // 2
-                    elif personagem_x > 0:
-                        personagem_x -= vel // 2
-                    else:
-                        move_x = True
-
-                    # Controle eixo Y (cima)
-                    if pos_chao_y < 0 and personagem_y <= ALTURA // 2:
-                        pos_chao_y += vel // 2
-                        personagem = ALTURA // 2
-                    elif personagem_y > 0:
-                        personagem_y -= vel // 2
-                    else:
-                        move_y = True
-
-            # Movimento diagonal (D + W)
-            elif key[pygame.K_d] and key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(vel, -vel), pos_chao_x, pos_chao_y):
-                novo_personagem = personagem.move(vel, -vel)
-                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
-
-                    # Controle eixo X (direita)
-                    if pos_chao_x > -(MAPA_LARGURA - LARGURA) and personagem_x >= LARGURA // 2:
-                        pos_chao_x -= vel // 2
-                        personagem = LARGURA // 2
-                    elif personagem_x < LARGURA:
-                        personagem_x += vel // 2
-
-                    # Controle eixo Y (cima)
-                    if pos_chao_y < 0 and personagem_y <= ALTURA // 2:
-                        pos_chao_y += vel // 2
-                        personagem = ALTURA // 2
-                    elif personagem_y > 0:
-                        personagem_y -= vel // 2
-
-            # Movimento diagonal (A + S)
-            elif key[pygame.K_a] and key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(-vel, vel), pos_chao_x, pos_chao_y):
-                novo_personagem = personagem.move(-vel, vel)
-                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
-
-                    # Controle eixo X (esquerda)
-                    if pos_chao_x < 0 and personagem_x <= LARGURA // 2:
-                        pos_chao_x += vel // 2
-                        personagem = LARGURA // 2
-                    elif personagem_x > 0:
-                        personagem_x -= vel // 2
-
-                    # Controle eixo Y (baixo)
-                    if pos_chao_y > -(MAPA_ALTURA - ALTURA) and personagem_y >= ALTURA // 2:
-                        pos_chao_y -= vel // 2
-                        personagem = ALTURA // 2
-                    elif personagem_y < ALTURA:
-                        personagem_y += vel // 2
-
-            # Movimento diagonal (D + S)
-            elif key[pygame.K_d] and key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(vel, vel), pos_chao_x, pos_chao_y):
-                novo_personagem = personagem.move(vel, vel)
-                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
-
-                    # Controle eixo X (direita)
-                    if pos_chao_x > -(MAPA_LARGURA - LARGURA) and personagem_x >= LARGURA // 2:
-                        pos_chao_x -= vel // 2
-                        personagem = LARGURA // 2
-                    elif personagem_x < LARGURA:
-                        personagem_x += vel // 2
-
-                    # Controle eixo Y (baixo)
-                    if pos_chao_y > -(MAPA_ALTURA - ALTURA) and personagem_y >= ALTURA // 2:
-                        pos_chao_y -= vel // 2
-                        personagem = ALTURA // 2
-                    elif personagem_y < ALTURA:
-                        personagem_y += vel // 2
-
-            # ---------------------------
-            # Movimento direita (D)
-            elif key[pygame.K_d] and not gerenciador_colisao.colide(personagem.move(vel, 0), pos_chao_x, pos_chao_y):
-                novo_personagem = personagem.move(vel, 0)
-                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
-
-                    if pos_chao_x > -(MAPA_LARGURA - LARGURA) and personagem_x >= LARGURA // 2:
-                        pos_chao_x -= vel // 1.5
-                        personagem = LARGURA // 2
-                    elif personagem_x <= LARGURA:
-                        personagem_x += vel // 1.5
-
-            # Movimento esquerda (A)
-            elif key[pygame.K_a] and not gerenciador_colisao.colide(personagem.move(-vel, 0), pos_chao_x, pos_chao_y):
-                novo_personagem = personagem.move(-vel, 0)
-                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
-
-                    if pos_chao_x < 0 and personagem_x <= LARGURA // 2:
-                        pos_chao_x += vel // 1.5
-                        personagem = LARGURA // 2
-                    elif personagem_x >= 0:
-                        personagem_x -= vel // 1.5
-
-            # Movimento cima (W)
-            elif key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(0, -vel), pos_chao_x, pos_chao_y):
-                novo_personagem = personagem.move(0, -vel)
-                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
-
-                    if pos_chao_y < 0 and personagem_y <= ALTURA // 2:
-                        pos_chao_y += vel // 1.5
-                        personagem = ALTURA // 2
-                    elif personagem_y >= 0:
-                        personagem_y -= vel // 1.5
-
-            # Movimento baixo (S)
-            elif key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(0, vel), pos_chao_x, pos_chao_y):
-                novo_personagem = personagem.move(0, vel)
-                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
-
-                    if pos_chao_y > -(MAPA_ALTURA - ALTURA) and personagem_y >= ALTURA // 2:
-                        pos_chao_y -= vel // 1.5
-                        personagem = ALTURA // 2
-                    elif personagem_y <= ALTURA:
-                        personagem_y += vel // 1.5
 
 
             # ESCAPE → abre opções
@@ -767,7 +803,7 @@ if __name__ == "__main__":
                         angulo_moita = 0
 
 
-            if dados["progresso"]["missao"] >= 1 and dados["progresso"]["missao"] < 2:
+            if dados["progresso"]["missao"] >= 1.3 and dados["progresso"]["missao"] < 2:
                 lines = wrap_text("Colete 10 frutas azuis na floresta Wode of Blod.", font_nome, 380)
                 screen.blit(quadrado_missao, (40, 300))
                 pygame.draw.rect(screen, (200, 200, 200), (40, 300, 400, 300), 3)
@@ -819,7 +855,7 @@ if __name__ == "__main__":
                 XP_necessario = XP_necessarios[dados["status"]["nivel"] - 1]
                 XP_atual = dados["status"]["experiencia"]
                 defesa = dados["status"]["defesa"] + buff_defesa
-                vel_combate = int(dados["status"]["velocidade"] * 1.3)
+                vel_combate = int(dados["status"]["velocidade"] * 2.3)
                 contador += 1
                 vel_derrota = 1
                 vel_vitoria = 0.7
@@ -882,16 +918,16 @@ if __name__ == "__main__":
                     if key[pygame.K_d]:
                         posição -= vel_combate
                         inimigo_local = [(est, pos - vel_combate) for est, pos in inimigo_local]
-                        if diresao != "soco" and diresao != "dano":
+                        if diresao != "soco" and diresao != "dano" and diresao != "socoE":
                             diresao = "direita"
                 else:
                     if -posição_personagem_X >= -LARGURA + 150 and not travar and not morto:
                         if key[pygame.K_d]:
                             posição_personagem_X += vel_combate
-                            if diresao != "soco" and diresao != "dano":
+                            if diresao != "soco" and diresao != "dano" and diresao != "socoE":
                                 diresao = "direita"
                     else:
-                        if diresao != "soco" and not morto and diresao != "dano":
+                        if diresao != "soco" and not morto and diresao != "dano" and diresao != "socoE":
                             diresao = "parado"
 
 
@@ -900,22 +936,25 @@ if __name__ == "__main__":
                     if key[pygame.K_a]:
                         posição += vel_combate
                         inimigo_local = [(est, pos + vel_combate) for est, pos in inimigo_local]
-                        if diresao != "soco" and diresao != "dano":
+                        if diresao != "soco" and diresao != "dano" and diresao != "socoE":
                             diresao = "esquerda"
 
                 else:
                     if posição_personagem_X >= -21 * LARGURA // 1920 and not morto:
                         if key[pygame.K_a]:
                             posição_personagem_X -= vel_combate
-                            if diresao != "soco" and diresao != "dano":
+                            if diresao != "soco" and diresao != "dano" and diresao != "socoE":
                                 diresao = "esquerda"
                     else:
-                        if diresao != "soco" and not morto and diresao != "dano":
+                        if diresao != "soco" and not morto and diresao != "dano" and diresao != "socoE":
                             diresao = "parado"
 
                 if botoes[0] and contador_cooldown_jogador <= 0 and not morto:
                     contador_cooldown_jogador = cooldown_jogador
-                    diresao = "soco"
+                    if diresao == "esquerda":
+                        diresao = "socoE"
+                    else:
+                        diresao = "soco"
 
                     # Atualiza quais inimigos estão em contato
                     for i, (est, distancia) in enumerate(inimigo_local):
@@ -957,7 +996,7 @@ if __name__ == "__main__":
                     qnt_de_pulo = 0
                 
                 if not key[pygame.K_a] and not key[pygame.K_d] and not morto:
-                    if diresao != "soco" and diresao != "dano":
+                    if diresao != "soco" and diresao != "dano" and diresao != "socoE":
                         diresao = "parado"
 
                 if vida_atual <= 0:
@@ -977,6 +1016,14 @@ if __name__ == "__main__":
                     screen.blit(personagem_soco_d[int(frame_personagem_soco)], (posição_personagem_X, posição_personagem_Y + 12))
                     frame_personagem_soco += len(personagem_soco_d) * 0.08
                     if frame_personagem_soco >= len(personagem_soco_d):
+                        frame_personagem_soco = 0
+                        diresao = "parado"
+                    
+                elif diresao == "socoE":
+                    screen.blit(sombra, (posição_personagem_X + 40 * LARGURA // 1920, posição_chao - 50 * LARGURA // 1920))
+                    screen.blit(personagem_soco_e[int(frame_personagem_soco)], (posição_personagem_X, posição_personagem_Y + 12))
+                    frame_personagem_soco += len(personagem_soco_e) * 0.08
+                    if frame_personagem_soco >= len(personagem_soco_e):
                         frame_personagem_soco = 0
                         diresao = "parado"
 
@@ -1326,41 +1373,209 @@ if __name__ == "__main__":
                 nome.get_height() + 6
                 )
             
-            if key[pygame.K_DELETE]:
-                contador = 0
-                estado = COMBATE
-            rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 3
+            rect.centerx = personagem_x + personagem_parado_expB[0].get_width() // 2
             nome_rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 9
             nome_rect.y = personagem_y - 40
 
 
-            quadrado_7.fill((0, 200, 0))
-            personagem = pygame.Rect(personagem_x, personagem_y, 50, 50)
+            personagem = pygame.Rect(personagem_x, personagem_y, 70, 70)
+            personagem_rect = pygame.Rect(personagem_x, personagem_y, 70, 70)
             for obj in pach_objects_intamgible:
                 screen.blit(obj.imagem_pach, (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
                                              ((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y))
-            screen.blit(quadrado_7, (personagem_x, personagem_y))
+
+            # velocidade
+            vel = dados["status"]["velocidade"] * 3
+
+            # limites do mapa (10x a largura/altura da tela)
+            MAPA_LARGURA = LARGURA * 10
+            MAPA_ALTURA = LARGURA * 10
+
+            # ---------------------------
+            # Movimento diagonal (A + W)
+            if key[pygame.K_a] and key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(-vel, -vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(-vel, -vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "esquerda"
+                    pach_usada = personagem_andando_expE
+                    move_x = False
+                    move_y = False
+
+                    # Controle eixo X (esquerda)
+                    if pos_chao_x < 0 and personagem_x <= LARGURA // 2:
+                        pos_chao_x += vel // 2
+                    elif personagem_x > 0:
+                        personagem_x -= vel // 2
+                    else:
+                        move_x = True
+
+                    # Controle eixo Y (cima)
+                    if pos_chao_y < 0 and personagem_y <= ALTURA // 2:
+                        pos_chao_y += vel // 2
+                    elif personagem_y > 0:
+                        personagem_y -= vel // 2
+                    else:
+                        move_y = True
+
+            # Movimento diagonal (D + W)
+            elif key[pygame.K_d] and key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(vel, -vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(vel, -vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "direita"
+                    pach_usada = personagem_andando_expD
+                    # Controle eixo X (direita)
+                    if pos_chao_x > -(MAPA_LARGURA - LARGURA) and personagem_x >= LARGURA // 2:
+                        pos_chao_x -= vel // 2
+                    elif personagem_x < LARGURA:
+                        personagem_x += vel // 2
+
+                    # Controle eixo Y (cima)
+                    if pos_chao_y < 0 and personagem_y <= ALTURA // 2:
+                        pos_chao_y += vel // 2
+                    elif personagem_y > 0:
+                        personagem_y -= vel // 2
+
+            # Movimento diagonal (A + S)
+            elif key[pygame.K_a] and key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(-vel, vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(-vel, vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "esquerda"
+                    pach_usada = personagem_andando_expE
+                    # Controle eixo X (esquerda)
+                    if pos_chao_x < 0 and personagem_x <= LARGURA // 2:
+                        pos_chao_x += vel // 2
+                    elif personagem_x > 0:
+                        personagem_x -= vel // 2
+
+                    # Controle eixo Y (baixo)
+                    if pos_chao_y > -(MAPA_ALTURA - ALTURA) and personagem_y >= ALTURA // 2:
+                        pos_chao_y -= vel // 2
+                    elif personagem_y < ALTURA:
+                        personagem_y += vel // 2
+
+            # Movimento diagonal (D + S)
+            elif key[pygame.K_d] and key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(vel, vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(vel, vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "direita"
+                    pach_usada = personagem_andando_expD
+                    # Controle eixo X (direita)
+                    if pos_chao_x > -(MAPA_LARGURA - LARGURA) and personagem_x >= LARGURA // 2:
+                        pos_chao_x -= vel // 2
+                    elif personagem_x < LARGURA:
+                        personagem_x += vel // 2
+
+                    # Controle eixo Y (baixo)
+                    if pos_chao_y > -(MAPA_ALTURA - ALTURA) and personagem_y >= ALTURA // 2:
+                        pos_chao_y -= vel // 2
+                    elif personagem_y < ALTURA:
+                        personagem_y += vel // 2
+
+            # ---------------------------
+            # Movimento direita (D)
+            elif key[pygame.K_d] and not gerenciador_colisao.colide(personagem.move(vel, 0), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(vel, 0)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "direita"
+                    pach_usada = personagem_andando_expD
+
+                    if pos_chao_x > -(MAPA_LARGURA - LARGURA) and personagem_x >= LARGURA // 2:
+                        pos_chao_x -= vel // 1.5
+                    elif personagem_x <= LARGURA:
+                        personagem_x += vel // 1.5
+
+            # Movimento esquerda (A)
+            elif key[pygame.K_a] and not gerenciador_colisao.colide(personagem.move(-vel, 0), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(-vel, 0)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "esquerda"
+                    pach_usada = personagem_andando_expE
+
+                    if pos_chao_x < 0 and personagem_x <= LARGURA // 2:
+                        pos_chao_x += vel // 1.5
+                    elif personagem_x >= 0:
+                        personagem_x -= vel // 1.5
+
+            # Movimento cima (W)
+            elif key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(0, -vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(0, -vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "cima"
+                    pach_usada = personagem_andando_expC
+
+                    if pos_chao_y < 0 and personagem_y <= ALTURA // 2:
+                        pos_chao_y += vel // 1.5
+                    elif personagem_y >= 0:
+                        personagem_y -= vel // 1.5
+
+            # Movimento baixo (S)
+            elif key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(0, vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(0, vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "baixo"
+                    pach_usada = personagem_andando_expB
+
+                    if pos_chao_y > -(MAPA_ALTURA - ALTURA) and personagem_y >= ALTURA // 2:
+                        pos_chao_y -= vel // 1.5
+                    elif personagem_y <= ALTURA:
+                        personagem_y += vel // 1.5
+            else:
+                if ultima_direcao == "baixo":
+                    pach_usada = personagem_parado_expB
+                elif ultima_direcao == "cima":
+                    pach_usada = personagem_parado_expC
+                elif ultima_direcao == "esquerda":
+                    pach_usada = personagem_parado_expE
+                elif ultima_direcao == "direita":
+                    pach_usada = personagem_parado_expD
+
+            if frame_explorar >= len(pach_usada):
+                frame_explorar = 0
+            screen.blit(pach_usada[int(frame_explorar)], (personagem_x, personagem_y))
+            frame_explorar += 0.1
+            range_moita_fruta = []
             
             for obj in pach_objects:
                 if (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x) + obj.largura_real > 0 and (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x) < LARGURA:
                     if (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y) + obj.altura_real > 0 and (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y) < ALTURA:
                         screen.blit(obj.imagem_pach, (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
                                                     ((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y))
+                        if obj.largura_real == 134 and obj.altura_real == 144 and obj.bottom_rith == 22 and obj.bottom_left == 88:
+                            range_moita_fruta.append(pygame.Rect((7 + (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x),
+                            73 + (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y),
+                              120, 78)))
+                        
+# Desenha os NPCs
+            for npc in npcs:
+                atualizar_npc(npc, pos_chao_x, pos_chao_y)
+                if npc.tipo != "slime" or dados["progresso"]["missao"] < 1.7:
+                    if personagem.colliderect(npc.rect):
+                        texto = font_estrucao.render(f"precione a tecla V", True, (200, 110, 110))
+                        largura_texto, altura_texto = font_estrucao.size(f"precione a tecla V")
+                        quadrado_estrucao = pygame.Surface((largura_texto + 20, altura_texto + 20), pygame.SRCALPHA)
+                        quadrado_estrucao.fill((*(0, 0, 0), 150))
+                        screen.blit(quadrado_estrucao, ((LARGURA // 2) - (largura_texto // 2) - 10, 1000 - 10))
+                        screen.blit(texto, ((LARGURA // 2) - (largura_texto // 2), 1000))
+                        if tamanho_estrucao <= 36:
+                            vel_letra = 0.5
+                        if tamanho_estrucao >= 40:
+                            vel_letra = -0.5
+                        tamanho_estrucao += vel_letra
+                        if key[pygame.K_v]:
+                            dialogo_npc = npc.tipo
+                            estado = DIALOGO
+                        
+                    npc.frame += 0.1
+                    if npc.frame >= len(npc.imagem):
+                        npc.frame = 0
+                    screen.blit(npc.imagem[int(npc.frame)], (((npc.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
+                                            ((npc.y - 100) * 19200) // (980 - 100) + pos_chao_y))
                     
             # Desenha o retângulo cinza atrás do nome
             pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
 
             # Desenha o texto do nome por cima do retângulo
             screen.blit(nome, (rect.x + 3, rect.y + 3))
-
-            item_x = 1800
-            item_y = 250
-            # icon do inventario
-            screen.blit(inventario_icon, (1800, 250))
-            screen.blit(inventario_icon, (1800, 370))
-            screen.blit(inventario_icon, (1800, 490))
-            screen.blit(inventario_icon, (1800, 610))
-            screen.blit(inventario_icon, (1800, 730))
 
             for equipamento in dados["inventario"]["equipado"]:
                 for i, item in enumerate(itens):
@@ -1849,48 +2064,209 @@ if __name__ == "__main__":
                 nome.get_height() + 6
                 )
             
-            if key[pygame.K_DELETE]:
-                contador = 0
-                estado = COMBATE
-            rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 3
+            rect.centerx = personagem_x + personagem_parado_expB[0].get_width() // 2
             nome_rect.x = personagem_x - font_nome.size(primeiro_nome)[0] // 9
             nome_rect.y = personagem_y - 40
 
 
-            quadrado_7.fill((0, 200, 0))
-            personagem = pygame.Rect(personagem_x, personagem_y, 50, 50)
+            personagem = pygame.Rect(personagem_x, personagem_y, 70, 70)
+            personagem_rect = pygame.Rect(personagem_x, personagem_y, 70, 70)
             for obj in pach_objects_intamgible:
                 screen.blit(obj.imagem_pach, (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
                                              ((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y))
-            screen.blit(quadrado_7, (personagem_x, personagem_y))
+
+            # velocidade
+            vel = dados["status"]["velocidade"] * 3
+
+            # limites do mapa (10x a largura/altura da tela)
+            MAPA_LARGURA = LARGURA * 10
+            MAPA_ALTURA = LARGURA * 10
+
+            # ---------------------------
+            # Movimento diagonal (A + W)
+            if key[pygame.K_a] and key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(-vel, -vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(-vel, -vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "esquerda"
+                    pach_usada = personagem_andando_expE
+                    move_x = False
+                    move_y = False
+
+                    # Controle eixo X (esquerda)
+                    if pos_chao_x < 0 and personagem_x <= LARGURA // 2:
+                        pos_chao_x += vel // 2
+                    elif personagem_x > 0:
+                        personagem_x -= vel // 2
+                    else:
+                        move_x = True
+
+                    # Controle eixo Y (cima)
+                    if pos_chao_y < 0 and personagem_y <= ALTURA // 2:
+                        pos_chao_y += vel // 2
+                    elif personagem_y > 0:
+                        personagem_y -= vel // 2
+                    else:
+                        move_y = True
+
+            # Movimento diagonal (D + W)
+            elif key[pygame.K_d] and key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(vel, -vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(vel, -vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "direita"
+                    pach_usada = personagem_andando_expD
+                    # Controle eixo X (direita)
+                    if pos_chao_x > -(MAPA_LARGURA - LARGURA) and personagem_x >= LARGURA // 2:
+                        pos_chao_x -= vel // 2
+                    elif personagem_x < LARGURA:
+                        personagem_x += vel // 2
+
+                    # Controle eixo Y (cima)
+                    if pos_chao_y < 0 and personagem_y <= ALTURA // 2:
+                        pos_chao_y += vel // 2
+                    elif personagem_y > 0:
+                        personagem_y -= vel // 2
+
+            # Movimento diagonal (A + S)
+            elif key[pygame.K_a] and key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(-vel, vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(-vel, vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "esquerda"
+                    pach_usada = personagem_andando_expE
+                    # Controle eixo X (esquerda)
+                    if pos_chao_x < 0 and personagem_x <= LARGURA // 2:
+                        pos_chao_x += vel // 2
+                    elif personagem_x > 0:
+                        personagem_x -= vel // 2
+
+                    # Controle eixo Y (baixo)
+                    if pos_chao_y > -(MAPA_ALTURA - ALTURA) and personagem_y >= ALTURA // 2:
+                        pos_chao_y -= vel // 2
+                    elif personagem_y < ALTURA:
+                        personagem_y += vel // 2
+
+            # Movimento diagonal (D + S)
+            elif key[pygame.K_d] and key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(vel, vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(vel, vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "direita"
+                    pach_usada = personagem_andando_expD
+                    # Controle eixo X (direita)
+                    if pos_chao_x > -(MAPA_LARGURA - LARGURA) and personagem_x >= LARGURA // 2:
+                        pos_chao_x -= vel // 2
+                    elif personagem_x < LARGURA:
+                        personagem_x += vel // 2
+
+                    # Controle eixo Y (baixo)
+                    if pos_chao_y > -(MAPA_ALTURA - ALTURA) and personagem_y >= ALTURA // 2:
+                        pos_chao_y -= vel // 2
+                    elif personagem_y < ALTURA:
+                        personagem_y += vel // 2
+
+            # ---------------------------
+            # Movimento direita (D)
+            elif key[pygame.K_d] and not gerenciador_colisao.colide(personagem.move(vel, 0), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(vel, 0)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "direita"
+                    pach_usada = personagem_andando_expD
+
+                    if pos_chao_x > -(MAPA_LARGURA - LARGURA) and personagem_x >= LARGURA // 2:
+                        pos_chao_x -= vel // 1.5
+                    elif personagem_x <= LARGURA:
+                        personagem_x += vel // 1.5
+
+            # Movimento esquerda (A)
+            elif key[pygame.K_a] and not gerenciador_colisao.colide(personagem.move(-vel, 0), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(-vel, 0)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "esquerda"
+                    pach_usada = personagem_andando_expE
+
+                    if pos_chao_x < 0 and personagem_x <= LARGURA // 2:
+                        pos_chao_x += vel // 1.5
+                    elif personagem_x >= 0:
+                        personagem_x -= vel // 1.5
+
+            # Movimento cima (W)
+            elif key[pygame.K_w] and not gerenciador_colisao.colide(personagem.move(0, -vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(0, -vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "cima"
+                    pach_usada = personagem_andando_expC
+
+                    if pos_chao_y < 0 and personagem_y <= ALTURA // 2:
+                        pos_chao_y += vel // 1.5
+                    elif personagem_y >= 0:
+                        personagem_y -= vel // 1.5
+
+            # Movimento baixo (S)
+            elif key[pygame.K_s] and not gerenciador_colisao.colide(personagem.move(0, vel), pos_chao_x, pos_chao_y):
+                novo_personagem = personagem.move(0, vel)
+                if not gerenciador_colisao.colide(novo_personagem, pos_chao_x, pos_chao_y):
+                    ultima_direcao = "baixo"
+                    pach_usada = personagem_andando_expB
+
+                    if pos_chao_y > -(MAPA_ALTURA - ALTURA) and personagem_y >= ALTURA // 2:
+                        pos_chao_y -= vel // 1.5
+                    elif personagem_y <= ALTURA:
+                        personagem_y += vel // 1.5
+            else:
+                if ultima_direcao == "baixo":
+                    pach_usada = personagem_parado_expB
+                elif ultima_direcao == "cima":
+                    pach_usada = personagem_parado_expC
+                elif ultima_direcao == "esquerda":
+                    pach_usada = personagem_parado_expE
+                elif ultima_direcao == "direita":
+                    pach_usada = personagem_parado_expD
+
+            if frame_explorar >= len(pach_usada):
+                frame_explorar = 0
+            screen.blit(pach_usada[int(frame_explorar)], (personagem_x, personagem_y))
+            frame_explorar += 0.1
+            range_moita_fruta = []
             
             for obj in pach_objects:
                 if (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x) + obj.largura_real > 0 and (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x) < LARGURA:
                     if (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y) + obj.altura_real > 0 and (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y) < ALTURA:
                         screen.blit(obj.imagem_pach, (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
                                                     ((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y))
+                        if obj.largura_real == 134 and obj.altura_real == 144 and obj.bottom_rith == 22 and obj.bottom_left == 88:
+                            range_moita_fruta.append(pygame.Rect((7 + (((obj.x - 500) * 19200) // (1380 - 500) + pos_chao_x),
+                            73 + (((obj.y - 100) * 19200) // (980 - 100) + pos_chao_y),
+                              120, 78)))
+                        
+# Desenha os NPCs
+            for npc in npcs:
+                atualizar_npc(npc, pos_chao_x, pos_chao_y)
+                if npc.tipo != "slime" or dados["progresso"]["missao"] < 1.7:
+                    if personagem.colliderect(npc.rect):
+                        texto = font_estrucao.render(f"precione a tecla V", True, (200, 110, 110))
+                        largura_texto, altura_texto = font_estrucao.size(f"precione a tecla V")
+                        quadrado_estrucao = pygame.Surface((largura_texto + 20, altura_texto + 20), pygame.SRCALPHA)
+                        quadrado_estrucao.fill((*(0, 0, 0), 150))
+                        screen.blit(quadrado_estrucao, ((LARGURA // 2) - (largura_texto // 2) - 10, 1000 - 10))
+                        screen.blit(texto, ((LARGURA // 2) - (largura_texto // 2), 1000))
+                        if tamanho_estrucao <= 36:
+                            vel_letra = 0.5
+                        if tamanho_estrucao >= 40:
+                            vel_letra = -0.5
+                        tamanho_estrucao += vel_letra
+                        if key[pygame.K_v]:
+                            dialogo_npc = npc.tipo
+                            estado = DIALOGO
+                        
+                    npc.frame += 0.1
+                    if npc.frame >= len(npc.imagem):
+                        npc.frame = 0
+                    screen.blit(npc.imagem[int(npc.frame)], (((npc.x - 500) * 19200) // (1380 - 500) + pos_chao_x,
+                                            ((npc.y - 100) * 19200) // (980 - 100) + pos_chao_y))
                     
             # Desenha o retângulo cinza atrás do nome
             pygame.draw.rect(screen, (100, 100, 100), rect, border_radius=5)
 
             # Desenha o texto do nome por cima do retângulo
             screen.blit(nome, (rect.x + 3, rect.y + 3))
-
-
-            item_x = 1800
-            item_y = 250
-            # icon do inventario
-            screen.blit(inventario_icon, (1800, 250))
-            screen.blit(inventario_icon, (1800, 370))
-            screen.blit(inventario_icon, (1800, 490))
-            screen.blit(inventario_icon, (1800, 610))
-            screen.blit(inventario_icon, (1800, 730))
-
-            for equipamento in dados["inventario"]["equipado"]:
-                for i, item in enumerate(itens):
-                    if item.nome == equipamento[0] and item.raridade == equipamento[1] and item.type != "comum" and item.type != "defesa" and item.type != "ataque":
-                        screen.blit(itens_icons[i], (1800, item_y))
-                        item_y += 120
 
             
             quadrado_3.fill((*(0, 0, 0), 150))
@@ -1919,6 +2295,14 @@ if __name__ == "__main__":
                             (( (personagem_y - pos_chao_y) * (980 - 100)) // 19200 + 100)
                              )
             pygame.draw.circle(screen, (20, 20, 90), (loc_personagem[0], loc_personagem[1]), 10)
+            if dados["progresso"]["missao"] == 1:
+                pygame.draw.circle(screen, (180, 180, 20), (761, 628), 10)
+            elif dados["progresso"]["missao"] == 1.3:
+                pygame.draw.circle(screen, (180, 180, 20), (1041, 287), 10)
+            elif dados["progresso"]["missao"] == 1.5:
+                pygame.draw.circle(screen, (180, 180, 20), (1085, 209), 10)
+            elif dados["progresso"]["missao"] == 1.7:
+                pygame.draw.circle(screen, (180, 180, 20), (761, 628), 10)
 
             texto_descricao_nome = font_descrição.render("Você", True, (30, 30, 30))
             texto_descricao_marcado = font_descrição.render("Marcado", True, (30, 30, 30))
@@ -1988,8 +2372,6 @@ if __name__ == "__main__":
                 if not botoes[0]:
                     botao_segurado = False
 
-
-
             # ESCAPE → abre opções
             if key[pygame.K_ESCAPE] and not click:
                 click = True
@@ -2040,6 +2422,7 @@ if __name__ == "__main__":
                 mostrar_dialogo(["Hm!?"], screen, dialogo_agnes, dialogo_agnes)
                 dados["progresso"]["missao"] = 1.5
                 salvar(dados["keys"], dados)
+                contador = 0
                 estado = COMBATE
             elif dados["progresso"]["missao"] == 1.7 and missao == "completa":
                 dialogos_missao = ["Ora! Muito obrigado minha jovem! Me ajudou muito!", "De nada! Olha você viu alguém diferente passando por aqui? Alguém que nunca viu antes?",
@@ -2048,8 +2431,14 @@ if __name__ == "__main__":
                             "Certo, vou procurar ele, muito obrigada!", "De nada jovem! Boa sorte!"]
                 mostrar_dialogo(dialogos_missao, screen, dialogo_fazendeiro, dialogo_agnes)
                 dados["progresso"]["missao"] = 2
+                dados["inventario"]["dinheiro"] += 50
                 salvar(dados["keys"], dados)
                 estado = JOGO
+            elif dados["progresso"]["missao"] >= 2:
+                dialogos_missao = ["Olá jovem, o dia está lindo hoje não é mesmo."]
+                mostrar_dialogo(dialogos_missao, screen, dialogo_fazendeiro, dialogo_agnes)
+                estado = JOGO
+
                 
             
 

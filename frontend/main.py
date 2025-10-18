@@ -2525,7 +2525,7 @@ if __name__ == "__main__":
                 dados["progresso"]["missao"] = 1.3
                 salvar(dados["keys"], dados)
                 estado = JOGO
-            elif dados["progresso"]["missao"] < 1.7 and dialogo_npc == "fazendeiro" and missao != "completa":
+            elif dados["progresso"]["missao"] <= 1.7 and dialogo_npc == "fazendeiro" and missao != "completa":
                 dialogos_missao = ["Volte quedo conseguir as frutas azuis, por favor!"]
                 mostrar_dialogo(dialogos_missao, screen, dialogo_fazendeiro, dialogo_agnes)
                 estado = JOGO

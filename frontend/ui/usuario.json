@@ -1,29 +1,29 @@
 {
-    "usuario": "joao",
+    "usuario": "AGnes",
     "dados_pessoais": {
-        "Nome": "joao",
-        "Classe": "Artista Marcial"
+        "Nome": "AGnes",
+        "Classe": "Arqueiro"
     },
     "inventario": {
-        "item": "[[[\"Punho\", \"comum\"], 1]]",
-        "equipado": "[]",
+        "item": "[[[\"Punho\", \"comum\"], 1], [[\"Gosma azul\", \"comum\"], 6]]",
+        "equipado": "[[\"Punho\", \"comum\"]]",
         "dinheiro": 100
     },
     "status": {
-        "nivel": 1,
-        "dano": 4,
+        "nivel": 3,
+        "dano": 2,
         "velocidade": 6,
-        "defesa": 4,
-        "vida": 18,
+        "defesa": 2,
+        "vida": 11,
         "experiencia": 0
     },
     "progresso": {
         "capitulo": 0,
-        "missao": 14.39999999999998
+        "missao": 1.7
     },
     "keys": {
         "inventario": "E",
-        "correr": "lctrl",
+        "correr": "Lctrl",
         "habilidade": "R",
         "habilidade_1": "Z",
         "habilidade_2": "X",

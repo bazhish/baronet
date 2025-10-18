@@ -885,6 +885,7 @@ if __name__ == "__main__":
                         texto_missao = font_nome.render(f"{fruta[1]}/10", True, (200, 200, 200))
                         if fruta[1] >= 10:
                             missao = "completa"
+                            dados["progresso"]["missao"] = 1.8
                         break
                     else:
                         texto_missao = font_nome.render("0/10", True, (200, 200, 200))
@@ -2367,9 +2368,9 @@ if __name__ == "__main__":
                 pygame.draw.circle(screen, (180, 180, 20), (761, 628), 10)
             elif dados["progresso"]["missao"] == 1.3:
                 pygame.draw.circle(screen, (180, 180, 20), (1041, 287), 10)
-            elif dados["progresso"]["missao"] == 1.5:
-                pygame.draw.circle(screen, (180, 180, 20), (1085, 209), 10)
             elif dados["progresso"]["missao"] == 1.7:
+                pygame.draw.circle(screen, (180, 180, 20), (1085, 209), 10)
+            elif dados["progresso"]["missao"] == 1.8:
                 pygame.draw.circle(screen, (180, 180, 20), (761, 628), 10)
 
             texto_descricao_nome = font_descrição.render("Você", True, (30, 30, 30))
@@ -2539,7 +2540,7 @@ if __name__ == "__main__":
                 salvar(dados["keys"], dados)
                 contador = 0
                 estado = COMBATE
-            elif dados["progresso"]["missao"] == 1.7 and missao == "completa":
+            elif dados["progresso"]["missao"] == 1.8 and missao == "completa":
                 dialogos_missao = ["Ora! Muito obrigado minha jovem! Me ajudou muito!", "De nada! Olha você viu alguém diferente passando por aqui? Alguém que nunca viu antes?",
                             "Hmm... Se me lembro bem, vi alguém encapuzado por essas redondezas com algo nas costas, mas depois disso não o vi mais, parecia com pressa.",
                             "Ele carregava algum mapa como esse? *Mostra o mapa", "Hmm, não vi ele com um mapa, mas conheço alguém que pode te ajudar com isso, procure por Ralph na taverna Drink till thou fallest no centro da vila",

@@ -1,55 +1,29 @@
 {
-    "usuario": "admimin",
+    "usuario": "joao",
     "dados_pessoais": {
-        "Nome": "agnes",
-        "Classe": "Artista Marcial",
-        "Tentativas": 3,
-        "1° passiva": "mira aprimorada",
-        "2° passiva": "arsenal tático",
-        "3° passiva": "fogo sucessivo",
-        "Habilidade ativa": "Combo Relâmpago",
-        "Habilidade especial": "Postura de Ferro"
+        "Nome": "joao",
+        "Classe": "Artista Marcial"
     },
     "inventario": {
-        "itens": [
-            "Punho do Aprendiz"
-        ],
-        "equipado": {
-            "arma": "Punho do Aprendiz",
-            "armadura": "nenhum",
-            "escudo": "nenhum"
-        },
-        "dinheiro": 4000
-    },
-    "atributos": {
-        "nivel": 14,
-        "experiencia": 691.0,
-        "dano": 6979140537712,
-        "velocidade": 9420132691255,
-        "defesa": 6979140537656,
-        "vida": 310,
-        "estamina": 220,
-        "multiplicador_de_experiencia": 1.6888716688258987
-    },
-    "armadura": {
-        "elmo": "nenhum",
-        "peitoral": "nenhum",
-        "calça": "nenhuma",
-        "botas": "nenhuma"
+        "item": "[[[\"Punho\", \"comum\"], 1]]",
+        "equipado": "[]",
+        "dinheiro": 100
     },
     "status": {
-        "estado": "normal",
-        "pode se mover": true,
-        "pode atacar": true,
-        "bloqueio ativo": false
+        "nivel": 1,
+        "dano": 4,
+        "velocidade": 6,
+        "defesa": 4,
+        "vida": 18,
+        "experiencia": 0
     },
     "progresso": {
         "capitulo": 0,
-        "missao": 1
+        "missao": 14.39999999999998
     },
     "keys": {
         "inventario": "E",
-        "correr": "Lctrl",
+        "correr": "lctrl",
         "habilidade": "R",
         "habilidade_1": "Z",
         "habilidade_2": "X",

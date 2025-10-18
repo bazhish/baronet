@@ -1,9 +1,23 @@
-import pygetwindow as gw
-from pyautogui import hotkey
-hotkey("win", "d")
+import subprocess
+import sys
 
-janela = gw.getWindowsWithTitle("Bloco de Notas")[0]
+# Lista de pacotes externos necessários
+pacotes = [
+    "pygame",
+    "pygetwindow",
+    "pyautogui",
+    "pillow"
+]
 
-# Restaura e maximiza sem checar
-janela.restore()
-janela.maximize()
+def instalar(pacote):
+    """Instala um pacote com pip."""
+    subprocess.check_call([sys.executable, "-m", "pip", "install", pacote])
+
+if __name__ == "__main__":
+    for pacote in pacotes:
+        try:
+            __import__(pacote if pacote != "pillow" else "PIL")  # pillow é importado como PIL
+            print(f"✅ {pacote} já está instalado.")
+        except ImportError:
+            print(f"📦 Instalando {pacote}...")
+            instalar(pacote)

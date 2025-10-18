@@ -2,7 +2,13 @@ python.exe -m pip install --upgrade pip
 
 pip install pygame
 pip install pyautogui
-pip install pygame-spritesheet
+pip install pygetwindow
+pip install pillow
+
+pygame
+pyautogui
+pillow
+pygetwindow
 
 import sys, os
 current_dir = os.path.dirname(os.path.abspath(__file__))

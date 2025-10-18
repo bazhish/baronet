@@ -2,39 +2,59 @@ import pygame
 import sys
 import os
 from random import choice
+import ctypes
 import sqlite3
+from pyautogui import hotkey, size
+import pygetwindow as gw
+hotkey("win", "d")
 from subprocess import Popen
 import json
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from recursos.imagens.telas.telas import telas
 
+# Tamanho da janela
+WIDTH, HEIGHT = 1300, 650
+
+# Inicia o pygame
+pygame.init()
+pygame.mixer.init()
+
+# Tela
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Baronet")
+
+janela = gw.getWindowsWithTitle("Baronet")[0]
+
+# Restaura e maximiza sem checar
+janela.restore()
+
+
+# ----------------- Centralizar a janela no Windows -----------------
+user32 = ctypes.windll.user32
+res_x = user32.GetSystemMetrics(0)  # largura da tela
+res_y = user32.GetSystemMetrics(1)  # altura da tela
+
+hwnd = pygame.display.get_wm_info()['window']  # handle da janela Pygame
+pos_x = (res_x - WIDTH) // 2
+pos_y = (res_y - HEIGHT) // 2
+ctypes.windll.user32.MoveWindow(hwnd, pos_x, pos_y, WIDTH, HEIGHT, True)
+# -------------------------------------------------------------------
+
+# Música de fundo
+endereco_frontend = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+pygame.mixer.music.load(rf"{endereco_frontend}\recursos\sons\Menu.mp3")
+pygame.mixer.music.set_volume(0.05)
+pygame.mixer.music.play(-1)
+
+botao = pygame.mixer.Sound(rf"{endereco_frontend}\recursos\sons\botao.ogg")
+erro = pygame.mixer.Sound(rf"{endereco_frontend}\recursos\sons\error.ogg")
 
 # Endereço do arquivo
 endereço = os.path.dirname(os.path.abspath(__file__))
 endereco_frontend = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
 # Endereço do banco de dados
 endereco_banco_de_dados = rf"{endereco_frontend}\ui\banco_de_dados.db"
-
-# Iniciar o pygame e seus audios
-pygame.init()
-pygame.mixer.init()
-
-
-# Efeito sonoro de fundo
-if __name__ == "__main__":
-    pygame.mixer.music.load(rf"{endereco_frontend}\recursos\sons\Menu.mp3")
-    pygame.mixer.music.set_volume(0.05)
-    pygame.mixer.music.play(-1)
-
-# Som do botão e se caso ocorra algum erro
-botao = pygame.mixer.Sound(rf"{endereco_frontend}\recursos\sons\botao.ogg")
-erro = pygame.mixer.Sound(rf"{endereco_frontend}\recursos\sons\error.ogg")
-
-
-# Tela
-WIDTH, HEIGHT = 1300, 650
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Meu RPG")
 
 # Cores
 WHITE = (255, 255, 255)

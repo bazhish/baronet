@@ -1,0 +1,32 @@
+{
+    "usuario": "joao",
+    "dados_pessoais": {
+        "Nome": "joao",
+        "Classe": "Artista Marcial"
+    },
+    "inventario": {
+        "item": "[[[\"Punho\", \"comum\"], 1]]",
+        "equipado": "[]",
+        "dinheiro": 100
+    },
+    "status": {
+        "nivel": 1,
+        "dano": 4,
+        "velocidade": 6,
+        "defesa": 4,
+        "vida": 18,
+        "experiencia": 0
+    },
+    "progresso": {
+        "capitulo": 0,
+        "missao": 14.39999999999998
+    },
+    "keys": {
+        "inventario": "E",
+        "correr": "lctrl",
+        "habilidade": "R",
+        "habilidade_1": "Z",
+        "habilidade_2": "X",
+        "mapa": "M"
+    }
+}

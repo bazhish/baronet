@@ -5,10 +5,13 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from menus import desenhar_botao, font_title, TEXTO_S, obter_id_usuario_por_nome
 import sqlite3
 import pyautogui
+import pygetwindow as gw
+from pyautogui import hotkey
 from subprocess import Popen
 import json
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from recursos.imagens.telas.telas import telas
+hotkey("win", "d")
 
 
 LARGURA, ALTURA = pyautogui.size()
@@ -41,6 +44,14 @@ teclas = dados["keys"]
 
 pygame.init()
 clock = pygame.time.Clock()
+# Tela
+pygame.display.set_caption("Baronet")
+janela = gw.getWindowsWithTitle("Baronet")[0]
+
+# Restaura e maximiza sem checar
+janela.restore()
+janela.maximize()
+
 
 # Telas
 MENU = "menu"
@@ -73,9 +84,6 @@ rect = pygame.Rect(
                 nome_rect.width + 2 * padding_x,
                 nome_rect.height + 2 * padding_y
                 )
-
-# Tela
-pygame.display.set_caption("Meu RPG")
 
 input_boxes = [
                                 {"label": "Inventario", "rect": pygame.Rect(446, 414, 472, 135), "text": f"{dados["keys"]["inventario"]}", "active": False, "peritido": TEXTO_S},

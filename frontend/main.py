@@ -9,6 +9,7 @@ from recursos.imagens.cenario.cenario_explorar import inventario_pach, inventari
 from recursos.imagens.hud.hud_combate import vida_hud, vida_inimigo_hud, estamina_hud, xp_hud, armas_hud, usaveis_hud, vitoria_tela, derrota_tela
 from recursos.imagens.telas.telas import telas
 import math
+import pygetwindow as gw
 import sqlite3
 import pyautogui
 from PIL import Image
@@ -24,6 +25,8 @@ from backend.sistemas.Dialogo import mostrar_dialogo, dialogo_agnes, dialogo_faz
 from backend.sistemas.colisao import pach_objects, pach_objects_colision, pach_objects_rects_colision, gerenciador_colisao, pach_objects_intamgible
 #from backend.app.models.sistema.habilidades_ativa_combatentes import golpe_mortal, intangibilidade, impacto_cruzado, bloqueio_de_espada, ataque_com_escudo, defesa_reforcada, giro_de_lanca, arremesso_de_lanca, disparo_perfurante, camuflagem, ataque_surpresa, fuga_rapida
 #from backend.app.models.sistema.habilidades_passivas_combatentes import furtividade, evasao, sangramento, vontade_da_espada, heranca_da_espada, ataque_rapido, bloqueio_de_ataque, repelir, peso_pena, danca_da_lanca, controle_passivo, controle_total, disparo_preciso, passos_silenciosos, flecha_dupla, ataque_silencioso, evasao_rapida, exploracao_furtiva
+pyautogui.hotkey("win", "d")
+
 LARGURA, ALTURA = pyautogui.size()
 endereço = os.path.dirname(os.path.abspath(__file__))
 
@@ -176,6 +179,14 @@ clock = pygame.time.Clock()
 botao_segurado = False
 botao_segurado_m = False
 
+pyautogui.hotkey("win", "d")
+pygame.display.set_caption("Baronet")
+janela = gw.getWindowsWithTitle("Baronet")[0]
+
+# Restaura e maximiza sem checar
+janela.restore()
+janela.maximize()
+
 
 usuario = agnes
 precionado = False
@@ -297,6 +308,45 @@ def wrap_text(text, font, max_width):
             lines.append(current_line)
         return lines
 
+def estrucao_rect(x, y, width, height, x_rect, y_rect, width_rect, height_rect, texto, liberação=None):
+    global font_nome, skip, timer
+    estrucao = [pygame.Surface((LARGURA, y), pygame.SRCALPHA),
+                pygame.Surface((x, height), pygame.SRCALPHA),
+                pygame.Surface((LARGURA - (x + width), height), pygame.SRCALPHA),
+                pygame.Surface((LARGURA, ALTURA - (y + height)), pygame.SRCALPHA)]
+    for quadrad in estrucao:
+        quadrad.fill((*(0, 0, 0), 200))
+    screen.blit(estrucao[0], (0, 0))
+    screen.blit(estrucao[1], (0, y))
+    screen.blit(estrucao[2], (x + width, y))
+    screen.blit(estrucao[3], (0, y + height))
+    linhas = wrap_text(texto, font_nome, width_rect - 20)
+    pygame.draw.rect(screen, (30, 30, 30), (x_rect, y_rect, width_rect, height_rect), border_radius=8)
+    pygame.draw.rect(screen, (200, 200, 200), (x_rect, y_rect, width_rect, height_rect), 3, 8)
+    pygame.draw.line(screen, (200, 200, 200), (x_rect + width_rect, y_rect + height_rect // 2), ((x_rect + width_rect) + (x - (x_rect + width_rect)) // 2, y_rect + height_rect // 2), 2)
+    pygame.draw.line(screen, (200, 200, 200), ((x_rect + width_rect) + (x - (x_rect + width_rect)) // 2, y_rect + height_rect // 2), ((x_rect + width_rect) + (x - (x_rect + width_rect)) // 2, y + height // 2), 2)
+    pygame.draw.line(screen, (200, 200, 200), ((x_rect + width_rect) + (x - (x_rect + width_rect)) // 2, y + height // 2), ((x_rect + width_rect) + (x - (x_rect + width_rect)), y + height // 2), 2)
+    for i, linha in enumerate(linhas):
+        text_surface = font_nome.render(linha, True, (200, 200, 200))
+        line_height = font_nome.get_height()
+        y_missao = y_rect + 10 + i * (line_height + 15)
+        screen.blit(text_surface, (x_rect + 10, y_missao))
+    if liberação:
+        if timer <= 2:
+            skip.set_colorkey((200, 130, 130))
+            timer += 0.25
+            if timer >= 2:
+                timer = 4
+        else:
+            skip.set_colorkey((30, 30, 30))
+            timer -= 0.25
+            if timer <= 2:
+                timer = 0
+        screen.blit(skip, (x_rect + width_rect - skip.get_width() - 20, y_rect + height_rect - skip.get_height() - 10))
+        
+        
+
+
 if __name__ == "__main__":
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
@@ -319,6 +369,14 @@ if __name__ == "__main__":
             # redimensiona esse pedaço pro dobro
             crop = crop.resize((crop.size[0]*2, crop.size[1]*2), Image.NEAREST)
             chunks[(x, y)] = pygame.image.fromstring(crop.tobytes(), crop.size, crop.mode).convert()
+
+    pyautogui.hotkey("win", "d")
+    pygame.display.set_caption("Baronet")
+    janela = gw.getWindowsWithTitle("Baronet")[0]
+
+    # Restaura e maximiza sem checar
+    janela.restore()
+    janela.maximize()
 
     while True:
         for evento in pygame.event.get():
@@ -656,19 +714,20 @@ if __name__ == "__main__":
                             ((loc_marcado[1] - 100) * 19200) // (980 - 100) + pos_chao_y
                         ]
                 
-                if loc_mapa[0] <= 0:
-                    loc_mapa[0] = 0
-                if loc_mapa[0] >= 1920:
-                    loc_mapa[0] = 1920
-                if loc_mapa[1] <= 0:
-                    loc_mapa[1] = 0
-                if loc_mapa[1] >= 1080:
-                    loc_mapa[1] = 1080
+                if loc_mapa[0] <= 50:
+                    loc_mapa[0] = 50
+                if loc_mapa[0] >= 1870:
+                    loc_mapa[0] = 1870
+                if loc_mapa[1] <= 50:
+                    loc_mapa[1] = 50
+                if loc_mapa[1] >= 1030:
+                    loc_mapa[1] = 1030
 
                 loc_mapa = (loc_mapa[0],
                             loc_mapa[1])
 
                 pygame.draw.circle(screen, (190, 60, 60), loc_mapa, 30)
+                rect_marcado = (loc_mapa[0] - 35, loc_mapa[1] - 35, 70, 70)
 
             item_x = 1800
             item_y = 250
@@ -765,6 +824,15 @@ if __name__ == "__main__":
                 tamanho_estrucao += vel_letra
                 if key[mapa]:
                     estrucao = 8
+            
+            elif estrucao == 14 and marcado:
+                estrucao_rect(rect_marcado[0], rect_marcado[1] , 70, 70, 710, 200, 500, 200, "Você marcou esse local no mapa. vá até lá para começarmos!", True)
+                if botoes[0] and not botao_segurado:
+                    estrucao = 15
+                    botao_segurado = True
+                if not botoes[0]:
+                    botao_segurado = False
+
 
             carregando_moita = False
             for range_moita in range_moita_fruta:
@@ -2371,6 +2439,53 @@ if __name__ == "__main__":
                     botao_segurado = True
                 if not botoes[0]:
                     botao_segurado = False
+
+            elif estrucao == 9:
+                estrucao_rect(1402, 131, 156, 32, 824, 129, 384, 238, "Aqui mostra que a cor azul representa você no mapa.", True)
+                if botoes[0] and not botao_segurado:
+                    estrucao = 10
+                    botao_segurado = True
+                if not botoes[0]:
+                    botao_segurado = False
+
+            elif estrucao == 10:
+                estrucao_rect(1402, 163, 156, 32, 824, 129, 384, 250, "Aqui mostra que a cor vermelha representa a posição que você marcou no mapa.", True)
+                if botoes[0] and not botao_segurado:
+                    estrucao = 11
+                    botao_segurado = True
+                if not botoes[0]:
+                    botao_segurado = False
+
+            elif estrucao == 11:
+                estrucao_rect(1402, 195, 156, 32, 824, 129, 384, 250, "Aqui mostra que a cor amarela representa onde você tem que ir para realizar sua missão.", True)
+                if botoes[0] and not botao_segurado:
+                    estrucao = 12
+                    botao_segurado = True
+                if not botoes[0]:
+                    botao_segurado = False
+
+            elif estrucao == 12:
+                estrucao_rect(739, 606, 48, 35, 187, 198, 384, 250, "Marque o local da sua missão para facilitar encontrá-la.", True)
+                if botoes[0] and not botao_segurado:
+                    estrucao = 13
+                    botao_segurado = True
+                if not botoes[0]:
+                    botao_segurado = False
+
+            elif estrucao == 13:
+                texto = font_estrucao.render(f"pricione a tecla {dados["keys"]["mapa"]}", True, (200, 110, 110))
+                largura_texto, altura_texto = font_estrucao.size(f"pricione a tecla {dados["keys"]["mapa"]}")
+                quadrado_estrucao = pygame.Surface((largura_texto + 20, altura_texto + 20), pygame.SRCALPHA)
+                quadrado_estrucao.fill((*(0, 0, 0), 150))
+                screen.blit(quadrado_estrucao, ((LARGURA // 2) - (largura_texto // 2) - 10, 1000 - 10))
+                screen.blit(texto, ((LARGURA // 2) - (largura_texto // 2), 1000))
+                if tamanho_estrucao <= 36:
+                    vel_letra = 0.5
+                if tamanho_estrucao >= 40:
+                    vel_letra = -0.5
+                tamanho_estrucao += vel_letra
+                if key[mapa]:
+                    estrucao = 14
 
             # ESCAPE → abre opções
             if key[pygame.K_ESCAPE] and not click:
